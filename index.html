@@ -343,12 +343,12 @@
   /* ───── CTA ───── */
   .cta-section {
     background: var(--dark);
-    position:relative; overflow:hidden; text-align:center; padding:140px 64px;
+    position:relative; overflow:hidden; text-align:center; padding:120px 64px;
   }
   .cta-section::before {
     content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-    width:800px; height:400px;
-    background:radial-gradient(ellipse, rgba(196,28,28,0.14) 0%, transparent 70%);
+    width:900px; height:500px;
+    background:radial-gradient(ellipse, rgba(196,28,28,0.12) 0%, transparent 70%);
     pointer-events:none;
   }
   .cta-section::after {
@@ -357,12 +357,309 @@
   }
   .cta-title { font-family:'Barlow Condensed',sans-serif; font-size:clamp(52px,8vw,100px); font-weight:800; text-transform:uppercase; line-height:0.92; margin-bottom:24px; color:#fff; letter-spacing:-0.01em; }
   .cta-title em { font-style:italic; font-weight:700; color:var(--red3); text-transform:none; }
-  .cta-sub { font-size:15px; color:rgba(255,255,255,0.45); max-width:460px; margin:0 auto 48px; line-height:1.85; font-weight:300; }
-  .cta-form { display:flex; max-width:480px; margin:0 auto; }
-  .cta-form input { flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-right:none; outline:none; padding:16px 22px; color:#fff; font-family:'Inter',sans-serif; font-size:13px; }
-  .cta-form input::placeholder { color:rgba(255,255,255,0.28); }
-  .cta-form button { background:var(--red); border:none; padding:16px 28px; color:#fff; font-family:'Inter',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; cursor:pointer; transition:background 0.3s; white-space:nowrap; }
-  .cta-form button:hover { background:var(--red2); }
+  .cta-sub { font-size:15px; color:rgba(255,255,255,0.45); max-width:500px; margin:0 auto 56px; line-height:1.85; font-weight:300; }
+
+  /* ── AUDIT FORM ── */
+  .audit-form {
+    max-width: 740px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: 14px;
+    text-align: left; position: relative; z-index: 1;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-field { display: flex; flex-direction: column; gap: 7px; }
+  .form-field label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.32);
+  }
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    outline: none; padding: 14px 18px;
+    color: #fff; font-family: 'Inter', sans-serif; font-size: 13px;
+    transition: border-color 0.25s, background 0.25s;
+    width: 100%; border-radius: 0;
+    -webkit-appearance: none; appearance: none;
+  }
+  .form-field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.3)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center;
+    padding-right: 42px; cursor: pointer;
+  }
+  .form-field select option { background: #1a1410; color: #fff; }
+  .form-field input::placeholder,
+  .form-field textarea::placeholder { color: rgba(255,255,255,0.2); }
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus {
+    border-color: rgba(196,28,28,0.55);
+    background: rgba(255,255,255,0.06);
+  }
+  .form-field textarea { resize: vertical; min-height: 96px; line-height: 1.7; }
+  .form-divider { border: none; border-top: 1px solid rgba(255,255,255,0.05); margin: 6px 0; }
+  .form-submit-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px; margin-top: 10px;
+  }
+  .form-note {
+    font-size: 11px; color: rgba(255,255,255,0.2);
+    font-family: 'JetBrains Mono', monospace; letter-spacing: 0.07em; line-height: 1.7;
+  }
+  .form-submit-btn {
+    background: var(--red); border: none;
+    padding: 17px 44px; color: #fff;
+    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s; white-space: nowrap;
+    position: relative; overflow: hidden; flex-shrink: 0;
+  }
+  .form-submit-btn::after {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(255,255,255,0.1);
+    transform: translateX(-101%); transition: transform 0.3s;
+  }
+  .form-submit-btn:hover::after { transform: translateX(0); }
+  .form-submit-btn:hover { background: var(--red2); box-shadow: 0 6px 28px rgba(196,28,28,0.4); }
+  .form-submit-btn:disabled { background: #3a3a3a; cursor: not-allowed; }
+  .form-success {
+    text-align: center; padding: 56px 24px;
+    border: 1px solid rgba(196,28,28,0.25);
+    background: rgba(196,28,28,0.05);
+    max-width: 740px; margin: 0 auto;
+  }
+  .form-success-icon { font-size: 36px; margin-bottom: 18px; }
+  .form-success h3 {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 32px;
+    font-weight: 800; text-transform: uppercase; color: #fff; margin-bottom: 12px;
+  }
+  .form-success p { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.8; max-width: 400px; margin: 0 auto; }
+
+  @media(max-width:700px) {
+    .form-row { grid-template-columns: 1fr; }
+    .form-submit-row { flex-direction: column; align-items: stretch; }
+    .form-submit-btn { text-align: center; }
+    .cta-section { padding: 80px 24px; }
+  }
+
+  /* ───── WHY VELMONTX ───── */
+  .why-section { background: var(--dark); padding: 120px 64px; position: relative; overflow: hidden; }
+  .why-section::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
+  }
+  .why-section .section-label { color: var(--gold); }
+  .why-section .section-label::before { background: var(--gold); }
+  .why-section .section-title { color: #fff; }
+  .why-section .section-title em { color: var(--red3); }
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 64px; }
+  .why-card {
+    padding: 44px 36px; border: 1px solid rgba(255,255,255,0.05);
+    position: relative; overflow: hidden; transition: border-color 0.3s;
+  }
+  .why-card:hover { border-color: rgba(196,28,28,0.3); }
+  .why-card::before {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--red), var(--gold));
+    transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+  }
+  .why-card:hover::before { transform: scaleX(1); }
+  .why-icon {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--red); letter-spacing: 0.2em; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .why-icon::before { content: ''; width: 20px; height: 1px; background: var(--red); }
+  .why-title {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 22px;
+    font-weight: 700; text-transform: uppercase; color: #fff;
+    margin-bottom: 14px; line-height: 1.2;
+  }
+  .why-desc { font-size: 13px; line-height: 1.85; color: rgba(255,255,255,0.42); font-weight: 300; }
+
+  /* ───── TRUST BAR ───── */
+  .trust-bar {
+    background: var(--cream2); padding: 40px 64px;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .trust-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+  .trust-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted);
+    white-space: nowrap;
+  }
+  .trust-divider { width: 1px; height: 32px; background: var(--border); flex-shrink: 0; }
+  .trust-badges { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+  .trust-badge {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+    color: var(--mid); letter-spacing: 0.02em;
+  }
+  .trust-badge-icon {
+    width: 32px; height: 32px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; color: #fff; flex-shrink: 0;
+  }
+  .trust-badge-icon.meta { background: linear-gradient(135deg, #1877f2, #0d5ab5); font-family: 'Inter', sans-serif; font-size: 13px; }
+  .trust-badge-icon.ig { background: linear-gradient(135deg, #e1306c, #f56040, #ffdc80); }
+  .trust-badge-icon.ga { background: linear-gradient(135deg, #e37400, #fbbc04); color: #fff; font-size: 11px; }
+  .trust-badge-icon.px { background: linear-gradient(135deg, #2a8a52, #1a6a3a); font-size: 10px; }
+  .trust-stat { text-align: center; }
+  .trust-stat-num {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 28px;
+    font-weight: 800; color: var(--red); line-height: 1;
+  }
+  .trust-stat-lbl {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ───── BLOG / INSIGHTS ───── */
+  .insights { background: var(--parchment); }
+  .insights-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 56px; flex-wrap: wrap; gap: 20px; }
+  .insights-link {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--red); text-decoration: none; border-bottom: 1px solid rgba(196,28,28,0.3);
+    padding-bottom: 2px; transition: border-color 0.25s;
+  }
+  .insights-link:hover { border-color: var(--red); }
+  .insights-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .insight-card {
+    background: var(--cream); border: 1px solid var(--border);
+    overflow: hidden; transition: all 0.3s; cursor: pointer;
+    text-decoration: none; color: inherit; display: block;
+  }
+  .insight-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); border-color: rgba(196,28,28,0.2); }
+  .insight-thumb {
+    height: 180px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .insight-thumb-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--dark) 0%, #2c1a10 100%);
+  }
+  .insight-thumb-text {
+    position: relative; z-index: 1; text-align: center; padding: 20px;
+  }
+  .insight-thumb-hook {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 22px;
+    font-weight: 800; text-transform: uppercase; color: #fff;
+    line-height: 1.1; margin-bottom: 8px;
+  }
+  .insight-thumb-hook em { color: var(--red3); font-style: italic; }
+  .insight-thumb-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase;
+  }
+  .insight-body { padding: 24px 26px 28px; }
+  .insight-cat {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--red);
+    margin-bottom: 10px;
+  }
+  .insight-title {
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700;
+    color: var(--dark); line-height: 1.4; margin-bottom: 10px;
+  }
+  .insight-desc { font-size: 13px; color: var(--mid); line-height: 1.75; font-weight: 300; }
+  .insight-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border);
+  }
+  .insight-read {
+    font-size: 11px; font-weight: 600; color: var(--red);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .insight-min { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); }
+
+  /* ───── FAQ ───── */
+  .faq-section { background: var(--cream2); }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 64px; }
+  .faq-item {
+    background: var(--parchment); border: 1px solid var(--border);
+    overflow: hidden; transition: border-color 0.25s;
+  }
+  .faq-item.open { border-color: rgba(196,28,28,0.2); }
+  .faq-q {
+    padding: 26px 30px; cursor: pointer;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    user-select: none;
+  }
+  .faq-q-text {
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+    color: var(--dark); line-height: 1.45;
+  }
+  .faq-toggle {
+    width: 22px; height: 22px; flex-shrink: 0;
+    border: 1px solid var(--border); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--red); transition: all 0.3s;
+    margin-top: 1px;
+  }
+  .faq-item.open .faq-toggle { background: var(--red); color: #fff; border-color: var(--red); transform: rotate(45deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 30px;
+  }
+  .faq-item.open .faq-a { max-height: 300px; padding: 0 30px 26px; }
+  .faq-a p { font-size: 13px; line-height: 1.85; color: var(--mid); font-weight: 300; }
+
+  /* ───── WHATSAPP BUTTON ───── */
+  .wa-btn {
+    position: fixed; bottom: 28px; right: 28px; z-index: 998;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #25d366; box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; transition: all 0.3s;
+  }
+  .wa-btn:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(37,211,102,0.55); }
+  .wa-btn svg { width: 28px; height: 28px; fill: #fff; }
+  .wa-tooltip {
+    position: absolute; right: 68px; top: 50%; transform: translateY(-50%);
+    background: var(--dark); color: #fff; white-space: nowrap;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.08em; padding: 7px 14px;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  .wa-btn:hover .wa-tooltip { opacity: 1; }
+
+  /* ───── MOBILE NAV ───── */
+  .nav-hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: pointer; padding: 4px; background: none; border: none;
+  }
+  .nav-hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: var(--dark); transition: all 0.3s;
+  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .mobile-menu {
+    display: none; position: fixed; top: 65px; left: 0; right: 0;
+    background: rgba(245,240,232,0.98); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border); z-index: 99;
+    flex-direction: column; padding: 20px 28px 28px;
+    gap: 4px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--mid); text-decoration: none;
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu a:hover { color: var(--red); }
+  .mobile-menu .mobile-cta {
+    margin-top: 8px; background: var(--red); color: #fff !important;
+    text-align: center; padding: 14px; border-bottom: none !important;
+  }
 
   /* ───── FOOTER ───── */
   footer { border-top:1px solid var(--border); padding:48px 64px; display:flex; align-items:center; justify-content:space-between; background:var(--cream); }
@@ -384,21 +681,32 @@
   .stat-num.animate { animation: countUp 0.5s ease forwards; }
 
   @media(max-width:1024px){
-    nav{padding:18px 28px;} .nav-links{display:none;}
+    nav{padding:18px 28px;} .nav-links{display:none;} .nav-hamburger{display:flex;}
     section{padding:80px 28px;}
     .stats-strip{grid-template-columns:repeat(2,1fr);}
     .services-grid{grid-template-columns:1fr 1fr;}
+    .why-grid{grid-template-columns:1fr 1fr;}
     .process-grid{grid-template-columns:1fr;gap:48px;}
     .testimonials-grid{grid-template-columns:1fr;}
+    .insights-grid{grid-template-columns:1fr 1fr;}
+    .faq-grid{grid-template-columns:1fr;}
     .cta-section{padding:100px 28px;}
     footer{flex-direction:column;gap:24px;text-align:center;padding:40px 28px;}
     .footer-links{flex-wrap:wrap;justify-content:center;}
     .showcase-header{padding:0 28px;}
+    .trust-bar{padding:32px 28px;}
+    .why-section{padding:80px 28px;}
   }
   @media(max-width:640px){
     .services-grid{grid-template-columns:1fr;}
+    .why-grid{grid-template-columns:1fr;}
+    .insights-grid{grid-template-columns:1fr;}
     .hero-actions{flex-direction:column;align-items:center;}
     .dashboard-card{width:320px;height:220px;}
+    .trust-inner{flex-direction:column;align-items:flex-start;gap:20px;}
+    .trust-divider{display:none;}
+    .insights-header{flex-direction:column;align-items:flex-start;}
+    .wa-btn{bottom:20px;right:20px;}
   }
 </style>
 </head>
@@ -414,7 +722,19 @@
     <li><a href="#contact">Contact</a></li>
   </ul>
   <a href="#contact" class="nav-cta">Free Audit →</a>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#services" onclick="closeMobileMenu()">Services</a>
+  <a href="#results" onclick="closeMobileMenu()">Results</a>
+  <a href="#process" onclick="closeMobileMenu()">Process</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+  <a href="#contact" class="mobile-cta" onclick="closeMobileMenu()">Get Free Audit →</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -451,6 +771,36 @@
   </div>
 </div>
 
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <span class="trust-label">Certified & Verified On</span>
+    <div class="trust-divider"></div>
+    <div class="trust-badges">
+      <div class="trust-badge">
+        <div class="trust-badge-icon meta">f</div>
+        Meta Business Suite
+      </div>
+      <div class="trust-badge">
+        <div class="trust-badge-icon ig">✦</div>
+        Instagram Ads
+      </div>
+      <div class="trust-badge">
+        <div class="trust-badge-icon ga">G</div>
+        Google Analytics 4
+      </div>
+      <div class="trust-badge">
+        <div class="trust-badge-icon px">✓</div>
+        Meta Pixel & CAPI
+      </div>
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-stat"><div class="trust-stat-num">120+</div><div class="trust-stat-lbl">Brands Scaled</div></div>
+    <div class="trust-stat"><div class="trust-stat-num">6.8×</div><div class="trust-stat-lbl">Avg ROAS</div></div>
+    <div class="trust-stat"><div class="trust-stat-num">98%</div><div class="trust-stat-lbl">Retention</div></div>
+  </div>
+</div>
+
 <!-- SERVICES -->
 <section class="services" id="services">
   <div class="services-header reveal">
@@ -465,6 +815,44 @@
     <div class="service-card reveal"><div class="service-num">04 / Analytics</div><div class="service-name">Attribution & Revenue Analytics</div><p class="service-desc">Crystal-clear reporting on what's working. Custom dashboards, pixel mastery, and first-party data strategies that cut through Meta's attribution noise.</p><span class="service-tag">GA4 · Pixel · CAPI</span></div>
     <div class="service-card reveal reveal-delay-1"><div class="service-num">05 / Scale</div><div class="service-name">Budget Scaling & Bid Strategy</div><p class="service-desc">Scaling ad spend without killing efficiency is an art. We've perfected the playbook across ₹1L to ₹1Cr+ monthly budgets with consistent ROAS.</p><span class="service-tag">CBO · ABO · ASC+</span></div>
     <div class="service-card reveal reveal-delay-2"><div class="service-num">06 / Retention</div><div class="service-name">Retargeting & Customer LTV</div><p class="service-desc">Your pixel is a goldmine. We deploy sophisticated retargeting sequences that bring prospects back and maximise lifetime value at scale.</p><span class="service-tag">Dynamic · Sequential · LTV</span></div>
+  </div>
+</section>
+
+<!-- WHY VELMONTX -->
+<section class="why-section">
+  <div class="section-label reveal">Why VelmontX</div>
+  <h2 class="section-title reveal">Not Just Another<br><em>Ads Agency</em></h2>
+  <div class="why-grid">
+    <div class="why-card reveal">
+      <div class="why-icon">01 · ALGO-FIRST</div>
+      <div class="why-title">We Work With the Algorithm, Not Against It</div>
+      <p class="why-desc">Most agencies fight Meta's AI with over-targeting. We feed the algorithm what it needs — clean data, strong creative, and proper pixel signals — and let it find your best buyers at scale.</p>
+    </div>
+    <div class="why-card reveal reveal-delay-1">
+      <div class="why-icon">02 · CREATIVE ENGINE</div>
+      <div class="why-title">Creative Is Treated as a Performance Asset</div>
+      <p class="why-desc">We don't outsource creative strategy. Every ad angle is built from conversion data, tested systematically, and iterated weekly. Your creative pipeline never goes stale.</p>
+    </div>
+    <div class="why-card reveal reveal-delay-2">
+      <div class="why-icon">03 · FULL FUNNEL</div>
+      <div class="why-title">We Optimise the Entire Revenue Journey</div>
+      <p class="why-desc">Clicks mean nothing without conversions. We work on the full funnel — from cold audience to retargeting to post-click landing page — so every rupee of ad spend has the best shot at returning revenue.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">04 · TRANSPARENT</div>
+      <div class="why-title">No Vanity Metrics. Only Revenue Numbers</div>
+      <p class="why-desc">We report on ROAS, CPL, revenue, and cost per acquisition. Not impressions. Not reach. You always know exactly what your ad spend is returning and why.</p>
+    </div>
+    <div class="why-card reveal reveal-delay-1">
+      <div class="why-icon">05 · DEDICATED</div>
+      <div class="why-title">A Dedicated Strategist, Not a Ticket System</div>
+      <p class="why-desc">You get a dedicated Meta Ads strategist who knows your account inside out. No rotating account managers, no generic playbooks — just someone who treats your budget like their own.</p>
+    </div>
+    <div class="why-card reveal reveal-delay-2">
+      <div class="why-icon">06 · SPEED</div>
+      <div class="why-title">We Move Fast. Markets Don't Wait</div>
+      <p class="why-desc">Campaign changes, creative swaps, bid adjustments — we operate with startup speed. When your data signals a shift, we act within hours, not the next billing cycle.</p>
+    </div>
   </div>
 </section>
 
@@ -554,15 +942,282 @@
   </div>
 </section>
 
+<!-- INSIGHTS -->
+<section class="insights">
+  <div class="insights-header reveal">
+    <div>
+      <div class="section-label">Free Knowledge</div>
+      <h2 class="section-title">Meta Ads<br><em>Insights</em></h2>
+    </div>
+    <a href="https://instagram.com/velmontx" target="_blank" class="insights-link">Follow on Instagram →</a>
+  </div>
+  <div class="insights-grid">
+    <a class="insight-card reveal" href="https://instagram.com/velmontx" target="_blank">
+      <div class="insight-thumb">
+        <div class="insight-thumb-bg"></div>
+        <div class="insight-thumb-text">
+          <div class="insight-thumb-hook">You're Retargeting <em>Everyone.</em><br>That's Why It's Not Working.</div>
+          <div class="insight-thumb-tag">· Retargeting ·</div>
+        </div>
+      </div>
+      <div class="insight-body">
+        <div class="insight-cat">Retargeting Strategy</div>
+        <div class="insight-title">Intent-Based Retargeting: The Fix That Doubled Our Clients' ROAS</div>
+        <p class="insight-desc">Segmenting website visitors by intent level — not just "all visitors" — is the single structural change that consistently 2–4× retargeting performance.</p>
+        <div class="insight-footer">
+          <span class="insight-read">Read More →</span>
+          <span class="insight-min">4 min read</span>
+        </div>
+      </div>
+    </a>
+    <a class="insight-card reveal reveal-delay-1" href="https://instagram.com/velmontx" target="_blank">
+      <div class="insight-thumb">
+        <div class="insight-thumb-bg" style="background:linear-gradient(135deg,#1a0f2e,#2d1b4e)"></div>
+        <div class="insight-thumb-text">
+          <div class="insight-thumb-hook">Broad Targeting Is <em>Beating</em><br>Detailed Targeting in 2025</div>
+          <div class="insight-thumb-tag">· Audience Strategy ·</div>
+        </div>
+      </div>
+      <div class="insight-body">
+        <div class="insight-cat">Audience Targeting</div>
+        <div class="insight-title">Why We Stopped Using Interest Stacking (And What We Do Instead)</div>
+        <p class="insight-desc">Meta's algorithm knows your customer better than any interest stack. Here's the data-backed case for going broad and letting the AI do the work.</p>
+        <div class="insight-footer">
+          <span class="insight-read">Read More →</span>
+          <span class="insight-min">5 min read</span>
+        </div>
+      </div>
+    </a>
+    <a class="insight-card reveal reveal-delay-2" href="https://instagram.com/velmontx" target="_blank">
+      <div class="insight-thumb">
+        <div class="insight-thumb-bg" style="background:linear-gradient(135deg,#0f1a10,#1a3a1c)"></div>
+        <div class="insight-thumb-text">
+          <div class="insight-thumb-hook">The Ad That Looks <em>Too Simple</em><br>Is Printing Money</div>
+          <div class="insight-thumb-tag">· Ad Creative ·</div>
+        </div>
+      </div>
+      <div class="insight-body">
+        <div class="insight-cat">Creative Strategy</div>
+        <div class="insight-title">Why Polished Creative Kills Performance (And What Actually Works)</div>
+        <p class="insight-desc">High production value is the enemy of Meta ad performance. The algorithm rewards content that looks native. Here's what our winning creative actually looks like.</p>
+        <div class="insight-footer">
+          <span class="insight-read">Read More →</span>
+          <span class="insight-min">6 min read</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="section-label reveal">Got Questions</div>
+  <h2 class="section-title reveal">Everything You<br><em>Need to Know</em></h2>
+  <div class="faq-grid">
+
+    <div class="faq-item reveal">
+      <div class="faq-q">
+        <span class="faq-q-text">Do you guarantee results?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>We don't guarantee specific ROAS numbers — any agency that does is lying to you. What we do guarantee is a rigorous, data-driven process, full transparency, and a team that treats your budget like it's their own. Our track record speaks: 98% client retention and an average 6.8× ROAS across accounts.</p></div>
+    </div>
+
+    <div class="faq-item reveal reveal-delay-1">
+      <div class="faq-q">
+        <span class="faq-q-text">How long before I see results?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>Meta's algorithm typically needs 2–4 weeks of data to exit the learning phase and optimise efficiently. Most clients see meaningful improvement in ROAS and CPL within the first 30–45 days. Full-scale compounding results typically emerge by month 2–3 as we build on winning creatives and audiences.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <div class="faq-q">
+        <span class="faq-q-text">What's the minimum budget I need?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>We work with brands spending as little as $10/day on ads. However, to give Meta's algorithm enough data to optimise properly, a budget of $500–$1,000/month is where you'll start seeing consistent, scalable results. We're transparent about this in our onboarding so you know exactly what to expect at your budget level.</p></div>
+    </div>
+
+    <div class="faq-item reveal reveal-delay-1">
+      <div class="faq-q">
+        <span class="faq-q-text">Do I need to have run Meta Ads before?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>Not at all. We work with both businesses starting from scratch and those with existing campaigns that aren't performing. If you're new, we handle full setup — pixel installation, CAPI, account structure, and creative strategy. If you're already running ads, we audit and rebuild what's broken.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <div class="faq-q">
+        <span class="faq-q-text">What does the retainer include?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>Every retainer includes campaign strategy and management, audience architecture, creative strategy and performance reviews, weekly reporting, pixel and tracking management, and a dedicated strategist. Creative production (actual ad design/video) is either handled by your team or can be added as a service.</p></div>
+    </div>
+
+    <div class="faq-item reveal reveal-delay-1">
+      <div class="faq-q">
+        <span class="faq-q-text">Do you work with international clients?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>Yes — we work with clients globally. Our retainers are priced in USD and we're experienced running campaigns targeting audiences in the US, UK, UAE, Australia, and across South and Southeast Asia. Timezone is rarely an issue; we operate async-first with clear weekly communication rhythms.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <div class="faq-q">
+        <span class="faq-q-text">How is VelmontX different from a freelancer?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>A freelancer is one person juggling many clients. VelmontX is a focused team with a dedicated strategist per account, structured creative review processes, and a system built for scale. You get the accountability and reliability of an agency with the personal attention of someone who knows your business deeply.</p></div>
+    </div>
+
+    <div class="faq-item reveal reveal-delay-1">
+      <div class="faq-q">
+        <span class="faq-q-text">Can I cancel anytime?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>We work on monthly retainers with a 30-day notice period. No long-term lock-ins. We believe that if we're doing our job — delivering real, measurable ROAS — you won't want to leave. Our 98% retention rate backs that up.</p></div>
+    </div>
+
+  </div>
+</section>
+
 <!-- CTA -->
 <section class="cta-section" id="contact">
-  <h2 class="cta-title reveal">Ready to <em>Scale</em><br>Your Brand?</h2>
-  <p class="cta-sub reveal">Get a free Meta Ads audit. We'll show you exactly where money is leaking and how to fix it — no strings attached.</p>
-  <div class="cta-form reveal">
-    <input type="email" placeholder="your@email.com">
-    <button>Get Free Audit</button>
+  <h2 class="cta-title reveal">Get Your Free<br><em>Meta Ads</em> Audit</h2>
+  <p class="cta-sub reveal">Tell us about your business. We'll analyse your Meta setup and show you exactly where budget is leaking — no pitch, no strings.</p>
+
+  <form class="audit-form reveal" id="auditForm" action="https://formspree.io/f/mwvwgaog" method="POST">
+
+    <!-- Row 1: Name + Email -->
+    <div class="form-row">
+      <div class="form-field">
+        <label>Full Name *</label>
+        <input type="text" name="name" placeholder="Rahul Mehta" required>
+      </div>
+      <div class="form-field">
+        <label>Business Email *</label>
+        <input type="email" name="email" placeholder="rahul@yourbrand.com" required>
+      </div>
+    </div>
+
+    <!-- Row 2: Phone + Website -->
+    <div class="form-row">
+      <div class="form-field">
+        <label>Phone / WhatsApp</label>
+        <input type="tel" name="phone" placeholder="+91 98765 43210">
+      </div>
+      <div class="form-field">
+        <label>Business Website</label>
+        <input type="url" name="website" placeholder="https://yourbrand.com">
+      </div>
+    </div>
+
+    <hr class="form-divider">
+
+    <!-- Row 3: Business Type + Industry -->
+    <div class="form-row">
+      <div class="form-field">
+        <label>Business Type *</label>
+        <select name="business_type" required>
+          <option value="" disabled selected>Select your model</option>
+          <option>eCommerce / D2C</option>
+          <option>Lead Generation</option>
+          <option>Local Business</option>
+          <option>SaaS / App</option>
+          <option>Real Estate</option>
+          <option>EdTech / Coaching</option>
+          <option>Healthcare / Clinic</option>
+          <option>Finance / Insurance</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Industry / Niche</label>
+        <input type="text" name="industry" placeholder="e.g. Fashion, Skincare, Real Estate">
+      </div>
+    </div>
+
+    <!-- Row 4: Monthly Ad Spend + Current ROAS -->
+    <div class="form-row">
+      <div class="form-field">
+        <label>Current Monthly Ad Budget *</label>
+        <select name="monthly_budget" required>
+          <option value="" disabled selected>Select budget range</option>
+          <option>Not running ads yet</option>
+          <option>$10 – $500</option>
+          <option>$500 – $1,000</option>
+          <option>$1,000 – $3,000</option>
+          <option>$3,000 – $10,000</option>
+          <option>$10,000 – $25,000</option>
+          <option>$25,000+</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Current ROAS (if running ads)</label>
+        <select name="current_roas">
+          <option value="" disabled selected>Select approximate ROAS</option>
+          <option>Not running ads yet</option>
+          <option>Below 1× (losing money)</option>
+          <option>1× – 2×</option>
+          <option>2× – 4×</option>
+          <option>4× – 7×</option>
+          <option>7×+</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Row 5: Primary Goal + Platforms -->
+    <div class="form-row">
+      <div class="form-field">
+        <label>Primary Goal *</label>
+        <select name="primary_goal" required>
+          <option value="" disabled selected>What do you want most?</option>
+          <option>More Sales / Revenue</option>
+          <option>More Leads</option>
+          <option>Lower Cost Per Lead</option>
+          <option>Improve ROAS</option>
+          <option>Scale Existing Campaigns</option>
+          <option>Build from Scratch</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Platforms Currently Using</label>
+        <select name="platforms">
+          <option value="" disabled selected>Select platform</option>
+          <option>Facebook & Instagram (Meta)</option>
+          <option>Google Ads</option>
+          <option>Both Meta + Google</option>
+          <option>Not running any ads</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+
+    <hr class="form-divider">
+
+    <!-- Full-width: Biggest challenge -->
+    <div class="form-field">
+      <label>Biggest Challenge Right Now</label>
+      <textarea name="challenge" placeholder="e.g. Our CPL is too high, creative keeps fatiguing, not sure why ROAS dropped last month..."></textarea>
+    </div>
+
+    <!-- Submit row -->
+    <div class="form-submit-row">
+      <p class="form-note">Free audit · No commitment<br>We respond within 24 hours</p>
+      <button type="submit" class="form-submit-btn" id="submitBtn">Request Free Audit →</button>
+    </div>
+
+  </form>
+
+  <!-- Success state (hidden by default) -->
+  <div class="form-success" id="formSuccess" style="display:none;">
+    <div class="form-success-icon">✓</div>
+    <h3>Audit Request Received</h3>
+    <p>We'll review your details and reach out within 24 hours with a full breakdown of your Meta Ads opportunity.</p>
   </div>
-  <p style="margin-top:16px;font-size:10px;color:rgba(255,255,255,0.25);font-family:'JetBrains Mono',monospace;letter-spacing:0.12em;" class="reveal">· RESULTS IN TWO WEEKS ·</p>
+
+  <p style="margin-top:20px;font-size:10px;color:rgba(255,255,255,0.15);font-family:'JetBrains Mono',monospace;letter-spacing:0.12em;" class="reveal">· RESULTS IN TWO WEEKS ·</p>
 </section>
 
 <!-- FOOTER -->
@@ -705,6 +1360,74 @@ async function loadCaseStudies() {
 }
 
 loadCaseStudies();
+
+/* ── MOBILE NAV ── */
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+function closeMobileMenu() {
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+}
+
+/* ── FAQ ACCORDION ── */
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    // Open clicked if it was closed
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+/* ── AUDIT FORM SUBMISSION ── */
+const auditForm = document.getElementById('auditForm');
+const formSuccess = document.getElementById('formSuccess');
+const submitBtn = document.getElementById('submitBtn');
+
+if (auditForm) {
+  auditForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+
+    const data = new FormData(auditForm);
+
+    try {
+      const res = await fetch(auditForm.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        auditForm.style.display = 'none';
+        formSuccess.style.display = 'block';
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Request Free Audit →';
+        alert('Something went wrong. Please try again or email us directly.');
+      }
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Request Free Audit →';
+      alert('Network error. Please check your connection and try again.');
+    }
+  });
+}
 </script>
+<!-- WHATSAPP FLOATING BUTTON -->
+<a class="wa-btn" href="https://wa.me/919876543210?text=Hi%20VelmontX%2C%20I%27d%20like%20a%20free%20Meta%20Ads%20audit." target="_blank" aria-label="Chat on WhatsApp">
+  <span class="wa-tooltip">Chat on WhatsApp</span>
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
 </body>
 </html>
