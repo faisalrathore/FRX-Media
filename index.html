@@ -59,6 +59,679 @@
     backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
   }
+  .logo img {
+    height: 35px;
+    width: auto;
+    transform: scale(4.5);
+    transform-origin: left center;
+  }
+  .nav-links { display: flex; gap: 44px; list-style: none; }
+  .nav-links a {
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--mid); text-decoration: none; transition: color 0.25s;
+  }
+  .nav-links a:hover { color: var(--red); }
+  .nav-cta {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500;
+    letter-spacing: 0.1em; color: #fff; background: var(--red);
+    padding: 11px 26px; text-decoration: none; transition: all 0.25s;
+    border: 1px solid var(--red);
+  }
+  .nav-cta:hover { background: var(--red2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(196,28,28,0.3); }
+
+  /* ───── HERO ───── */
+  .hero {
+    min-height: 38vh; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    background: var(--parchment);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 65% 55% at 50% -10%, rgba(196,28,28,0.09) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 35% at 92% 85%, rgba(196,28,28,0.05) 0%, transparent 55%),
+      radial-gradient(ellipse 30% 25% at 10% 70%, rgba(184,150,90,0.06) 0%, transparent 50%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(26,20,16,0.05) 1px, transparent 0px),
+      linear-gradient(90deg, rgba(26,20,16,0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(ellipse 85% 70% at 50% 50%, black 0%, transparent 55%);
+  }
+  .hero::after {
+    content: '';
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 1px; height: 120px;
+    background: linear-gradient(180deg, var(--red), transparent);
+    opacity: 0.5;
+  }
+  .hero-content {
+    position: relative; text-align: center;
+    max-width: 1000px; padding: 0 48px; z-index: 2;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 400;
+    letter-spacing: 0.35em; text-transform: uppercase; color: var(--red);
+    margin-bottom: 0px;
+    opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(22px, 10vw, 130px);
+    font-weight: 800; line-height: 0.88; letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--dark); margin-bottom: 12px;
+    opacity: 0; animation: fadeUp 0.9s 0.6s forwards;
+  }
+  .hero-title em { font-style: italic; font-weight: 700; color: var(--red); text-transform: none; }
+  .hero-title .stroke {
+    -webkit-text-stroke: 1.5px rgba(26,20,16,0.22);
+    color: transparent;
+  }
+  .hero-divider {
+    width: 48px; height: 1px; background: var(--red);
+    margin: 0 auto 18px;
+    opacity: 0; animation: fadeUp 0.8s 0.75s forwards;
+  }
+  .hero-sub {
+    font-size: 15px; font-weight: 300; color: var(--mid);
+    max-width: 520px; margin: 0 auto 52px; line-height: 1.85;
+    opacity: 0; animation: fadeUp 0.9s 0.85s forwards;
+  }
+  .hero-actions {
+    display: flex; gap: 16px; justify-content: center;
+    opacity: 0; animation: fadeUp 0.9s 1.0s forwards;
+  }
+  .btn-primary {
+    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--red); color: #fff;
+    padding: 17px 40px; text-decoration: none;
+    transition: all 0.3s; border: 1px solid var(--red);
+    position: relative; overflow: hidden;
+  }
+  .btn-primary::after {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(255,255,255,0.12);
+    transform: translateX(-101%);
+    transition: transform 0.35s;
+  }
+  .btn-primary:hover::after { transform: translateX(0); }
+  .btn-primary:hover { box-shadow: 0 6px 28px rgba(196,28,28,0.35); transform: translateY(-2px); }
+  .btn-ghost {
+    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--dark); border: 1px solid var(--border-strong);
+    padding: 17px 40px; text-decoration: none; transition: all 0.3s;
+  }
+  .btn-ghost:hover { border-color: var(--dark); }
+
+  /* ───── STATS ───── */
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    background: var(--dark);
+    position: relative;
+    overflow: hidden;
+  }
+  .stats-strip::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
+  }
+  .stat-item {
+    padding: 52px 44px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    position: relative; overflow: hidden;
+    cursor: default;
+  }
+  .stat-item::before {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+    transform: scaleX(0); transition: transform 0.6s;
+  }
+  .stat-item:hover::before { transform: scaleX(1); }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 64px; font-weight: 800;
+    color: #fff; line-height: 0.95; margin-bottom: 10px;
+    display: flex; align-items: baseline; gap: 2px;
+    text-transform: uppercase; letter-spacing: -0.01em;
+  }
+  .stat-num .counter { display: inline-block; }
+  .stat-num .suffix { color: var(--red3); font-size: 42px; }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  /* ───── SECTION BASE ───── */
+  section { padding: 120px 64px; }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--red);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 16px;
+  }
+  .section-label::before { content: ''; width: 28px; height: 1px; background: var(--red); }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(40px, 5.5vw, 68px);
+    font-weight: 800; line-height: 1.0; letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin-bottom: 20px; color: var(--dark);
+  }
+  .section-title em { font-style: italic; font-weight: 700; color: var(--red); text-transform: none; }
+
+  /* ───── SERVICES ───── */
+  .services { background: var(--cream2); }
+  .services-header { max-width: 580px; margin-bottom: 72px; }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .service-card {
+    background: var(--parchment);
+    padding: 48px 40px; position: relative; overflow: hidden;
+    border: 1px solid var(--border); transition: all 0.35s;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 0;
+    background: linear-gradient(180deg, var(--red), var(--gold));
+    transition: height 0.4s ease;
+  }
+  .service-card:hover::before { height: 100%; }
+  .service-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); border-color: rgba(196,28,28,0.15); }
+  .service-num { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--red); letter-spacing: 0.25em; margin-bottom: 20px; }
+  .service-name { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.01em; margin-bottom: 14px; color: var(--dark); line-height: 1.2; }
+  .service-desc { font-size: 13px; line-height: 1.85; color: var(--mid); font-weight: 300; }
+  .service-tag {
+    display: inline-block; margin-top: 24px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--red); border: 1px solid rgba(196,28,28,0.25); padding: 5px 12px;
+  }
+
+  /* ───── SHOWCASE ───── */
+  .showcase { background: var(--cream3); overflow: hidden; padding: 120px 0; }
+  .showcase-header { padding: 0 64px; max-width: 680px; margin-bottom: 64px; }
+  .showcase-sub { font-size: 15px; color: var(--mid); line-height: 1.85; margin-top: 18px; font-weight: 300; }
+  .scroll-track-wrapper { position: relative; margin-bottom: 18px; }
+  .scroll-track-wrapper::before, .scroll-track-wrapper::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 160px; z-index: 2; pointer-events: none;
+  }
+  .scroll-track-wrapper::before { left: 0; background: linear-gradient(90deg, var(--cream3), transparent); }
+  .scroll-track-wrapper::after  { right: 0; background: linear-gradient(-90deg, var(--cream3), transparent); }
+  .scroll-track { display: flex; gap: 18px; width: max-content; animation: scrollLeft 36s linear infinite; }
+  .scroll-track:hover { animation-play-state: paused; }
+  .scroll-track-rev { animation-direction: reverse; animation-duration: 42s; }
+  @keyframes scrollLeft { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+  .dashboard-card {
+    width: 480px; height: 300px; border-radius: 2px;
+    border: 1px solid var(--border); overflow: hidden;
+    flex-shrink: 0; background: var(--parchment);
+    transition: all 0.3s; cursor: pointer; box-shadow: var(--shadow);
+  }
+  .dashboard-card:hover { border-color: rgba(196,28,28,0.25); box-shadow: var(--shadow-lg); transform: translateY(-5px); }
+  .dp { width:100%; height:100%; display:flex; flex-direction:column; padding:20px; }
+  .dp-hdr { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .dp-logo { width:26px; height:26px; background:linear-gradient(135deg,#1877f2,#42a5f5); border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; font-family:'Inter',sans-serif; }
+  .dp-ttl { font-size:11px; font-weight:600; color:var(--dark); font-family:'Inter',sans-serif; letter-spacing:0.02em; }
+  .dp-dt { font-size:9px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-left:auto; }
+  .dp-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px; }
+  .dp-m { background:var(--cream); border:1px solid var(--border); border-radius:2px; padding:8px 10px; }
+  .dp-mv { font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:500; color:var(--dark); margin-bottom:2px; }
+  .dp-mv.g { color:#2a8a52; }
+  .dp-mv.b { color:var(--meta-blue); }
+  .dp-ml { font-size:8px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); font-family:'JetBrains Mono',monospace; }
+  .dp-chart { flex:1; background:var(--cream); border-radius:2px; overflow:hidden; }
+  .mini-bars { display:flex; align-items:flex-end; gap:3px; height:100%; padding:8px; }
+  .mini-bar { flex:1; border-radius:1px 1px 0 0; background:linear-gradient(180deg,var(--red),rgba(196,28,28,0.2)); }
+
+  /* Screenshot cards (from GitHub) */
+  .dashboard-card.screenshot img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+
+  /* ───── PROCESS ───── */
+  .process { background: var(--parchment); }
+  .process-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; margin-top:72px; }
+  .process-steps { display:flex; flex-direction:column; }
+  .process-step { display:flex; gap:28px; padding:30px 0; border-bottom:1px solid var(--border); transition: background 0.3s; }
+  .process-step:first-child { border-top:1px solid var(--border); }
+  .process-step:hover .step-num { color:var(--red); }
+  .step-num { font-family:'Barlow Condensed',sans-serif; font-size:48px; font-weight:800; letter-spacing:-0.02em; color:rgba(196,28,28,0.12); line-height:1; width:52px; flex-shrink:0; transition:color 0.3s; }
+  .step-title { font-family:'Inter',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.04em; margin-bottom:8px; color:var(--dark); text-transform:uppercase; }
+  .step-desc { font-size:13px; line-height:1.8; color:var(--mid); font-weight:300; }
+  .meta-phone { background:var(--cream); border:1px solid var(--border); border-radius:12px; padding:26px 22px; max-width:340px; margin:0 auto; position:relative; box-shadow:var(--shadow-lg); }
+  .roas-badge { position:absolute; top:-14px; right:-14px; background:var(--red); color:#fff; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500; padding:9px 14px; border-radius:2px; box-shadow:0 6px 24px rgba(196,28,28,0.35); }
+  .phone-bar { display:flex; align-items:center; gap:7px; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--border); }
+  .phone-dot { width:8px; height:8px; border-radius:50%; }
+  .phone-url { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted); margin-left:6px; }
+  .ad-img { height:110px; background:linear-gradient(135deg,#c41c1c 0%,#7a0f0f 60%); display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-size:16px; font-style:italic; color:rgba(255,255,255,0.38); border-radius:6px 6px 0 0; }
+  .ad-body { background:var(--parchment); padding:12px 14px; border-radius:0 0 6px 6px; border:1px solid var(--border); border-top:none; margin-bottom:10px; }
+  .ad-brand { font-size:8px; color:var(--muted); margin-bottom:4px; font-family:'JetBrains Mono',monospace; letter-spacing:0.1em; }
+  .ad-headline { font-size:13px; font-weight:600; color:var(--dark); font-family:'Inter',sans-serif; }
+  .ad-cta { display:inline-block; background:var(--meta-blue); color:#fff; font-size:10px; font-weight:700; padding:5px 14px; border-radius:3px; margin-top:8px; font-family:'Inter',sans-serif; }
+  .phone-stats { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+  .ps-box { border:1px solid var(--border); border-radius:4px; padding:10px 12px; background:var(--parchment); }
+  .ps-val { font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:500; margin-bottom:2px; }
+  .ps-val.r { color:var(--red); }
+  .ps-val.b { color:var(--meta-blue); }
+  .ps-lbl { font-size:8px; color:var(--muted); font-family:'JetBrains Mono',monospace; letter-spacing:0.12em; text-transform:uppercase; }
+
+  /* ───── TESTIMONIALS ───── */
+  .testimonials { background: var(--cream2); }
+  .testimonials-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:64px; }
+  .testimonial {
+    background:var(--parchment); padding:44px 36px; position:relative;
+    border:1px solid var(--border); box-shadow:var(--shadow);
+    transition: all 0.3s;
+  }
+  .testimonial::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--red),var(--gold),transparent); }
+  .testimonial:hover { box-shadow:var(--shadow-lg); transform:translateY(-3px); }
+  .quote-mark { font-family:'Barlow Condensed',sans-serif; font-size:64px; line-height:0.6; color:var(--red); opacity:0.18; margin-bottom:18px; }
+  .quote-text { font-family:'Inter',sans-serif; font-size:15px; font-style:italic; font-weight:400; line-height:1.75; color:var(--dark); margin-bottom:28px; }
+  .quote-author { font-size:12px; font-weight:700; letter-spacing:0.08em; color:var(--dark); margin-bottom:4px; text-transform:uppercase; }
+  .quote-company { font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; letter-spacing:0.1em; }
+  .quote-metric { position:absolute; top:36px; right:36px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--red); text-align:right; }
+  .quote-metric strong { display:block; font-size:20px; font-weight:500; margin-bottom:2px; }
+
+  /* ───── CTA ───── */
+  .cta-section {
+    background: var(--dark);
+    position:relative; overflow:hidden; text-align:center; padding:140px 64px;
+  }
+  .cta-section::before {
+    content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:800px; height:400px;
+    background:radial-gradient(ellipse, rgba(196,28,28,0.14) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .cta-section::after {
+    content:''; position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg,transparent,var(--red),var(--gold),var(--red),transparent);
+  }
+  .cta-title { font-family:'Barlow Condensed',sans-serif; font-size:clamp(52px,8vw,100px); font-weight:800; text-transform:uppercase; line-height:0.92; margin-bottom:24px; color:#fff; letter-spacing:-0.01em; }
+  .cta-title em { font-style:italic; font-weight:700; color:var(--red3); text-transform:none; }
+  .cta-sub { font-size:15px; color:rgba(255,255,255,0.45); max-width:460px; margin:0 auto 48px; line-height:1.85; font-weight:300; }
+  .cta-form { display:flex; max-width:480px; margin:0 auto; }
+  .cta-form input { flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-right:none; outline:none; padding:16px 22px; color:#fff; font-family:'Inter',sans-serif; font-size:13px; }
+  .cta-form input::placeholder { color:rgba(255,255,255,0.28); }
+  .cta-form button { background:var(--red); border:none; padding:16px 28px; color:#fff; font-family:'Inter',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; cursor:pointer; transition:background 0.3s; white-space:nowrap; }
+  .cta-form button:hover { background:var(--red2); }
+
+  /* ───── FOOTER ───── */
+  footer { border-top:1px solid var(--border); padding:48px 64px; display:flex; align-items:center; justify-content:space-between; background:var(--cream); }
+  .footer-logo img { height:26px; width:auto; }
+  .footer-links { display:flex; gap:32px; }
+  .footer-links a { font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.25s; font-family:'JetBrains Mono',monospace; }
+  .footer-links a:hover { color:var(--red); }
+  .footer-copy { font-size:10px; color:rgba(26,20,16,0.3); font-family:'JetBrains Mono',monospace; }
+
+  /* ───── ANIMATIONS ───── */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+  .reveal { opacity:1; transform:translateY(0); transition:opacity 0.75s ease,transform 0.75s ease; }
+  .reveal.hidden { opacity:0; transform:translateY(30px); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  @keyframes countUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .stat-num.animate { animation: countUp 0.5s ease forwards; }
+
+  @media(max-width:1024px){
+    nav{padding:18px 28px;} .nav-links{display:none;}
+    section{padding:80px 28px;}
+    .stats-strip{grid-template-columns:repeat(2,1fr);}
+    .services-grid{grid-template-columns:1fr 1fr;}
+    .process-grid{grid-template-columns:1fr;gap:48px;}
+    .testimonials-grid{grid-template-columns:1fr;}
+    .cta-section{padding:100px 28px;}
+    footer{flex-direction:column;gap:24px;text-align:center;padding:40px 28px;}
+    .footer-links{flex-wrap:wrap;justify-content:center;}
+    .showcase-header{padding:0 28px;}
+  }
+  @media(max-width:640px){
+    .services-grid{grid-template-columns:1fr;}
+    .hero-actions{flex-direction:column;align-items:center;}
+    .dashboard-card{width:320px;height:220px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo"><img src="logotransparent.png" alt="VelmontX"></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Free Audit →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Performance Marketing</p>
+    <h1 class="hero-title">The Engine<br>Behind <em>Brand</em><br><span class="stroke">Growth</span></h1>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">Precision-engineered Meta advertising campaigns that transform your ad spend into predictable, compounding revenue growth.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Scale My Brand →</a>
+      <a href="#results" class="btn-ghost">See Our Results</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS — animated counters -->
+<div class="stats-strip" id="statsStrip">
+  <div class="stat-item">
+    <div class="stat-num"><span class="counter" data-target="42" data-prefix="₹" data-suffix=" Cr+">₹0</span></div>
+    <div class="stat-label">Ad Spend Managed</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num"><span class="counter" data-target="6.8" data-suffix="×" data-decimal="1">0</span></div>
+    <div class="stat-label">Average ROAS</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num"><span class="counter" data-target="120" data-suffix="+">0</span></div>
+    <div class="stat-label">Brands Scaled</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num"><span class="counter" data-target="98" data-suffix="%">0</span></div>
+    <div class="stat-label">Client Retention</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-header reveal">
+    <div class="section-label">Our Expertise</div>
+    <h2 class="section-title">Meta Ads That<br><em>Actually Convert</em></h2>
+    <p style="color:var(--mid);font-size:15px;line-height:1.85;max-width:460px;margin-top:16px;font-weight:300;">Every campaign is engineered from first principles — audience architecture, creative strategy, and relentless optimisation in perfect synchrony.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal"><div class="service-num">01 / Meta Ads</div><div class="service-name">Facebook & Instagram Performance Campaigns</div><p class="service-desc">Full-funnel campaigns built on deep audience research. From cold prospecting to high-converting retargeting — engineered for scale, not just clicks.</p><span class="service-tag">Lead Gen · eCommerce · D2C</span></div>
+    <div class="service-card reveal reveal-delay-1"><div class="service-num">02 / Creative</div><div class="service-name">Creative Strategy & Ad Production</div><p class="service-desc">Data-backed creative frameworks. We identify winning angles, build scroll-stopping ads, and iterate fast to keep ROAS compounding month over month.</p><span class="service-tag">UGC · Motion · Static</span></div>
+    <div class="service-card reveal reveal-delay-2"><div class="service-num">03 / Funnel</div><div class="service-name">Conversion Funnel Architecture</div><p class="service-desc">Landing pages and post-click experiences optimised in tandem with your ads. Because traffic without conversion is just burning money.</p><span class="service-tag">CRO · LPs · A/B Testing</span></div>
+    <div class="service-card reveal"><div class="service-num">04 / Analytics</div><div class="service-name">Attribution & Revenue Analytics</div><p class="service-desc">Crystal-clear reporting on what's working. Custom dashboards, pixel mastery, and first-party data strategies that cut through Meta's attribution noise.</p><span class="service-tag">GA4 · Pixel · CAPI</span></div>
+    <div class="service-card reveal reveal-delay-1"><div class="service-num">05 / Scale</div><div class="service-name">Budget Scaling & Bid Strategy</div><p class="service-desc">Scaling ad spend without killing efficiency is an art. We've perfected the playbook across ₹1L to ₹1Cr+ monthly budgets with consistent ROAS.</p><span class="service-tag">CBO · ABO · ASC+</span></div>
+    <div class="service-card reveal reveal-delay-2"><div class="service-num">06 / Retention</div><div class="service-name">Retargeting & Customer LTV</div><p class="service-desc">Your pixel is a goldmine. We deploy sophisticated retargeting sequences that bring prospects back and maximise lifetime value at scale.</p><span class="service-tag">Dynamic · Sequential · LTV</span></div>
+  </div>
+</section>
+
+<!-- SHOWCASE -->
+<section class="showcase" id="results">
+  <div class="showcase-header reveal">
+    <div class="section-label">Proof of Performance</div>
+    <h2 class="section-title">Real Dashboards.<br><em>Real Results.</em></h2>
+    <p class="showcase-sub">Every number below is from an active client account. No mockups — just verifiable Meta Ads Manager results from brands we've scaled.</p>
+  </div>
+
+  <div class="scroll-track-wrapper" style="margin-bottom:18px;">
+    <div class="scroll-track" id="track1">
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹12.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹1.47L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c1"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Instagram — Real Estate</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv">₹48L</div><div class="dp-ml">Lead Value</div></div><div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹1,412</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c2"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹28.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c3"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Lead Gen — EdTech</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">₹410</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv">1,840</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹7.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">22%</div><div class="dp-ml">Close Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c4"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Ads — Home Décor</div><div class="dp-dt">Mar 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">6.7×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹18.8L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.8L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.8%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c5"></div></div></div></div>
+      <!-- duplicates for seamless loop -->
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹12.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹1.47L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c1b"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Instagram — Real Estate</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv">₹48L</div><div class="dp-ml">Lead Value</div></div><div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹1,412</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c2b"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹28.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c3b"></div></div></div></div>
+    </div>
+  </div>
+
+  <div class="scroll-track-wrapper">
+    <div class="scroll-track scroll-track-rev" id="track2">
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹35.6L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.9L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c6"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹57L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.98L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c7"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Leads — B2B SaaS</div><div class="dp-dt">Mar 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">₹280</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv">2,400</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹6.7L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">31%</div><div class="dp-ml">SQL Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c8"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">DPA — Furniture</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">7.8×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹22L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.8L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.6%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c9"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">CBO Scale — Health</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">5.9×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹14.8L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.9%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c10"></div></div></div></div>
+      <!-- duplicates for seamless loop -->
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹35.6L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.9L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c6b"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹57L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.98L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c7b"></div></div></div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="section-label reveal">Our Method</div>
+  <h2 class="section-title reveal">The VelmontX<br><em>Scaling System</em></h2>
+  <div class="process-grid">
+    <div class="process-steps">
+      <div class="process-step reveal"><div class="step-num">01</div><div class="step-content"><div class="step-title">Deep Audit & Opportunity Mapping</div><p class="step-desc">We dissect your existing Meta account, competitors, and market — identifying the exact levers that will move the needle for your brand.</p></div></div>
+      <div class="process-step reveal"><div class="step-num">02</div><div class="step-content"><div class="step-title">Audience Architecture & Creative Brief</div><p class="step-desc">Layered audience strategy built on first-party data, interest stacks, and lookalikes — paired with a creative brief that converts at every funnel stage.</p></div></div>
+      <div class="process-step reveal"><div class="step-num">03</div><div class="step-content"><div class="step-title">Launch & Rapid Iteration</div><p class="step-desc">We launch lean, test systematically, and double down on winners — killing losers fast so your budget always flows to what works.</p></div></div>
+      <div class="process-step reveal"><div class="step-num">04</div><div class="step-content"><div class="step-title">Scale & Revenue Compounding</div><p class="step-desc">Profitable scaling through budget management, campaign structure evolution, and continuous creative refresh to beat ad fatigue at every level.</p></div></div>
+    </div>
+    <div class="process-visual reveal">
+      <div class="meta-phone" style="position:relative;">
+        <div class="roas-badge">ROAS 11.2×</div>
+        <div class="phone-bar">
+          <div class="phone-dot" style="background:#ff5f57"></div>
+          <div class="phone-dot" style="background:#ffbd2e"></div>
+          <div class="phone-dot" style="background:#28c840"></div>
+          <div class="phone-url">ads.meta.com › manager</div>
+        </div>
+        <div style="border-radius:6px;overflow:hidden;margin-bottom:10px;">
+          <div class="ad-img">Brand Creative</div>
+          <div class="ad-body">
+            <div class="ad-brand">SPONSORED · VELMONTX CLIENT</div>
+            <div class="ad-headline">Transform Your Brand With Meta Ads</div>
+            <p style="font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;">Scale with data-driven advertising that delivers real results.</p>
+            <div class="ad-cta">Shop Now</div>
+          </div>
+        </div>
+        <div class="phone-stats">
+          <div class="ps-box"><div class="ps-val r">₹28.4L</div><div class="ps-lbl">Revenue</div></div>
+          <div class="ps-box"><div class="ps-val b">2.1%</div><div class="ps-lbl">CTR</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="section-label reveal">Client Stories</div>
+  <h2 class="section-title reveal">What Our Clients<br><em>Are Saying</em></h2>
+  <div class="testimonials-grid reveal">
+    <div class="testimonial"><div class="quote-metric"><strong>8.4×</strong>ROAS</div><div class="quote-mark">"</div><p class="quote-text">VelmontX took our Meta Ads from a money pit to our highest-performing revenue channel. In 90 days, 2× to 8.4× ROAS.</p><div class="quote-author">Priya Sharma</div><div class="quote-company">CEO · D2C Fashion Brand</div></div>
+    <div class="testimonial"><div class="quote-metric"><strong>340</strong>Leads/Mo</div><div class="quote-mark">"</div><p class="quote-text">We were spending ₹5L/month with terrible results. After 60 days with VelmontX, same budget, 340 qualified leads. ROI speaks for itself.</p><div class="quote-author">Rahul Mehta</div><div class="quote-company">Director · Real Estate Co.</div></div>
+    <div class="testimonial"><div class="quote-metric"><strong>11.2×</strong>ROAS</div><div class="quote-mark">"</div><p class="quote-text">The team genuinely understands the Meta algorithm at a deep level. Scaled us from ₹50K to ₹3L/month in spend while improving ROAS every week.</p><div class="quote-author">Ananya Krishnan</div><div class="quote-company">Founder · Skincare Brand</div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <h2 class="cta-title reveal">Ready to <em>Scale</em><br>Your Brand?</h2>
+  <p class="cta-sub reveal">Get a free Meta Ads audit. We'll show you exactly where money is leaking and how to fix it — no strings attached.</p>
+  <div class="cta-form reveal">
+    <input type="email" placeholder="your@email.com">
+    <button>Get Free Audit</button>
+  </div>
+  <p style="margin-top:16px;font-size:10px;color:rgba(255,255,255,0.25);font-family:'JetBrains Mono',monospace;letter-spacing:0.12em;" class="reveal">· RESULTS IN TWO WEEKS ·</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><img src="logotransparent.png" alt="VelmontX"></div>
+  <div class="footer-links">
+    <a href="#services">Services</a>
+    <a href="#results">Results</a>
+    <a href="#process">Process</a>
+    <a href="mailto:hello@velmontx.com">hello@velmontx.com</a>
+  </div>
+  <div class="footer-copy">© 2026 VelmontX</div>
+</footer>
+
+<script>
+/* ── SCROLL REVEAL ── */
+document.querySelectorAll('.reveal').forEach(r => r.classList.add('hidden'));
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) setTimeout(() => e.target.classList.remove('hidden'), 80); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(r => revObs.observe(r));
+
+/* ── ANIMATED COUNTERS ── */
+function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+
+function animateCounter(el) {
+  const target = parseFloat(el.dataset.target);
+  const prefix = el.dataset.prefix || '';
+  const suffix = el.dataset.suffix || '';
+  const decimals = el.dataset.decimal ? parseInt(el.dataset.decimal) : 0;
+  const duration = 2000;
+  const startTime = performance.now();
+
+  function update(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = easeOutQuart(progress);
+    const current = target * eased;
+    el.textContent = prefix + (decimals > 0 ? current.toFixed(decimals) : Math.round(current)) + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+    else el.textContent = prefix + (decimals > 0 ? target.toFixed(decimals) : target) + suffix;
+  }
+  requestAnimationFrame(update);
+}
+
+let countersTriggered = false;
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !countersTriggered) {
+      countersTriggered = true;
+      document.querySelectorAll('.counter').forEach((el, i) => {
+        setTimeout(() => animateCounter(el), i * 150);
+      });
+    }
+  });
+}, { threshold: 0.3 });
+const strip = document.getElementById('statsStrip');
+if (strip) statsObs.observe(strip);
+
+/* ── MINI BAR CHARTS ── */
+function drawBars(id, heights) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = '';
+  heights.forEach(h => {
+    const b = document.createElement('div');
+    b.className = 'mini-bar';
+    b.style.height = h + '%';
+    el.appendChild(b);
+  });
+}
+const chartData = {
+  c1:[30,45,38,60,55,72,68,80,75,88,82,95], c1b:[30,45,38,60,55,72,68,80,75,88,82,95],
+  c2:[20,35,42,38,55,60,58,70,65,75,80,85], c2b:[20,35,42,38,55,60,58,70,65,75,80,85],
+  c3:[40,55,60,70,65,80,75,85,90,88,92,98], c3b:[40,55,60,70,65,80,75,85,90,88,92,98],
+  c4:[25,30,35,40,38,50,55,60,65,70,68,80], c5:[35,40,45,42,55,60,58,65,70,72,75,82],
+  c6:[30,40,50,55,60,65,70,75,80,85,88,92], c6b:[30,40,50,55,60,65,70,75,80,85,88,92],
+  c7:[20,30,40,50,60,70,75,80,85,88,90,95], c7b:[20,30,40,50,60,70,75,80,85,88,90,95],
+  c8:[40,45,50,55,60,65,70,72,75,78,82,88], c9:[25,35,40,45,50,55,60,65,68,72,76,82],
+  c10:[30,38,42,48,52,58,62,68,70,74,78,84]
+};
+Object.entries(chartData).forEach(([id, h]) => drawBars(id, h));
+
+/* ── GITHUB CASE STUDY LOADER ──
+   Drop real Meta dashboard screenshots into the /case-studies/ folder
+   in your GitHub repo. They will automatically appear in the marquee
+   on every page load — no frontend upload needed.
+
+   HOW TO USE:
+   1. Replace GITHUB_USERNAME and REPO_NAME below with your actual values
+   2. Create a folder called "case-studies" in the root of your repo
+   3. Push any .png / .jpg / .webp screenshots into that folder
+   4. They will auto-populate in both scroll tracks on refresh
+
+   Screenshots are injected BEFORE the placeholder cards so real
+   results always appear first in the marquee.
+*/
+const GITHUB_USERNAME = 'faisalrathore';
+const REPO_NAME = 'Velmontx';
+const CASE_STUDIES_FOLDER = 'case-studies';
+
+async function loadCaseStudies() {
+  try {
+    const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${CASE_STUDIES_FOLDER}`;
+    const res = await fetch(url);
+    if (!res.ok) return; // folder doesn't exist yet — silently do nothing
+
+    const files = await res.json();
+    const images = files.filter(f => /\.(png|jpg|jpeg|webp)$/i.test(f.name));
+    if (!images.length) return;
+
+    const track1 = document.getElementById('track1');
+    const track2 = document.getElementById('track2');
+
+    images.forEach((file, idx) => {
+      // Build screenshot card
+      const card = document.createElement('div');
+      card.className = 'dashboard-card screenshot';
+      const img = document.createElement('img');
+      img.src = file.download_url;
+      img.alt = file.name.replace(/[-_]/g, ' ').replace(/\.[^.]+$/, '');
+      img.loading = 'lazy';
+      card.appendChild(img);
+
+      // Also build a duplicate for the seamless loop
+      const cardDupe = card.cloneNode(true);
+
+      // Alternate between the two tracks
+      const target = idx % 2 === 0 ? track1 : track2;
+
+      // Insert before the first child so real screenshots lead the marquee
+      target.insertBefore(card, target.firstChild);
+      target.appendChild(cardDupe); // duplicate at end keeps the loop seamless
+    });
+
+  } catch (err) {
+    // Fail silently — placeholder cards remain visible
+    console.warn('VelmontX: Could not load case studies from GitHub.', err);
+  }
+}
+
+loadCaseStudies();
+</script>
+</body>
+</html>    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  /* ───── NAV ───── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 18px 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(245,240,232,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
    .logo img {
   height: 35px;
   width: auto;
