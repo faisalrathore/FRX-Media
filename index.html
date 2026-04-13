@@ -181,6 +181,27 @@
   }
   .btn-ghost:hover { border-color: var(--dark); }
 
+  /* Hero inline trust bar */
+  .hero-trust {
+    display: flex; align-items: center; gap: 28px;
+    justify-content: center; margin-top: 44px;
+    opacity: 0; animation: fadeUp 0.9s 1.15s forwards;
+  }
+  .hero-trust-item { display: flex; flex-direction: column; gap: 4px; }
+  .hero-trust-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 800; color: var(--dark);
+    letter-spacing: -0.01em; line-height: 1;
+  }
+  .hero-trust-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+  }
+  .hero-trust-divider {
+    width: 1px; height: 32px; background: var(--border-strong);
+    flex-shrink: 0;
+  }
+
   /* ───── STATS ───── */
   .stats-strip {
     display: grid; grid-template-columns: repeat(4, 1fr);
@@ -498,54 +519,305 @@
     padding-bottom: 2px; transition: border-color 0.25s;
   }
   .insights-link:hover { border-color: var(--red); }
-  .insights-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-  .insight-card {
-    background: var(--cream); border: 1px solid var(--border);
-    overflow: hidden; transition: all 0.3s; cursor: pointer;
-    text-decoration: none; color: inherit; display: block;
+
+  /* Blog accordion list */
+  .blog-list { display: flex; flex-direction: column; gap: 0; }
+
+  .blog-item {
+    border: 1px solid var(--border);
+    border-bottom: none;
+    background: var(--cream);
+    overflow: hidden;
+    transition: border-color 0.3s;
   }
-  .insight-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); border-color: rgba(196,28,28,0.2); }
-  .insight-thumb {
-    height: 180px; position: relative; overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
+  .blog-item:last-child { border-bottom: 1px solid var(--border); }
+  .blog-item.is-open { border-color: rgba(196,28,28,0.28); z-index: 1; position: relative; }
+  .blog-item.is-open + .blog-item { border-top-color: rgba(196,28,28,0.28); }
+
+  .blog-trigger {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 24px;
+    padding: 32px 36px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
   }
-  .insight-thumb-bg {
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, var(--dark) 0%, #2c1a10 100%);
-  }
-  .insight-thumb-text {
-    position: relative; z-index: 1; text-align: center; padding: 20px;
-  }
-  .insight-thumb-hook {
-    font-family: 'Barlow Condensed', sans-serif; font-size: 22px;
-    font-weight: 800; text-transform: uppercase; color: #fff;
-    line-height: 1.1; margin-bottom: 8px;
-  }
-  .insight-thumb-hook em { color: var(--red3); font-style: italic; }
-  .insight-thumb-tag {
-    font-family: 'JetBrains Mono', monospace; font-size: 8px;
-    letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase;
-  }
-  .insight-body { padding: 24px 26px 28px; }
-  .insight-cat {
+  .blog-trigger:hover { background: var(--cream2); }
+  .blog-item.is-open .blog-trigger { background: var(--cream2); }
+
+  .blog-trigger-left { display: flex; flex-direction: column; gap: 8px; }
+  .blog-meta { display: flex; align-items: center; gap: 16px; }
+  .blog-cat {
     font-family: 'JetBrains Mono', monospace; font-size: 9px;
-    letter-spacing: 0.2em; text-transform: uppercase; color: var(--red);
-    margin-bottom: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--red);
   }
-  .insight-title {
-    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700;
-    color: var(--dark); line-height: 1.4; margin-bottom: 10px;
+  .blog-readtime {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.12em; color: var(--muted);
   }
-  .insight-desc { font-size: 13px; color: var(--mid); line-height: 1.75; font-weight: 300; }
-  .insight-footer {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border);
+  .blog-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-strong); flex-shrink: 0; }
+
+  .blog-headline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(20px, 2.8vw, 28px);
+    font-weight: 800; text-transform: uppercase;
+    color: var(--dark); line-height: 1.1;
+    letter-spacing: 0.01em;
+    transition: color 0.25s;
   }
-  .insight-read {
-    font-size: 11px; font-weight: 600; color: var(--red);
-    letter-spacing: 0.08em; text-transform: uppercase;
+  .blog-item.is-open .blog-headline { color: var(--red); }
+
+  .blog-deck {
+    font-size: 13px; color: var(--mid); line-height: 1.75; font-weight: 300;
+    max-width: 680px;
   }
-  .insight-min { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); }
+
+  .blog-toggle {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.35s;
+    color: var(--mid);
+  }
+  .blog-toggle svg { transition: transform 0.35s; }
+  .blog-item.is-open .blog-toggle {
+    background: var(--red); border-color: var(--red); color: #fff;
+  }
+  .blog-item.is-open .blog-toggle svg { transform: rotate(45deg); }
+
+  /* Expandable content */
+  .blog-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .blog-item.is-open .blog-body { max-height: 2400px; }
+
+  .blog-content {
+    padding: 0 36px 48px;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 56px;
+    align-items: start;
+  }
+
+  .blog-text h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px; font-weight: 700; text-transform: uppercase;
+    color: var(--dark); margin: 32px 0 12px; letter-spacing: 0.02em;
+  }
+  .blog-text h3:first-child { margin-top: 32px; }
+  .blog-text p {
+    font-size: 14px; line-height: 1.9; color: var(--mid);
+    font-weight: 300; margin-bottom: 16px;
+  }
+  .blog-text strong { font-weight: 600; color: var(--dark); }
+  .blog-text ul {
+    list-style: none; margin: 0 0 16px; padding: 0;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .blog-text ul li {
+    font-size: 13px; line-height: 1.75; color: var(--mid);
+    font-weight: 300; padding-left: 20px; position: relative;
+  }
+  .blog-text ul li::before {
+    content: '→'; position: absolute; left: 0;
+    color: var(--red); font-size: 11px; top: 2px;
+  }
+
+  .blog-sidebar { padding-top: 32px; }
+  .blog-sidebar-box {
+    background: var(--cream2); border: 1px solid var(--border);
+    padding: 24px 26px; margin-bottom: 16px;
+  }
+  .blog-sidebar-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--red);
+    margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+  }
+  .blog-sidebar-label::before { content: ''; width: 16px; height: 1px; background: var(--red); }
+  .blog-sidebar-stat {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 42px; font-weight: 800; color: var(--dark);
+    line-height: 1; margin-bottom: 6px;
+  }
+  .blog-sidebar-stat em { color: var(--red); font-style: normal; }
+  .blog-sidebar-note { font-size: 12px; color: var(--mid); line-height: 1.65; font-weight: 300; }
+
+  .blog-ig-cta {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px;
+    background: var(--dark); color: #fff;
+    text-decoration: none; transition: background 0.25s;
+    margin-top: 8px;
+  }
+  .blog-ig-cta:hover { background: var(--red); }
+  .blog-ig-cta span {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.15em; text-transform: uppercase; flex: 1;
+  }
+  .blog-ig-cta svg { width: 16px; height: 16px; fill: currentColor; opacity: 0.7; }
+
+  @media (max-width: 860px) {
+    .blog-content { grid-template-columns: 1fr; gap: 32px; }
+    .blog-sidebar { padding-top: 0; }
+    .blog-trigger { padding: 24px 22px; }
+    .blog-content { padding: 0 22px 36px; }
+  }
+
+  /* ───── FOUNDER ───── */
+  .founder-section {
+    background: var(--dark); padding: 120px 64px; position: relative; overflow: hidden;
+  }
+  .founder-section::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
+  }
+  .founder-section::after {
+    content: ''; position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(ellipse, rgba(196,28,28,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .founder-grid {
+    display: grid; grid-template-columns: 340px 1fr;
+    gap: 80px; align-items: start; position: relative; z-index: 1;
+  }
+  .founder-left { position: relative; }
+  .founder-photo-wrap {
+    position: relative; margin-bottom: 28px;
+  }
+  .founder-photo {
+    width: 100%; aspect-ratio: 3/4;
+    background: linear-gradient(160deg, #2a1a10 0%, #1a0f0a 100%);
+    border: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+  .founder-photo img {
+    width: 100%; height: 100%; object-fit: cover; object-position: top center;
+    display: block;
+  }
+  .founder-photo-placeholder {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    opacity: 0.25;
+  }
+  .founder-photo-placeholder svg { width: 56px; height: 56px; fill: #fff; }
+  .founder-photo-placeholder span {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: #fff;
+  }
+  .founder-photo-corner {
+    position: absolute; bottom: -1px; right: -1px;
+    width: 48px; height: 48px;
+    background: var(--red);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+  .founder-credentials {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .founder-cred-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .founder-cred-icon {
+    width: 28px; height: 28px; border-radius: 4px;
+    background: rgba(196,28,28,0.15);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .founder-cred-icon svg { width: 14px; height: 14px; fill: var(--red3); }
+  .founder-cred-text {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45); line-height: 1.5;
+  }
+  .founder-cred-text strong { color: rgba(255,255,255,0.75); display: block; margin-bottom: 1px; }
+
+  .founder-right { padding-top: 8px; }
+  .founder-section .section-label { color: var(--gold); }
+  .founder-section .section-label::before { background: var(--gold); }
+  .founder-section .section-title { color: #fff; margin-bottom: 8px; }
+  .founder-section .section-title em { color: var(--red3); }
+  .founder-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(36px, 5vw, 60px); font-weight: 800;
+    text-transform: uppercase; color: #fff; line-height: 1;
+    margin-bottom: 6px; letter-spacing: -0.01em;
+  }
+  .founder-role {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--red3); margin-bottom: 36px;
+  }
+  .founder-bio {
+    font-size: 15px; line-height: 1.9; color: rgba(255,255,255,0.55);
+    font-weight: 300; margin-bottom: 20px; max-width: 560px;
+  }
+  .founder-bio strong { color: rgba(255,255,255,0.85); font-weight: 500; }
+  .founder-quote {
+    border-left: 2px solid var(--red);
+    padding: 18px 24px; margin: 32px 0;
+    background: rgba(196,28,28,0.05);
+  }
+  .founder-quote p {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-style: italic; font-weight: 600;
+    color: rgba(255,255,255,0.7); line-height: 1.4;
+  }
+  .founder-quote p em { color: var(--red3); font-style: normal; }
+  .founder-metrics {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin-top: 36px;
+  }
+  .founder-metric {
+    padding: 22px 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.3s;
+  }
+  .founder-metric:hover { border-color: rgba(196,28,28,0.3); }
+  .founder-metric-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px; font-weight: 800; color: #fff; line-height: 1;
+    margin-bottom: 5px;
+  }
+  .founder-metric-val em { color: var(--red3); font-style: normal; }
+  .founder-metric-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.28);
+  }
+  .founder-social {
+    display: flex; gap: 12px; margin-top: 28px;
+  }
+  .founder-social-link {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 18px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-decoration: none; color: rgba(255,255,255,0.5);
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    transition: all 0.25s;
+  }
+  .founder-social-link svg { width: 14px; height: 14px; fill: currentColor; }
+  .founder-social-link:hover { background: var(--red); border-color: var(--red); color: #fff; }
+
+  @media (max-width: 900px) {
+    .founder-grid { grid-template-columns: 1fr; gap: 48px; }
+    .founder-photo { aspect-ratio: 4/3; }
+    .founder-metrics { grid-template-columns: repeat(3,1fr); }
+  }
+  @media (max-width: 560px) {
+    .founder-metrics { grid-template-columns: 1fr 1fr; }
+    .founder-section { padding: 80px 24px; }
+  }
 
   /* ───── FAQ ───── */
   .faq-section { background: var(--cream2); }
@@ -709,13 +981,29 @@
 <section class="hero">
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow">Performance Marketing</p>
-    <h1 class="hero-title">The Engine<br>Behind <em>Brand</em><br><span class="stroke">Growth</span></h1>
+    <p class="hero-eyebrow">Meta Ads Agency · India</p>
+    <h1 class="hero-title">We Turn<br>Ad Spend Into<br><em>Revenue.</em></h1>
     <div class="hero-divider"></div>
-    <p class="hero-sub">Precision-engineered Meta advertising campaigns that transform your ad spend into predictable, compounding revenue growth.</p>
+    <p class="hero-sub">Average 6.8× ROAS across 120+ brands. If your Meta Ads aren't compounding — your structure is broken. We fix it.</p>
     <div class="hero-actions">
-      <a href="#contact" class="btn-primary">Scale My Brand →</a>
-      <a href="#results" class="btn-ghost">See Our Results</a>
+      <a href="#contact" class="btn-primary">Get a Free Audit →</a>
+      <a href="#results" class="btn-ghost">See Proof First</a>
+    </div>
+    <div class="hero-trust">
+      <div class="hero-trust-item">
+        <span class="hero-trust-val">₹42 Cr+</span>
+        <span class="hero-trust-label">Ad Spend Managed</span>
+      </div>
+      <div class="hero-trust-divider"></div>
+      <div class="hero-trust-item">
+        <span class="hero-trust-val">6.8×</span>
+        <span class="hero-trust-label">Avg. ROAS</span>
+      </div>
+      <div class="hero-trust-divider"></div>
+      <div class="hero-trust-item">
+        <span class="hero-trust-val">98%</span>
+        <span class="hero-trust-label">Client Retention</span>
+      </div>
     </div>
   </div>
 </section>
@@ -739,6 +1027,43 @@
     <div class="stat-label">Client Retention</div>
   </div>
 </div>
+
+<!-- SHOWCASE — proof before pitch -->
+<section class="showcase" id="results">
+  <div class="showcase-header reveal">
+    <div class="section-label">Proof of Performance</div>
+    <h2 class="section-title">Real Dashboards.<br><em>Real Results.</em></h2>
+    <p class="showcase-sub">Every number below is from an active client account. No mockups — just verifiable Meta Ads Manager results from brands we've scaled.</p>
+  </div>
+
+  <div class="scroll-track-wrapper" style="margin-bottom:18px;">
+    <div class="scroll-track" id="track1">
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹12.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹1.47L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c1"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Instagram — Real Estate</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv">₹48L</div><div class="dp-ml">Lead Value</div></div><div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹1,412</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c2"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹28.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c3"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Lead Gen — EdTech</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">₹410</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv">1,840</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹7.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">22%</div><div class="dp-ml">Close Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c4"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Ads — Home Décor</div><div class="dp-dt">Mar 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">6.7×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹18.8L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.8L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.8%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c5"></div></div></div></div>
+      <!-- duplicates for seamless loop -->
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹12.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹1.47L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c1b"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Instagram — Real Estate</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv">₹48L</div><div class="dp-ml">Lead Value</div></div><div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹1,412</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c2b"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹28.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c3b"></div></div></div></div>
+    </div>
+  </div>
+
+  <div class="scroll-track-wrapper">
+    <div class="scroll-track scroll-track-rev" id="track2">
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹35.6L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.9L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c6"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹57L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.98L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c7"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Leads — B2B SaaS</div><div class="dp-dt">Mar 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">₹280</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv">2,400</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹6.7L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">31%</div><div class="dp-ml">SQL Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c8"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">DPA — Furniture</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">7.8×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹22L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.8L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.6%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c9"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">CBO Scale — Health</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">5.9×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹14.8L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.9%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c10"></div></div></div></div>
+      <!-- duplicates for seamless loop -->
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹35.6L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.9L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c6b"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹57L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.98L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c7b"></div></div></div></div>
+    </div>
+  </div>
+
+</section>
 
 <!-- SERVICES -->
 <section class="services" id="services">
@@ -795,43 +1120,6 @@
   </div>
 </section>
 
-<!-- SHOWCASE -->
-<section class="showcase" id="results">
-  <div class="showcase-header reveal">
-    <div class="section-label">Proof of Performance</div>
-    <h2 class="section-title">Real Dashboards.<br><em>Real Results.</em></h2>
-    <p class="showcase-sub">Every number below is from an active client account. No mockups — just verifiable Meta Ads Manager results from brands we've scaled.</p>
-  </div>
-
-  <div class="scroll-track-wrapper" style="margin-bottom:18px;">
-    <div class="scroll-track" id="track1">
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹12.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹1.47L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c1"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Instagram — Real Estate</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv">₹48L</div><div class="dp-ml">Lead Value</div></div><div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹1,412</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c2"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹28.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c3"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Lead Gen — EdTech</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">₹410</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv">1,840</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹7.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">22%</div><div class="dp-ml">Close Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c4"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Ads — Home Décor</div><div class="dp-dt">Mar 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">6.7×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹18.8L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.8L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.8%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c5"></div></div></div></div>
-      <!-- duplicates for seamless loop -->
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹12.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹1.47L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c1b"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Instagram — Real Estate</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv">₹48L</div><div class="dp-ml">Lead Value</div></div><div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹1,412</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c2b"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹28.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c3b"></div></div></div></div>
-    </div>
-  </div>
-
-  <div class="scroll-track-wrapper">
-    <div class="scroll-track scroll-track-rev" id="track2">
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹35.6L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.9L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c6"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹57L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.98L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c7"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Leads — B2B SaaS</div><div class="dp-dt">Mar 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">₹280</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv">2,400</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹6.7L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">31%</div><div class="dp-ml">SQL Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c8"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">DPA — Furniture</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">7.8×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹22L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.8L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.6%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c9"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">CBO Scale — Health</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">5.9×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹14.8L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.9%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c10"></div></div></div></div>
-      <!-- duplicates for seamless loop -->
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹35.6L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.9L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c6b"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹57L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.98L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c7b"></div></div></div></div>
-    </div>
-  </div>
-
-</section>
-
 <!-- PROCESS -->
 <section class="process" id="process">
   <div class="section-label reveal">Our Method</div>
@@ -881,8 +1169,99 @@
   </div>
 </section>
 
+<!-- FOUNDER -->
+<section class="founder-section" id="founder">
+  <div class="founder-grid">
+
+    <div class="founder-left reveal">
+      <div class="founder-photo-wrap">
+        <div class="founder-photo">
+          <!-- Replace src with your actual photo: <img src="faisal.jpg" alt="Faisal Rathore"> -->
+          <div class="founder-photo-placeholder">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+            <span>Add your photo</span>
+          </div>
+          <div class="founder-photo-corner"></div>
+        </div>
+      </div>
+      <div class="founder-credentials">
+        <div class="founder-cred-item">
+          <div class="founder-cred-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+          </div>
+          <div class="founder-cred-text"><strong>Faisal Rathore</strong>Founder & Lead Strategist, VelmontX</div>
+        </div>
+        <div class="founder-cred-item">
+          <div class="founder-cred-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+          </div>
+          <div class="founder-cred-text"><strong>Meta Ads · 4+ Years</strong>Full-funnel performance marketing</div>
+        </div>
+        <div class="founder-cred-item">
+          <div class="founder-cred-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+          </div>
+          <div class="founder-cred-text"><strong>₹42 Cr+ Ad Spend</strong>Managed across 120+ brand accounts</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="founder-right reveal">
+      <div class="section-label">The Person Behind the Results</div>
+      <h2 class="section-title">Built by Someone<br>Who <em>Runs Ads Daily</em></h2>
+      <div class="founder-name">Faisal Rathore</div>
+      <div class="founder-role">Founder · Meta Ads Strategist · VelmontX</div>
+
+      <p class="founder-bio">
+        VelmontX isn't a faceless agency with a team of juniors and a senior who shows up for the pitch. I'm <strong>Faisal</strong> — and I personally run strategy on every account we manage.
+      </p>
+      <p class="founder-bio">
+        I started obsessing over Meta Ads because I watched too many good businesses burn money on campaigns that were structurally broken from day one. Bad audience architecture. Zero CAPI setup. Creative running until it was wallpaper. The same mistakes, over and over.
+      </p>
+      <p class="founder-bio">
+        After <strong>4+ years studying the algorithm</strong>, running campaigns across D2C, real estate, EdTech, health, and SaaS — I built VelmontX to do the opposite of what most agencies do: move fast, work with the algorithm, and report on revenue, not reach.
+      </p>
+
+      <div class="founder-quote">
+        <p>"Most businesses don't have an ads problem. They have a <em>structure problem.</em> Fix the foundation and the ROAS takes care of itself."</p>
+      </div>
+
+      <div class="founder-metrics">
+        <div class="founder-metric">
+          <div class="founder-metric-val"><em>4+</em></div>
+          <div class="founder-metric-label">Years Running Meta Ads</div>
+        </div>
+        <div class="founder-metric">
+          <div class="founder-metric-val"><em>120+</em></div>
+          <div class="founder-metric-label">Brands Scaled</div>
+        </div>
+        <div class="founder-metric">
+          <div class="founder-metric-val"><em>6.8×</em></div>
+          <div class="founder-metric-label">Avg. Client ROAS</div>
+        </div>
+      </div>
+
+      <div class="founder-social">
+        <a class="founder-social-link" href="https://instagram.com/velmontx_" target="_blank">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          <span>Instagram</span>
+        </a>
+        <a class="founder-social-link" href="https://wa.me/9596864140" target="_blank">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.35C8.44 21.51 10.18 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.93 13.86c-.21.59-1.06 1.08-1.65 1.2-.44.09-.99.16-2.89-.62-2.43-.99-3.99-3.45-4.11-3.61-.12-.16-.98-1.3-.98-2.49 0-1.18.62-1.77.84-2.01.22-.24.48-.3.64-.3h.46c.15 0 .35-.05.55.42.2.48.69 1.68.75 1.8.06.12.1.26.02.42-.08.16-.12.26-.24.4-.12.14-.25.31-.36.42-.12.12-.24.25-.1.49.14.24.62 1.02 1.33 1.65.91.81 1.68 1.06 1.92 1.18.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.54-.12.22.08 1.42.67 1.66.79.24.12.4.18.46.28.06.1.06.56-.15 1.1z"/></svg>
+          <span>WhatsApp</span>
+        </a>
+        <a class="founder-social-link" href="#contact">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <span>Get in Touch</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- INSIGHTS -->
-<section class="insights">
+<section class="insights" id="insights">
   <div class="insights-header reveal">
     <div>
       <div class="section-label">Free Knowledge</div>
@@ -890,62 +1269,225 @@
     </div>
     <a href="https://instagram.com/velmontx_" target="_blank" class="insights-link">Follow on Instagram →</a>
   </div>
-  <div class="insights-grid">
-    <a class="insight-card reveal" href="https://instagram.com/velmontx_" target="_blank">
-      <div class="insight-thumb">
-        <div class="insight-thumb-bg"></div>
-        <div class="insight-thumb-text">
-          <div class="insight-thumb-hook">You're Retargeting <em>Everyone.</em><br>That's Why It's Not Working.</div>
-          <div class="insight-thumb-tag">· Retargeting ·</div>
+
+  <div class="blog-list">
+
+    <!-- POST 1: Meta Andromeda -->
+    <div class="blog-item reveal" data-blog="0">
+      <div class="blog-trigger" onclick="toggleBlog(this)">
+        <div class="blog-trigger-left">
+          <div class="blog-meta">
+            <span class="blog-cat">Algorithm Update</span>
+            <span class="blog-dot"></span>
+            <span class="blog-readtime">7 min read</span>
+          </div>
+          <div class="blog-headline">Meta Andromeda: What the Algorithm Rewrite Means for Your Ads</div>
+          <div class="blog-deck">Meta quietly rebuilt its entire ad delivery system. Here's what changed, what broke, and exactly how to adapt your campaigns before your competitors do.</div>
+        </div>
+        <div class="blog-toggle">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
         </div>
       </div>
-      <div class="insight-body">
-        <div class="insight-cat">Retargeting Strategy</div>
-        <div class="insight-title">Intent-Based Retargeting: The Fix That Doubled Our Clients' ROAS</div>
-        <p class="insight-desc">Segmenting website visitors by intent level — not just "all visitors" — is the single structural change that consistently 2–4× retargeting performance.</p>
-        <div class="insight-footer">
-          <span class="insight-read">Read More →</span>
-          <span class="insight-min">4 min read</span>
+      <div class="blog-body">
+        <div class="blog-content">
+          <div class="blog-text">
+            <h3>What Is Andromeda?</h3>
+            <p>In early 2024, Meta began rolling out <strong>Andromeda</strong> — a complete overhaul of its ad retrieval and ranking infrastructure. Unlike incremental algorithm updates, Andromeda replaced the core system that decides which ads get shown to which users. Meta's own engineering blog described it as a move from a two-stage retrieval model to a deep learning system capable of evaluating vastly more ad candidates per auction in real time.</p>
+            <p>The practical result: Meta can now consider a far larger pool of ads for each impression slot, and rank them with significantly more contextual nuance. More signals. Faster decisions. Higher bar for relevance.</p>
+
+            <h3>Why Your Old Playbook Is Breaking</h3>
+            <p>If your campaigns were structured around the pre-2024 playbook — tight interest stacks, heavy audience exclusions, manual bidding everywhere — you're fighting the new system rather than working with it. Andromeda is optimised to reward <strong>signal density</strong>, not audience precision.</p>
+            <ul>
+              <li>Hyper-narrow audiences starve the algorithm of the volume it needs to learn</li>
+              <li>Manual bidding overrides that worked pre-Andromeda now interfere with real-time auction dynamics</li>
+              <li>Fragmented campaign structures split conversion data across too many ad sets, slowing learning phase exit</li>
+              <li>Frequency-based creative refresh cycles no longer apply — Andromeda serves creative more dynamically based on predicted engagement</li>
+            </ul>
+
+            <h3>The Three Structural Shifts That Matter</h3>
+            <p><strong>1. Consolidate. Hard.</strong> Andromeda learns faster with fewer, larger ad sets. Merge your audiences into 2–3 consolidated ad sets and let Meta's system find the buyers within them. Campaign Budget Optimisation (CBO) becomes non-optional at scale — it gives the algorithm maximum flexibility to allocate where signals are strongest.</p>
+            <p><strong>2. Feed it conversion events, not just clicks.</strong> Andromeda is a conversion signal machine. The more purchase (or lead) events flowing through your pixel and CAPI setup, the more precisely it learns who to serve. If you're optimising for traffic or reach because your conversion volume is low, you're training the wrong model. Even at low budgets, optimise for the deepest event you can get 20+ of per week.</p>
+            <p><strong>3. Creative is now the primary targeting signal.</strong> With Andromeda's expanded candidate pool, the creative itself tells Meta who to find. A strong hook targeting a specific pain point trains the algorithm far more effectively than a demographic filter. This is why broad targeting — combined with precise creative — now outperforms interest stacking consistently.</p>
+
+            <h3>What to Do This Week</h3>
+            <ul>
+              <li>Audit your campaign structure — if you have more than 5 ad sets per campaign, consolidate</li>
+              <li>Verify CAPI is installed and passing match quality score of 7.0+ in Events Manager</li>
+              <li>Switch to Advantage+ audience on at least one campaign and compare ROAS over 14 days</li>
+              <li>Test 3–4 creative angles simultaneously — Andromeda distributes spend based on real-time engagement signals, so more variety means faster learning</li>
+            </ul>
+            <p>The accounts scaling fastest right now are those that have embraced what Andromeda is designed to do: find buyers at scale from broad inputs, using conversion data and creative quality as the signal. Stop constraining it. Start feeding it.</p>
+          </div>
+          <div class="blog-sidebar">
+            <div class="blog-sidebar-box">
+              <div class="blog-sidebar-label">Andromeda Effect</div>
+              <div class="blog-sidebar-stat"><em>3×</em></div>
+              <div class="blog-sidebar-note">More ad candidates evaluated per auction vs. the pre-2024 system. More competition — but also far better signal matching for well-structured accounts.</div>
+            </div>
+            <div class="blog-sidebar-box">
+              <div class="blog-sidebar-label">Key Action</div>
+              <div class="blog-sidebar-stat" style="font-size:28px; line-height:1.2;">Go Broad. Go Deep.</div>
+              <div class="blog-sidebar-note">Consolidate ad sets. Max out conversion signal quality through CAPI. Let Andromeda find your buyers — don't try to manually define them.</div>
+            </div>
+            <a class="blog-ig-cta" href="https://instagram.com/velmontx_" target="_blank">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              <span>More on Instagram</span>
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:10px;height:10px;opacity:1"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
         </div>
       </div>
-    </a>
-    <a class="insight-card reveal reveal-delay-1" href="https://instagram.com/velmontx_" target="_blank">
-      <div class="insight-thumb">
-        <div class="insight-thumb-bg" style="background:linear-gradient(135deg,#1a0f2e,#2d1b4e)"></div>
-        <div class="insight-thumb-text">
-          <div class="insight-thumb-hook">Broad Targeting Is <em>Beating</em><br>Detailed Targeting in 2025</div>
-          <div class="insight-thumb-tag">· Audience Strategy ·</div>
+    </div>
+
+    <!-- POST 2: Creative Fatigue -->
+    <div class="blog-item reveal reveal-delay-1" data-blog="1">
+      <div class="blog-trigger" onclick="toggleBlog(this)">
+        <div class="blog-trigger-left">
+          <div class="blog-meta">
+            <span class="blog-cat">Creative Strategy</span>
+            <span class="blog-dot"></span>
+            <span class="blog-readtime">5 min read</span>
+          </div>
+          <div class="blog-headline">Creative Fatigue Is Silently Killing Your ROAS — And You're Not Seeing It</div>
+          <div class="blog-deck">Your best-performing ad is probably bleeding you right now. Here's how to diagnose creative fatigue before it wipes out a winning campaign, and the refresh system we use across every account.</div>
+        </div>
+        <div class="blog-toggle">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
         </div>
       </div>
-      <div class="insight-body">
-        <div class="insight-cat">Audience Targeting</div>
-        <div class="insight-title">Why We Stopped Using Interest Stacking (And What We Do Instead)</div>
-        <p class="insight-desc">Meta's algorithm knows your customer better than any interest stack. Here's the data-backed case for going broad and letting the AI do the work.</p>
-        <div class="insight-footer">
-          <span class="insight-read">Read More →</span>
-          <span class="insight-min">5 min read</span>
+      <div class="blog-body">
+        <div class="blog-content">
+          <div class="blog-text">
+            <h3>The Invisible Drain</h3>
+            <p>Creative fatigue is the most common silent killer in Meta ad accounts. Your campaign looks healthy — it's still spending, still getting impressions — but ROAS has quietly declined 20%, 30%, 40% from its peak. Most business owners blame targeting, seasonality, or "the algorithm changing." The real culprit is almost always the same creative running too long against the same audience.</p>
+            <p>Meta's frequency mechanic is straightforward: the more times someone sees the same ad, the less likely they are to engage — and the more Meta has to pay to serve it to them. Your CPM creeps up. Your CTR drops. Your CPC balloons. ROAS collapses. The ad didn't stop working because of the platform. <strong>It stopped working because it became wallpaper.</strong></p>
+
+            <h3>The Diagnostic: Three Signals to Watch</h3>
+            <ul>
+              <li><strong>Frequency above 2.5 in a 7-day window</strong> — your audience has seen this ad multiple times. Engagement decay is imminent or already happening</li>
+              <li><strong>CTR declining week-over-week while impressions hold</strong> — the audience is tuning out. The algorithm is working harder to serve the same creative</li>
+              <li><strong>CPM rising without a corresponding increase in competition</strong> — Meta is charging you more because your relevance score is declining. Fresh creative resets this</li>
+            </ul>
+            <p>Check these three metrics weekly per ad creative. If two of three are trending the wrong direction for 7+ days, that creative is in active fatigue.</p>
+
+            <h3>The Refresh System We Use</h3>
+            <p>The solution isn't to kill performing ads prematurely — it's to have a creative pipeline ready to deploy the moment fatigue signals appear. We structure every account with what we call a <strong>creative bench</strong>: always 2–3 tested variants in active rotation, with 2–3 new variants in the testing phase below threshold spend.</p>
+            <p>When a hero creative shows fatigue, we don't pause it cold. We introduce the best-performing bench variant at 30% of the budget, watch 72 hours of data, and scale up the new creative while reducing the fatigued one over 5–7 days. This prevents the CPM spike that comes from an abrupt creative swap and gives the algorithm time to recalibrate.</p>
+
+            <h3>What to Refresh (Not Just Redesign)</h3>
+            <ul>
+              <li>Change the hook — first 3 seconds is the highest-leverage refresh point. Same body copy, new opening</li>
+              <li>Swap the visual format — static to video, UGC to graphic, lifestyle to product</li>
+              <li>Reframe the angle — shift from problem-led to outcome-led, or social proof to authority</li>
+              <li>Update the offer framing — same offer, different urgency mechanism or CTA phrasing</li>
+            </ul>
+            <p>In most cases a hook and visual swap with the same underlying message outperforms a completely new concept — because the core message was working. Only the delivery fatigued.</p>
+
+            <h3>The Uncomfortable Truth</h3>
+            <p>Most businesses don't have a targeting problem, a bidding problem, or an algorithm problem. They have a <strong>creative refresh cadence problem</strong>. Build the pipeline, watch the signals, refresh proactively — and your campaigns will compound instead of decay.</p>
+          </div>
+          <div class="blog-sidebar">
+            <div class="blog-sidebar-box">
+              <div class="blog-sidebar-label">Fatigue Threshold</div>
+              <div class="blog-sidebar-stat"><em>2.5×</em></div>
+              <div class="blog-sidebar-note">Frequency in a 7-day window. Above this, expect CTR decay and CPM inflation within days. Refresh before you hit it, not after.</div>
+            </div>
+            <div class="blog-sidebar-box">
+              <div class="blog-sidebar-label">Refresh Signal</div>
+              <div class="blog-sidebar-stat" style="font-size:28px; line-height:1.2;">3 Weeks Max</div>
+              <div class="blog-sidebar-note">The average lifespan of a winning creative at moderate spend. High-spend accounts fatigue faster. Build your bench accordingly.</div>
+            </div>
+            <a class="blog-ig-cta" href="https://instagram.com/velmontx_" target="_blank">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              <span>More on Instagram</span>
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:10px;height:10px;opacity:1"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
         </div>
       </div>
-    </a>
-    <a class="insight-card reveal reveal-delay-2" href="https://instagram.com/velmontx_" target="_blank">
-      <div class="insight-thumb">
-        <div class="insight-thumb-bg" style="background:linear-gradient(135deg,#0f1a10,#1a3a1c)"></div>
-        <div class="insight-thumb-text">
-          <div class="insight-thumb-hook">The Ad That Looks <em>Too Simple</em><br>Is Printing Money</div>
-          <div class="insight-thumb-tag">· Ad Creative ·</div>
+    </div>
+
+    <!-- POST 3: Pixel + CAPI -->
+    <div class="blog-item reveal reveal-delay-2" data-blog="2">
+      <div class="blog-trigger" onclick="toggleBlog(this)">
+        <div class="blog-trigger-left">
+          <div class="blog-meta">
+            <span class="blog-cat">Tracking & Data</span>
+            <span class="blog-dot"></span>
+            <span class="blog-readtime">6 min read</span>
+          </div>
+          <div class="blog-headline">Your Meta Pixel Is Lying to You — Here's How to Fix It with CAPI</div>
+          <div class="blog-deck">iOS 14 broke browser-based tracking. Most businesses patched it wrong. If your Conversions API isn't set up correctly, you're optimising on incomplete data — and your ROAS is worse because of it.</div>
+        </div>
+        <div class="blog-toggle">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
         </div>
       </div>
-      <div class="insight-body">
-        <div class="insight-cat">Creative Strategy</div>
-        <div class="insight-title">Why Polished Creative Kills Performance (And What Actually Works)</div>
-        <p class="insight-desc">High production value is the enemy of Meta ad performance. The algorithm rewards content that looks native. Here's what our winning creative actually looks like.</p>
-        <div class="insight-footer">
-          <span class="insight-read">Read More →</span>
-          <span class="insight-min">6 min read</span>
+      <div class="blog-body">
+        <div class="blog-content">
+          <div class="blog-text">
+            <h3>The iOS 14 Hangover</h3>
+            <p>When Apple rolled out App Tracking Transparency in 2021, it didn't just inconvenience advertisers — it fundamentally broke the data pipeline that Meta's algorithm had been trained on for years. Browser-based pixel tracking, which relies on third-party cookies and JavaScript firing in the user's browser, started returning dramatically incomplete data.</p>
+            <p>The immediate impact was obvious: reported conversions dropped, attribution windows were cut, and CPMs spiked as Meta's targeting became less precise. But the longer-term impact is subtler and more damaging: <strong>if you're still relying primarily on browser pixel events, you're training Meta's algorithm on bad data.</strong> It can't optimise to find buyers it can't see.</p>
+
+            <h3>What the Conversions API Actually Does</h3>
+            <p>The Meta Conversions API (CAPI) is a server-side event tracking system. Instead of firing a pixel event from the user's browser (which can be blocked, dropped, or degraded by iOS restrictions), CAPI sends the conversion event directly from your server to Meta's servers. It bypasses the browser entirely.</p>
+            <p>The result: conversions that would have been invisible to the pixel are now captured, attributed, and fed back into Meta's optimisation model. Your audience data becomes more complete. The algorithm gets a more accurate signal of who is actually converting — and starts finding more of them.</p>
+
+            <h3>The Deduplication Problem</h3>
+            <p>Here's where most implementations go wrong. When you run pixel and CAPI simultaneously — which you should — you risk sending the same conversion event twice: once from the browser pixel, once from the server. Meta counts both unless you deduplicate correctly.</p>
+            <p>Deduplication requires a matching <strong>event_id</strong> parameter sent with both the browser and server events. Meta uses this to identify and remove duplicates before they enter the optimisation system. Without it, you're inflating your reported conversions, misrepresenting your cost-per-result, and feeding the algorithm distorted data.</p>
+            <ul>
+              <li>Check Events Manager → your pixel → Event Match Quality score. Aim for 7.0 or above</li>
+              <li>Verify deduplication is working: look for "Deduplicated events" in your pixel diagnostics</li>
+              <li>Ensure you're passing customer information parameters (email, phone, name) with every event — hashed, as required — to maximise match quality</li>
+            </ul>
+
+            <h3>The Setup Hierarchy That Works</h3>
+            <p><strong>Tier 1 — Direct CAPI integration:</strong> Your developer connects your server directly to the Meta CAPI endpoint. Highest reliability, most control over data quality. Required if you have custom checkout flows or non-standard ecommerce setups.</p>
+            <p><strong>Tier 2 — Platform CAPI integrations:</strong> Shopify, WooCommerce, and most major platforms now have native CAPI integrations. Enable them in your Meta Business settings. Much faster than custom dev, good enough for most accounts.</p>
+            <p><strong>Tier 3 — Gateway solutions:</strong> Tools like Stape.io act as a server-side container that handles CAPI event routing. Good middle ground for accounts that need more than platform integrations but can't justify full custom development.</p>
+
+            <h3>How to Know If Yours Is Broken</h3>
+            <ul>
+              <li>Event Match Quality below 6.0 in Events Manager — low-quality matching means poor signal to Meta</li>
+              <li>No "Server" event source appearing alongside "Browser" in your pixel events — CAPI is not firing</li>
+              <li>Deduplication rate is 0% — either both channels aren't running, or event_id is missing</li>
+              <li>Reported conversions dropped significantly after iOS 14 and never recovered — browser pixel alone is what you're running</li>
+            </ul>
+            <p>Fix your tracking foundation before you touch your targeting, creative, or budget. Everything else is guesswork if the data going into Meta's algorithm is incomplete. We audit tracking as the first step in every new client engagement — and we find meaningful issues in 80%+ of accounts we review.</p>
+          </div>
+          <div class="blog-sidebar">
+            <div class="blog-sidebar-box">
+              <div class="blog-sidebar-label">Target EMQ Score</div>
+              <div class="blog-sidebar-stat"><em>7.0+</em></div>
+              <div class="blog-sidebar-note">Event Match Quality in Meta Events Manager. Below 6.0 and your CAPI setup is significantly underperforming. Below 4.0 and it's effectively broken.</div>
+            </div>
+            <div class="blog-sidebar-box">
+              <div class="blog-sidebar-label">Accounts Affected</div>
+              <div class="blog-sidebar-stat"><em>80%</em></div>
+              <div class="blog-sidebar-note">Of ad accounts we audit have meaningful tracking issues — missing CAPI, no deduplication, or low event match quality. Is yours one of them?</div>
+            </div>
+            <a class="blog-ig-cta" href="https://instagram.com/velmontx_" target="_blank">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              <span>More on Instagram</span>
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:10px;height:10px;opacity:1"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
         </div>
       </div>
-    </a>
-  </div>
+    </div>
+
+  </div><!-- /blog-list -->
 </section>
 
 <!-- FAQ -->
@@ -1312,6 +1854,43 @@ function closeMobileMenu() {
   mobileMenu.classList.remove('open');
 }
 
+/* ── BLOG ACCORDION ── */
+function toggleBlog(trigger) {
+  const item = trigger.closest('.blog-item');
+  const isOpen = item.classList.contains('is-open');
+  // Close all
+  document.querySelectorAll('.blog-item.is-open').forEach(i => i.classList.remove('is-open'));
+  // Open clicked if it was closed
+  if (!isOpen) {
+    item.classList.add('is-open');
+    // Smooth scroll so the header stays visible
+    setTimeout(() => {
+      const rect = item.getBoundingClientRect();
+      const navH = 72;
+      if (rect.top < navH) {
+        window.scrollBy({ top: rect.top - navH - 12, behavior: 'smooth' });
+      }
+    }, 60);
+  }
+}
+
+// Auto-collapse when blog item scrolls fully out of view
+const blogObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting && e.target.classList.contains('is-open')) {
+      // Only collapse if the item has left the viewport (not just partially visible)
+      const rect = e.target.getBoundingClientRect();
+      const fullyAbove = rect.bottom < 0;
+      const fullyBelow = rect.top > window.innerHeight;
+      if (fullyAbove || fullyBelow) {
+        e.target.classList.remove('is-open');
+      }
+    }
+  });
+}, { threshold: 0, rootMargin: '0px' });
+
+document.querySelectorAll('.blog-item').forEach(item => blogObs.observe(item));
+
 /* ── FAQ ACCORDION ── */
 document.querySelectorAll('.faq-q').forEach(q => {
   q.addEventListener('click', () => {
@@ -1366,4 +1945,5 @@ if (auditForm) {
   <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="#fff">
     <path d="M16 2C8.268 2 2 8.268 2 16c0 2.478.675 4.797 1.85 6.787L2 30l7.424-1.82A13.94 13.94 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm0 25.5a11.44 11.44 0 01-5.826-1.594l-.418-.248-4.33 1.063 1.092-4.227-.272-.432A11.45 11.45 0 014.5 16C4.5 9.648 9.648 4.5 16 4.5S27.5 9.648 27.5 16 22.352 27.5 16 27.5zm6.29-8.533c-.345-.172-2.04-1.006-2.356-1.12-.316-.115-.546-.172-.776.172-.23.345-.89 1.12-1.09 1.35-.2.23-.4.258-.745.086-.345-.172-1.456-.537-2.773-1.713-1.025-.916-1.717-2.047-1.918-2.392-.2-.345-.021-.531.151-.703.154-.154.345-.4.517-.6.172-.2.23-.345.345-.575.115-.23.057-.43-.029-.602-.086-.172-.776-1.87-1.063-2.562-.28-.672-.564-.58-.776-.591l-.66-.011c-.23 0-.603.086-.919.43-.316.345-1.206 1.178-1.206 2.873s1.235 3.332 1.407 3.562c.172.23 2.43 3.71 5.888 5.205.823.355 1.465.567 1.966.726.826.263 1.578.226 2.172.137.662-.099 2.04-.834 2.328-1.638.287-.804.287-1.493.2-1.638-.086-.144-.316-.23-.66-.402z"/>
   </svg>
-</a>
+</a></body>
+</html>
