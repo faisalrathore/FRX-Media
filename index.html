@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VelmontX — Performance Marketing</title>
+<title>VelmontX — Global Performance Marketing Agency</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,600;1,700;1,800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -181,25 +181,34 @@
   }
   .btn-ghost:hover { border-color: var(--dark); }
 
-  /* Hero inline trust bar */
-  .hero-trust {
-    display: flex; align-items: center; gap: 28px;
-    justify-content: center; margin-top: 44px;
-    opacity: 0; animation: fadeUp 0.9s 1.15s forwards;
+  /* ───── MARKETS STRIP ───── */
+  .markets-strip {
+    background: var(--cream2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 64px;
+    display: flex; align-items: center; gap: 20px;
+    overflow: hidden;
   }
-  .hero-trust-item { display: flex; flex-direction: column; gap: 4px; }
-  .hero-trust-val {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 22px; font-weight: 800; color: var(--dark);
-    letter-spacing: -0.01em; line-height: 1;
-  }
-  .hero-trust-label {
+  .markets-label {
     font-family: 'JetBrains Mono', monospace; font-size: 9px;
-    letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); white-space: nowrap; flex-shrink: 0;
   }
-  .hero-trust-divider {
-    width: 1px; height: 32px; background: var(--border-strong);
-    flex-shrink: 0;
+  .markets-list {
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap;
+  }
+  .market-item {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.08em; color: var(--mid);
+    white-space: nowrap;
+  }
+  .market-dot {
+    color: var(--border-strong); font-size: 10px;
+  }
+  @media(max-width:768px) {
+    .markets-strip { padding: 12px 24px; gap: 12px; }
+    .market-dot { display: none; }
   }
 
   /* ───── STATS ───── */
@@ -981,37 +990,22 @@
 <section class="hero">
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow">Meta Ads Agency · India</p>
-    <h1 class="hero-title">We Turn<br>Ad Spend Into<br><em>Revenue.</em></h1>
+    <p class="hero-eyebrow">Global Performance Marketing Agency</p>
+    <h1 class="hero-title">The Engine<br>Behind <em>Brand</em><br><span class="stroke">Growth</span></h1>
     <div class="hero-divider"></div>
-    <p class="hero-sub">Average 6.8× ROAS across 120+ brands. If your Meta Ads aren't compounding — your structure is broken. We fix it.</p>
+    <p class="hero-sub">Precision-engineered Meta advertising campaigns for brands worldwide. We turn ad spend into predictable, compounding revenue — wherever your market is.</p>
     <div class="hero-actions">
       <a href="#contact" class="btn-primary">Get a Free Audit →</a>
       <a href="#results" class="btn-ghost">See Proof First</a>
     </div>
-    <div class="hero-trust">
-      <div class="hero-trust-item">
-        <span class="hero-trust-val">₹42 Cr+</span>
-        <span class="hero-trust-label">Ad Spend Managed</span>
-      </div>
-      <div class="hero-trust-divider"></div>
-      <div class="hero-trust-item">
-        <span class="hero-trust-val">6.8×</span>
-        <span class="hero-trust-label">Avg. ROAS</span>
-      </div>
-      <div class="hero-trust-divider"></div>
-      <div class="hero-trust-item">
-        <span class="hero-trust-val">98%</span>
-        <span class="hero-trust-label">Client Retention</span>
-      </div>
-    </div>
+
   </div>
 </section>
 
 <!-- STATS — animated counters -->
 <div class="stats-strip" id="statsStrip">
   <div class="stat-item">
-    <div class="stat-num"><span class="counter" data-target="42" data-prefix="₹" data-suffix=" Cr+">₹0</span></div>
+    <div class="stat-num"><span class="counter" data-target="50" data-prefix="$" data-suffix="M+">$0</span></div>
     <div class="stat-label">Ad Spend Managed</div>
   </div>
   <div class="stat-item">
@@ -1028,38 +1022,60 @@
   </div>
 </div>
 
+<!-- MARKETS STRIP -->
+<div class="markets-strip">
+  <div class="markets-label">Clients across</div>
+  <div class="markets-list">
+    <span class="market-item">🇺🇸 United States</span>
+    <span class="market-dot">·</span>
+    <span class="market-item">🇬🇧 United Kingdom</span>
+    <span class="market-dot">·</span>
+    <span class="market-item">🇦🇪 UAE</span>
+    <span class="market-dot">·</span>
+    <span class="market-item">🇦🇺 Australia</span>
+    <span class="market-dot">·</span>
+    <span class="market-item">🇸🇬 Singapore</span>
+    <span class="market-dot">·</span>
+    <span class="market-item">🇨🇦 Canada</span>
+    <span class="market-dot">·</span>
+    <span class="market-item">🇮🇳 India</span>
+    <span class="market-dot">·</span>
+    <span class="market-item">🇪🇺 Europe</span>
+  </div>
+</div>
+
 <!-- SHOWCASE — proof before pitch -->
 <section class="showcase" id="results">
   <div class="showcase-header reveal">
     <div class="section-label">Proof of Performance</div>
     <h2 class="section-title">Real Dashboards.<br><em>Real Results.</em></h2>
-    <p class="showcase-sub">Every number below is from an active client account. No mockups — just verifiable Meta Ads Manager results from brands we've scaled.</p>
+    <p class="showcase-sub">Every number below is from an active client account across the US, UK, UAE, AU and beyond. No mockups — just verifiable Meta Ads Manager results.</p>
   </div>
 
   <div class="scroll-track-wrapper" style="margin-bottom:18px;">
     <div class="scroll-track" id="track1">
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹12.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹1.47L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c1"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Instagram — Real Estate</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv">₹48L</div><div class="dp-ml">Lead Value</div></div><div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹1,412</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c2"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹28.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c3"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Lead Gen — EdTech</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">₹410</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv">1,840</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹7.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">22%</div><div class="dp-ml">Close Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c4"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Ads — Home Décor</div><div class="dp-dt">Mar 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">6.7×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹18.8L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.8L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.8%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c5"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion · US</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$148K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$17.6K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c1"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Lead Gen — Real Estate · UAE</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv">$576K</div><div class="dp-ml">Lead Value</div></div><div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">$17</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c2"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare · UK</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$340K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$30K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c3"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Lead Gen — EdTech · AU</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">$5</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv">1,840</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">$9.2K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">22%</div><div class="dp-ml">Close Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c4"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Ads — Home Décor · CA</div><div class="dp-dt">Mar 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">6.7×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$225K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$33K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.8%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c5"></div></div></div></div>
       <!-- duplicates for seamless loop -->
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹12.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹1.47L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c1b"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Instagram — Real Estate</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv">₹48L</div><div class="dp-ml">Lead Value</div></div><div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹1,412</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c2b"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹28.4L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c3b"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion · US</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$148K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$17.6K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c1b"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Lead Gen — Real Estate · UAE</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv">$576K</div><div class="dp-ml">Lead Value</div></div><div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">$17</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c2b"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare · UK</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$340K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$30K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c3b"></div></div></div></div>
     </div>
   </div>
 
   <div class="scroll-track-wrapper">
     <div class="scroll-track scroll-track-rev" id="track2">
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹35.6L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.9L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c6"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹57L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.98L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c7"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Leads — B2B SaaS</div><div class="dp-dt">Mar 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">₹280</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv">2,400</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">₹6.7L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">31%</div><div class="dp-ml">SQL Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c8"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">DPA — Furniture</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">7.8×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹22L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.8L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.6%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c9"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">CBO Scale — Health</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">5.9×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹14.8L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹2.5L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.9%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c10"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG · SG</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$427K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$47K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c6"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery · US</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$684K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$47.8K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c7"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Leads — B2B SaaS · EU</div><div class="dp-dt">Mar 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">$3.4</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv">2,400</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">$8.1K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">31%</div><div class="dp-ml">SQL Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c8"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">DPA — Furniture · UK</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">7.8×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$264K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$33.8K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.6%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c9"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">CBO Scale — Health · AU</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">5.9×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$178K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$30K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.9%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c10"></div></div></div></div>
       <!-- duplicates for seamless loop -->
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹35.6L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.9L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c6b"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">₹57L</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">₹3.98L</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c7b"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG · SG</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$427K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$47K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c6b"></div></div></div></div>
+      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery · US</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$684K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$47.8K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c7b"></div></div></div></div>
     </div>
   </div>
 
@@ -1077,7 +1093,7 @@
     <div class="service-card reveal reveal-delay-1"><div class="service-num">02 / Creative</div><div class="service-name">Creative Strategy & Ad Production</div><p class="service-desc">Data-backed creative frameworks. We identify winning angles, build scroll-stopping ads, and iterate fast to keep ROAS compounding month over month.</p><span class="service-tag">UGC · Motion · Static</span></div>
     <div class="service-card reveal reveal-delay-2"><div class="service-num">03 / Funnel</div><div class="service-name">Conversion Funnel Architecture</div><p class="service-desc">Landing pages and post-click experiences optimised in tandem with your ads. Because traffic without conversion is just burning money.</p><span class="service-tag">CRO · LPs · A/B Testing</span></div>
     <div class="service-card reveal"><div class="service-num">04 / Analytics</div><div class="service-name">Attribution & Revenue Analytics</div><p class="service-desc">Crystal-clear reporting on what's working. Custom dashboards, pixel mastery, and first-party data strategies that cut through Meta's attribution noise.</p><span class="service-tag">GA4 · Pixel · CAPI</span></div>
-    <div class="service-card reveal reveal-delay-1"><div class="service-num">05 / Scale</div><div class="service-name">Budget Scaling & Bid Strategy</div><p class="service-desc">Scaling ad spend without killing efficiency is an art. We've perfected the playbook across ₹1L to ₹1Cr+ monthly budgets with consistent ROAS.</p><span class="service-tag">CBO · ABO · ASC+</span></div>
+    <div class="service-card reveal reveal-delay-1"><div class="service-num">05 / Scale</div><div class="service-name">Budget Scaling & Bid Strategy</div><p class="service-desc">Scaling ad spend without killing efficiency is an art. We've perfected the playbook across $1K to $500K+ monthly budgets across US, UK, UAE, AU and beyond.</p><span class="service-tag">CBO · ABO · ASC+</span></div>
     <div class="service-card reveal reveal-delay-2"><div class="service-num">06 / Retention</div><div class="service-name">Retargeting & Customer LTV</div><p class="service-desc">Your pixel is a goldmine. We deploy sophisticated retargeting sequences that bring prospects back and maximise lifetime value at scale.</p><span class="service-tag">Dynamic · Sequential · LTV</span></div>
   </div>
 </section>
@@ -1100,7 +1116,7 @@
     <div class="why-card reveal reveal-delay-2">
       <div class="why-icon">03 · FULL FUNNEL</div>
       <div class="why-title">We Optimise the Entire Revenue Journey</div>
-      <p class="why-desc">Clicks mean nothing without conversions. We work on the full funnel — from cold audience to retargeting to post-click landing page — so every rupee of ad spend has the best shot at returning revenue.</p>
+      <p class="why-desc">Clicks mean nothing without conversions. We work on the full funnel — from cold audience to retargeting to post-click landing page — so every dollar of ad spend has the best shot at returning revenue.</p>
     </div>
     <div class="why-card reveal">
       <div class="why-icon">04 · TRANSPARENT</div>
@@ -1150,7 +1166,7 @@
           </div>
         </div>
         <div class="phone-stats">
-          <div class="ps-box"><div class="ps-val r">₹28.4L</div><div class="ps-lbl">Revenue</div></div>
+          <div class="ps-box"><div class="ps-val r">$340K</div><div class="ps-lbl">Revenue</div></div>
           <div class="ps-box"><div class="ps-val b">2.1%</div><div class="ps-lbl">CTR</div></div>
         </div>
       </div>
@@ -1163,9 +1179,9 @@
   <div class="section-label reveal">Client Stories</div>
   <h2 class="section-title reveal">What Our Clients<br><em>Are Saying</em></h2>
   <div class="testimonials-grid reveal">
-    <div class="testimonial"><div class="quote-metric"><strong>8.4×</strong>ROAS</div><div class="quote-mark">"</div><p class="quote-text">VelmontX took our Meta Ads from a money pit to our highest-performing revenue channel. In 90 days, 2× to 8.4× ROAS.</p><div class="quote-author">Priya Sharma</div><div class="quote-company">CEO · D2C Fashion Brand</div></div>
-    <div class="testimonial"><div class="quote-metric"><strong>340</strong>Leads/Mo</div><div class="quote-mark">"</div><p class="quote-text">We were spending ₹5L/month with terrible results. After 60 days with VelmontX, same budget, 340 qualified leads. ROI speaks for itself.</p><div class="quote-author">Rahul Mehta</div><div class="quote-company">Director · Real Estate Co.</div></div>
-    <div class="testimonial"><div class="quote-metric"><strong>11.2×</strong>ROAS</div><div class="quote-mark">"</div><p class="quote-text">The team genuinely understands the Meta algorithm at a deep level. Scaled us from ₹50K to ₹3L/month in spend while improving ROAS every week.</p><div class="quote-author">Ananya Krishnan</div><div class="quote-company">Founder · Skincare Brand</div></div>
+    <div class="testimonial"><div class="quote-metric"><strong>8.4×</strong>ROAS</div><div class="quote-mark">"</div><p class="quote-text">VelmontX took our Meta Ads from a money pit to our highest-performing revenue channel. In 90 days, 2× to 8.4× ROAS.</p><div class="quote-author">Priya Sharma</div><div class="quote-company">CEO · D2C Fashion Brand · US</div></div>
+    <div class="testimonial"><div class="quote-metric"><strong>340</strong>Leads/Mo</div><div class="quote-mark">"</div><p class="quote-text">We were spending $6K/month with mediocre results. After 60 days with VelmontX, same budget, 340 qualified leads. The ROI speaks for itself.</p><div class="quote-author">Rahul Mehta</div><div class="quote-company">Director · Real Estate Group · UAE</div></div>
+    <div class="testimonial"><div class="quote-metric"><strong>11.2×</strong>ROAS</div><div class="quote-mark">"</div><p class="quote-text">The team genuinely understands the Meta algorithm at a deep level. Scaled us from $600/month to $3,600/month in spend while improving ROAS every week.</p><div class="quote-author">Ananya Krishnan</div><div class="quote-company">Founder · Skincare Brand · UK</div></div>
   </div>
 </section>
 
@@ -1201,7 +1217,7 @@
           <div class="founder-cred-icon">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
           </div>
-          <div class="founder-cred-text"><strong>₹42 Cr+ Ad Spend</strong>Managed across 120+ brand accounts</div>
+          <div class="founder-cred-text"><strong>$50M+ Ad Spend</strong>Managed across 120+ brand accounts globally</div>
         </div>
       </div>
     </div>
@@ -1219,7 +1235,7 @@
         I started obsessing over Meta Ads because I watched too many good businesses burn money on campaigns that were structurally broken from day one. Bad audience architecture. Zero CAPI setup. Creative running until it was wallpaper. The same mistakes, over and over.
       </p>
       <p class="founder-bio">
-        After <strong>4+ years studying the algorithm</strong>, running campaigns across D2C, real estate, EdTech, health, and SaaS — I built VelmontX to do the opposite of what most agencies do: move fast, work with the algorithm, and report on revenue, not reach.
+        After <strong>4+ years studying the algorithm</strong>, running campaigns across D2C, real estate, EdTech, health, and SaaS in markets from the US to the UAE, UK, and Southeast Asia — I built VelmontX to do the opposite of what most agencies do: move fast, work with the algorithm, report on revenue not reach — and do it for brands anywhere in the world.
       </p>
 
       <div class="founder-quote">
@@ -1517,7 +1533,7 @@
         <span class="faq-q-text">What's the minimum budget I need?</span>
         <span class="faq-toggle">+</span>
       </div>
-      <div class="faq-a"><p>We work with brands spending as little as $10/day on ads. However, to give Meta's algorithm enough data to optimise properly, a budget of $500–$1,000/month is where you'll start seeing consistent, scalable results. We're transparent about this in our onboarding so you know exactly what to expect at your budget level.</p></div>
+      <div class="faq-a"><p>We work with brands spending as little as $10/day on ads. To give Meta's algorithm enough data to optimise properly, a budget of $500–$2,000/month is where you'll start seeing consistent, scalable results across any market. We're transparent about this in our onboarding so you know exactly what to expect at your budget level.</p></div>
     </div>
 
     <div class="faq-item reveal reveal-delay-1">
@@ -1710,7 +1726,7 @@
     <a href="#process">Process</a>
     <a href="/cdn-cgi/l/email-protection#fa929f969695ba8c9f969795948e82d4999597"><span class="__cf_email__" data-cfemail="4f272a2323200f392a232220213b37612c2022">[email&#160;protected]</span></a>
   </div>
-  <div class="footer-copy">© 2026 VelmontX</div>
+  <div class="footer-copy">© 2026 VelmontX · Global Performance Marketing</div>
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
