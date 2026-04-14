@@ -296,27 +296,49 @@
   }
 
   /* ───── SHOWCASE ───── */
+  /* ── SHOWCASE / CAROUSEL ── */
   .showcase { background: var(--cream3); overflow: hidden; padding: 120px 0; }
   .showcase-header { padding: 0 64px; max-width: 680px; margin-bottom: 64px; }
   .showcase-sub { font-size: 15px; color: var(--mid); line-height: 1.85; margin-top: 18px; font-weight: 300; }
-  .scroll-track-wrapper { position: relative; margin-bottom: 18px; }
-  .scroll-track-wrapper::before, .scroll-track-wrapper::after {
-    content: ''; position: absolute; top: 0; bottom: 0; width: 160px; z-index: 2; pointer-events: none;
+
+  .carousel-wrap { position: relative; padding: 0 64px; }
+
+  /* viewport — clips everything outside */
+  .carousel-viewport {
+    overflow: hidden;
+    border-radius: 2px;
   }
-  .scroll-track-wrapper::before { left: 0; background: linear-gradient(90deg, var(--cream3), transparent); }
-  .scroll-track-wrapper::after  { right: 0; background: linear-gradient(-90deg, var(--cream3), transparent); }
-  .scroll-track { display: flex; gap: 18px; width: max-content; animation: scrollLeft 36s linear infinite; }
-  .scroll-track:hover { animation-play-state: paused; }
-  .scroll-track-rev { animation-direction: reverse; animation-duration: 42s; }
-  @keyframes scrollLeft { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+  /* the sliding strip */
+  .carousel-track {
+    display: flex;
+    gap: 18px;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  /* each card — 16:9 aspect ratio */
   .dashboard-card {
-    width: 480px; height: 300px; border-radius: 2px;
-    border: 1px solid var(--border); overflow: hidden;
-    flex-shrink: 0; background: var(--parchment);
-    transition: all 0.3s; cursor: pointer; box-shadow: var(--shadow);
+    flex: 0 0 calc(33.333% - 12px);
+    min-width: 0;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    background: var(--parchment);
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    cursor: pointer;
+    box-shadow: var(--shadow);
   }
-  .dashboard-card:hover { border-color: rgba(196,28,28,0.25); box-shadow: var(--shadow-lg); transform: translateY(-5px); }
-  .dp { width:100%; height:100%; display:flex; flex-direction:column; padding:20px; }
+  .dashboard-card:hover {
+    border-color: rgba(196,28,28,0.25);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+  }
+
+  /* card inner layout — fills the 16:9 card */
+  .dp { position:absolute; inset:0; display:flex; flex-direction:column; padding:20px; }
   .dp-hdr { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
   .dp-logo { width:26px; height:26px; background:linear-gradient(135deg,#1877f2,#42a5f5); border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; font-family:'Inter',sans-serif; }
   .dp-ttl { font-size:11px; font-weight:600; color:var(--dark); font-family:'Inter',sans-serif; letter-spacing:0.02em; }
@@ -331,9 +353,55 @@
   .mini-bars { display:flex; align-items:flex-end; gap:3px; height:100%; padding:8px; }
   .mini-bar { flex:1; border-radius:1px 1px 0 0; background:linear-gradient(180deg,var(--red),rgba(196,28,28,0.2)); }
 
-  /* Screenshot cards (from GitHub) */
+  /* screenshot image cards */
   .dashboard-card.screenshot img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+
+  /* prev / next arrows */
+  .carousel-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--parchment); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 4;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    color: var(--dark);
+  }
+  .carousel-btn:hover { background: var(--red); border-color: var(--red); color: #fff; box-shadow: 0 4px 16px rgba(196,28,28,0.3); }
+  .carousel-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .carousel-btn-prev { left: 12px; }
+  .carousel-btn-next { right: 12px; }
+
+  /* dot indicators */
+  .carousel-dots {
+    display: flex; justify-content: center; gap: 8px;
+    margin-top: 28px;
+  }
+  .carousel-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--border-strong); border: none; padding: 0;
+    cursor: pointer; transition: background 0.25s, transform 0.25s;
+  }
+  .carousel-dot.active {
+    background: var(--red); transform: scale(1.4);
+  }
+
+  /* counter label */
+  .carousel-counter {
+    text-align: center; margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+  }
+
+  @media(max-width:1024px) {
+    .carousel-wrap { padding: 0 28px; }
+    .dashboard-card { flex-basis: calc(50% - 9px); }
+  }
+  @media(max-width:640px) {
+    .dashboard-card { flex-basis: 100%; }
+    .carousel-wrap { padding: 0 20px; }
+    .dp-metrics { grid-template-columns: repeat(2,1fr); }
   }
 
   /* ───── PROCESS ───── */
@@ -954,7 +1022,6 @@
     .why-grid{grid-template-columns:1fr;}
     .insights-grid{grid-template-columns:1fr;}
     .hero-actions{flex-direction:column;align-items:center;}
-    .dashboard-card{width:320px;height:220px;}
     .insights-header{flex-direction:column;align-items:flex-start;}
     .wa-btn{bottom:20px;right:20px;}
   }
@@ -1052,32 +1119,168 @@
     <p class="showcase-sub">Every number below is from an active client account across the US, UK, UAE, AU and beyond. No mockups — just verifiable Meta Ads Manager results.</p>
   </div>
 
-  <div class="scroll-track-wrapper" style="margin-bottom:18px;">
-    <div class="scroll-track" id="track1">
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion · US</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$148K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$17.6K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c1"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Lead Gen — Real Estate · UAE</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv">$576K</div><div class="dp-ml">Lead Value</div></div><div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">$17</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c2"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare · UK</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$340K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$30K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c3"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Lead Gen — EdTech · AU</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">$5</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv">1,840</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">$9.2K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">22%</div><div class="dp-ml">Close Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c4"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Ads — Home Décor · CA</div><div class="dp-dt">Mar 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">6.7×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$225K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$33K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.8%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c5"></div></div></div></div>
-      <!-- duplicates for seamless loop -->
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion · US</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$148K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$17.6K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c1b"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Lead Gen — Real Estate · UAE</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv">$576K</div><div class="dp-ml">Lead Value</div></div><div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">$17</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c2b"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare · UK</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$340K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$30K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c3b"></div></div></div></div>
-    </div>
-  </div>
+  <div class="carousel-wrap" id="proofCarousel">
 
-  <div class="scroll-track-wrapper">
-    <div class="scroll-track scroll-track-rev" id="track2">
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG · SG</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$427K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$47K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c6"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery · US</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$684K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$47.8K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c7"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Leads — B2B SaaS · EU</div><div class="dp-dt">Mar 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">$3.4</div><div class="dp-ml">CPL</div></div><div class="dp-m"><div class="dp-mv">2,400</div><div class="dp-ml">Leads</div></div><div class="dp-m"><div class="dp-mv">$8.1K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">31%</div><div class="dp-ml">SQL Rate</div></div></div><div class="dp-chart"><div class="mini-bars" id="c8"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">DPA — Furniture · UK</div><div class="dp-dt">Dec 2024</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">7.8×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$264K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$33.8K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">2.6%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c9"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">CBO Scale — Health · AU</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">5.9×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$178K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$30K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">1.9%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c10"></div></div></div></div>
-      <!-- duplicates for seamless loop -->
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG · SG</div><div class="dp-dt">Feb 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$427K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$47K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c6b"></div></div></div></div>
-      <div class="dashboard-card"><div class="dp"><div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery · US</div><div class="dp-dt">Jan 2025</div></div><div class="dp-metrics"><div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div><div class="dp-m"><div class="dp-mv">$684K</div><div class="dp-ml">Revenue</div></div><div class="dp-m"><div class="dp-mv">$47.8K</div><div class="dp-ml">Spend</div></div><div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div></div><div class="dp-chart"><div class="mini-bars" id="c7b"></div></div></div></div>
-    </div>
-  </div>
+    <!-- prev / next -->
+    <button class="carousel-btn carousel-btn-prev" onclick="carouselMove(-1)" aria-label="Previous">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="carousel-btn carousel-btn-next" onclick="carouselMove(1)" aria-label="Next">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+
+    <!-- sliding viewport -->
+    <div class="carousel-viewport">
+      <div class="carousel-track" id="carouselTrack">
+
+        <!-- CARD 1 -->
+        <div class="dashboard-card">
+          <div class="dp">
+            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion · US</div><div class="dp-dt">Jan 2025</div></div>
+            <div class="dp-metrics">
+              <div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div>
+              <div class="dp-m"><div class="dp-mv">$148K</div><div class="dp-ml">Revenue</div></div>
+              <div class="dp-m"><div class="dp-mv">$17.6K</div><div class="dp-ml">Spend</div></div>
+              <div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div>
+            </div>
+            <div class="dp-chart"><div class="mini-bars" id="c1"></div></div>
+          </div>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="dashboard-card">
+          <div class="dp">
+            <div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Lead Gen — Real Estate · UAE</div><div class="dp-dt">Dec 2024</div></div>
+            <div class="dp-metrics">
+              <div class="dp-m"><div class="dp-mv">$576K</div><div class="dp-ml">Lead Value</div></div>
+              <div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div>
+              <div class="dp-m"><div class="dp-mv">$17</div><div class="dp-ml">CPL</div></div>
+              <div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div>
+            </div>
+            <div class="dp-chart"><div class="mini-bars" id="c2"></div></div>
+          </div>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="dashboard-card">
+          <div class="dp">
+            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare · UK</div><div class="dp-dt">Feb 2025</div></div>
+            <div class="dp-metrics">
+              <div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div>
+              <div class="dp-m"><div class="dp-mv">$340K</div><div class="dp-ml">Revenue</div></div>
+              <div class="dp-m"><div class="dp-mv">$30K</div><div class="dp-ml">Spend</div></div>
+              <div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div>
+            </div>
+            <div class="dp-chart"><div class="mini-bars" id="c3"></div></div>
+          </div>
+        </div>
+
+        <!-- CARD 4 -->
+        <div class="dashboard-card">
+          <div class="dp">
+            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Lead Gen — EdTech · AU</div><div class="dp-dt">Jan 2025</div></div>
+            <div class="dp-metrics">
+              <div class="dp-m"><div class="dp-mv g">$5</div><div class="dp-ml">CPL</div></div>
+              <div class="dp-m"><div class="dp-mv">1,840</div><div class="dp-ml">Leads</div></div>
+              <div class="dp-m"><div class="dp-mv">$9.2K</div><div class="dp-ml">Spend</div></div>
+              <div class="dp-m"><div class="dp-mv b">22%</div><div class="dp-ml">Close Rate</div></div>
+            </div>
+            <div class="dp-chart"><div class="mini-bars" id="c4"></div></div>
+          </div>
+        </div>
+
+        <!-- CARD 5 -->
+        <div class="dashboard-card">
+          <div class="dp">
+            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Ads — Home Décor · CA</div><div class="dp-dt">Mar 2025</div></div>
+            <div class="dp-metrics">
+              <div class="dp-m"><div class="dp-mv g">6.7×</div><div class="dp-ml">ROAS</div></div>
+              <div class="dp-m"><div class="dp-mv">$225K</div><div class="dp-ml">Revenue</div></div>
+              <div class="dp-m"><div class="dp-mv">$33K</div><div class="dp-ml">Spend</div></div>
+              <div class="dp-m"><div class="dp-mv b">1.8%</div><div class="dp-ml">CTR</div></div>
+            </div>
+            <div class="dp-chart"><div class="mini-bars" id="c5"></div></div>
+          </div>
+        </div>
+
+        <!-- CARD 6 -->
+        <div class="dashboard-card">
+          <div class="dp">
+            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG · SG</div><div class="dp-dt">Feb 2025</div></div>
+            <div class="dp-metrics">
+              <div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div>
+              <div class="dp-m"><div class="dp-mv">$427K</div><div class="dp-ml">Revenue</div></div>
+              <div class="dp-m"><div class="dp-mv">$47K</div><div class="dp-ml">Spend</div></div>
+              <div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div>
+            </div>
+            <div class="dp-chart"><div class="mini-bars" id="c6"></div></div>
+          </div>
+        </div>
+
+        <!-- CARD 7 -->
+        <div class="dashboard-card">
+          <div class="dp">
+            <div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery · US</div><div class="dp-dt">Jan 2025</div></div>
+            <div class="dp-metrics">
+              <div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div>
+              <div class="dp-m"><div class="dp-mv">$684K</div><div class="dp-ml">Revenue</div></div>
+              <div class="dp-m"><div class="dp-mv">$47.8K</div><div class="dp-ml">Spend</div></div>
+              <div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div>
+            </div>
+            <div class="dp-chart"><div class="mini-bars" id="c7"></div></div>
+          </div>
+        </div>
+
+        <!-- CARD 8 -->
+        <div class="dashboard-card">
+          <div class="dp">
+            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Leads — B2B SaaS · EU</div><div class="dp-dt">Mar 2025</div></div>
+            <div class="dp-metrics">
+              <div class="dp-m"><div class="dp-mv g">$3.4</div><div class="dp-ml">CPL</div></div>
+              <div class="dp-m"><div class="dp-mv">2,400</div><div class="dp-ml">Leads</div></div>
+              <div class="dp-m"><div class="dp-mv">$8.1K</div><div class="dp-ml">Spend</div></div>
+              <div class="dp-m"><div class="dp-mv b">31%</div><div class="dp-ml">SQL Rate</div></div>
+            </div>
+            <div class="dp-chart"><div class="mini-bars" id="c8"></div></div>
+          </div>
+        </div>
+
+        <!-- CARD 9 -->
+        <div class="dashboard-card">
+          <div class="dp">
+            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">DPA — Furniture · UK</div><div class="dp-dt">Dec 2024</div></div>
+            <div class="dp-metrics">
+              <div class="dp-m"><div class="dp-mv g">7.8×</div><div class="dp-ml">ROAS</div></div>
+              <div class="dp-m"><div class="dp-mv">$264K</div><div class="dp-ml">Revenue</div></div>
+              <div class="dp-m"><div class="dp-mv">$33.8K</div><div class="dp-ml">Spend</div></div>
+              <div class="dp-m"><div class="dp-mv b">2.6%</div><div class="dp-ml">CTR</div></div>
+            </div>
+            <div class="dp-chart"><div class="mini-bars" id="c9"></div></div>
+          </div>
+        </div>
+
+        <!-- CARD 10 -->
+        <div class="dashboard-card">
+          <div class="dp">
+            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">CBO Scale — Health · AU</div><div class="dp-dt">Feb 2025</div></div>
+            <div class="dp-metrics">
+              <div class="dp-m"><div class="dp-mv g">5.9×</div><div class="dp-ml">ROAS</div></div>
+              <div class="dp-m"><div class="dp-mv">$178K</div><div class="dp-ml">Revenue</div></div>
+              <div class="dp-m"><div class="dp-mv">$30K</div><div class="dp-ml">Spend</div></div>
+              <div class="dp-m"><div class="dp-mv b">1.9%</div><div class="dp-ml">CTR</div></div>
+            </div>
+            <div class="dp-chart"><div class="mini-bars" id="c10"></div></div>
+          </div>
+        </div>
+
+      </div><!-- /carousel-track -->
+    </div><!-- /carousel-viewport -->
+
+    <!-- dots -->
+    <div class="carousel-dots" id="carouselDots"></div>
+    <div class="carousel-counter" id="carouselCounter"></div>
+
+  </div><!-- /carousel-wrap -->
 
 </section>
 
@@ -1787,76 +1990,160 @@ function drawBars(id, heights) {
   });
 }
 const chartData = {
-  c1:[30,45,38,60,55,72,68,80,75,88,82,95], c1b:[30,45,38,60,55,72,68,80,75,88,82,95],
-  c2:[20,35,42,38,55,60,58,70,65,75,80,85], c2b:[20,35,42,38,55,60,58,70,65,75,80,85],
-  c3:[40,55,60,70,65,80,75,85,90,88,92,98], c3b:[40,55,60,70,65,80,75,85,90,88,92,98],
-  c4:[25,30,35,40,38,50,55,60,65,70,68,80], c5:[35,40,45,42,55,60,58,65,70,72,75,82],
-  c6:[30,40,50,55,60,65,70,75,80,85,88,92], c6b:[30,40,50,55,60,65,70,75,80,85,88,92],
-  c7:[20,30,40,50,60,70,75,80,85,88,90,95], c7b:[20,30,40,50,60,70,75,80,85,88,90,95],
-  c8:[40,45,50,55,60,65,70,72,75,78,82,88], c9:[25,35,40,45,50,55,60,65,68,72,76,82],
+  c1:[30,45,38,60,55,72,68,80,75,88,82,95],
+  c2:[20,35,42,38,55,60,58,70,65,75,80,85],
+  c3:[40,55,60,70,65,80,75,85,90,88,92,98],
+  c4:[25,30,35,40,38,50,55,60,65,70,68,80],
+  c5:[35,40,45,42,55,60,58,65,70,72,75,82],
+  c6:[30,40,50,55,60,65,70,75,80,85,88,92],
+  c7:[20,30,40,50,60,70,75,80,85,88,90,95],
+  c8:[40,45,50,55,60,65,70,72,75,78,82,88],
+  c9:[25,35,40,45,50,55,60,65,68,72,76,82],
   c10:[30,38,42,48,52,58,62,68,70,74,78,84]
 };
 Object.entries(chartData).forEach(([id, h]) => drawBars(id, h));
 
-/* ── GITHUB CASE STUDY LOADER ──
-   Drop real Meta dashboard screenshots into the /case-studies/ folder
-   in your GitHub repo. They will automatically appear in the marquee
-   on every page load — no frontend upload needed.
+/* ── PROOF CAROUSEL ── */
+(function() {
+  const track    = document.getElementById('carouselTrack');
+  const dotsWrap = document.getElementById('carouselDots');
+  const counter  = document.getElementById('carouselCounter');
+  if (!track) return;
 
-   HOW TO USE:
-   1. Replace GITHUB_USERNAME and REPO_NAME below with your actual values
-   2. Create a folder called "case-studies" in the root of your repo
-   3. Push any .png / .jpg / .webp screenshots into that folder
-   4. They will auto-populate in both scroll tracks on refresh
+  const cards      = Array.from(track.children);
+  const total      = cards.length;
+  let perView      = getPerView();
+  let current      = 0;          // index of leftmost visible card
+  let autoTimer    = null;
+  let isHovered    = false;
 
-   Screenshots are injected BEFORE the placeholder cards so real
-   results always appear first in the marquee.
-*/
-const GITHUB_USERNAME = 'faisalrathore';
-const REPO_NAME = 'Velmontx';
-const CASE_STUDIES_FOLDER = 'case-studies';
-
-async function loadCaseStudies() {
-  try {
-    const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${CASE_STUDIES_FOLDER}`;
-    const res = await fetch(url);
-    if (!res.ok) return; // folder doesn't exist yet — silently do nothing
-
-    const files = await res.json();
-    const images = files.filter(f => /\.(png|jpg|jpeg|webp)$/i.test(f.name));
-    if (!images.length) return;
-
-    const track1 = document.getElementById('track1');
-    const track2 = document.getElementById('track2');
-
-    images.forEach((file, idx) => {
-      // Build screenshot card
-      const card = document.createElement('div');
-      card.className = 'dashboard-card screenshot';
-      const img = document.createElement('img');
-      img.src = file.download_url;
-      img.alt = file.name.replace(/[-_]/g, ' ').replace(/\.[^.]+$/, '');
-      img.loading = 'lazy';
-      card.appendChild(img);
-
-      // Also build a duplicate for the seamless loop
-      const cardDupe = card.cloneNode(true);
-
-      // Alternate between the two tracks
-      const target = idx % 2 === 0 ? track1 : track2;
-
-      // Insert before the first child so real screenshots lead the marquee
-      target.insertBefore(card, target.firstChild);
-      target.appendChild(cardDupe); // duplicate at end keeps the loop seamless
-    });
-
-  } catch (err) {
-    // Fail silently — placeholder cards remain visible
-    console.warn('VelmontX: Could not load case studies from GitHub.', err);
+  function getPerView() {
+    return window.innerWidth <= 640 ? 1 : window.innerWidth <= 1024 ? 2 : 3;
   }
-}
 
-loadCaseStudies();
+  // max starting index so we never show empty space
+  function maxIndex() { return Math.max(0, total - perView); }
+
+  /* ── build dots ── */
+  function buildDots() {
+    dotsWrap.innerHTML = '';
+    const pages = maxIndex() + 1;
+    for (let i = 0; i < pages; i++) {
+      const d = document.createElement('button');
+      d.className = 'carousel-dot' + (i === current ? ' active' : '');
+      d.setAttribute('aria-label', `Go to slide ${i + 1}`);
+      d.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(d);
+    }
+  }
+
+  function updateDots() {
+    const dots = dotsWrap.querySelectorAll('.carousel-dot');
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  function updateCounter() {
+    const end = Math.min(current + perView, total);
+    counter.textContent = `${current + 1}–${end} of ${total}`;
+  }
+
+  /* ── move track ── */
+  function goTo(idx) {
+    current = Math.max(0, Math.min(idx, maxIndex()));
+    // card width = (viewport width - gaps) / perView
+    const vp        = track.parentElement;
+    const vpW       = vp.offsetWidth;
+    const gap       = 18;
+    const cardW     = (vpW - gap * (perView - 1)) / perView;
+    const offset    = current * (cardW + gap);
+    track.style.transform = `translateX(-${offset}px)`;
+    updateDots();
+    updateCounter();
+  }
+
+  /* ── public nav ── */
+  window.carouselMove = function(dir) {
+    goTo(current + dir);
+    resetAuto();
+  };
+
+  /* ── auto-advance every 3.5s ── */
+  function startAuto() {
+    autoTimer = setInterval(() => {
+      if (!isHovered) goTo(current < maxIndex() ? current + 1 : 0);
+    }, 3500);
+  }
+  function resetAuto() {
+    clearInterval(autoTimer);
+    startAuto();
+  }
+
+  /* ── pause on hover ── */
+  const wrap = document.getElementById('proofCarousel');
+  if (wrap) {
+    wrap.addEventListener('mouseenter', () => { isHovered = true; });
+    wrap.addEventListener('mouseleave', () => { isHovered = false; });
+  }
+
+  /* ── touch / swipe ── */
+  let touchStartX = 0;
+  track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) { carouselMove(diff > 0 ? 1 : -1); }
+  });
+
+  /* ── keyboard ── */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  carouselMove(-1);
+    if (e.key === 'ArrowRight') carouselMove(1);
+  });
+
+  /* ── resize ── */
+  window.addEventListener('resize', () => {
+    const prev = perView;
+    perView = getPerView();
+    if (perView !== prev) {
+      current = Math.min(current, maxIndex());
+      buildDots();
+    }
+    goTo(current);
+  });
+
+  /* ── also inject screenshot cards from GitHub ── */
+  const GITHUB_USERNAME    = 'faisalrathore';
+  const REPO_NAME          = 'Velmontx';
+  const CASE_STUDIES_FOLDER = 'case-studies';
+
+  async function loadCaseStudies() {
+    try {
+      const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${CASE_STUDIES_FOLDER}`;
+      const res = await fetch(url);
+      if (!res.ok) return;
+      const files  = await res.json();
+      const images = files.filter(f => /\.(png|jpg|jpeg|webp)$/i.test(f.name));
+      images.forEach(file => {
+        const card = document.createElement('div');
+        card.className = 'dashboard-card screenshot';
+        const img = document.createElement('img');
+        img.src = file.download_url;
+        img.alt = file.name.replace(/[-_]/g, ' ').replace(/\.[^.]+$/, '');
+        img.loading = 'lazy';
+        card.appendChild(img);
+        track.insertBefore(card, track.firstChild);
+      });
+    } catch(e) { /* fail silently */ }
+    // re-init after possible card injection
+    buildDots();
+    goTo(0);
+  }
+
+  /* ── init ── */
+  buildDots();
+  goTo(0);
+  startAuto();
+  loadCaseStudies();
+})();
 
 /* ── MOBILE NAV ── */
 const hamburger = document.getElementById('hamburger');
