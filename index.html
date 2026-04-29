@@ -183,32 +183,96 @@
 
   /* ───── MARKETS STRIP ───── */
   .markets-strip {
-    background: var(--cream2);
+    background: var(--cream);
     border-bottom: 1px solid var(--border);
-    padding: 14px 64px;
-    display: flex; align-items: center; gap: 20px;
+    border-top: 1px solid var(--border);
+    padding: 20px 64px;
+    display: flex; align-items: center; gap: 24px;
     overflow: hidden;
   }
   .markets-label {
-    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
     letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--muted); white-space: nowrap; flex-shrink: 0;
+    color: var(--dark); white-space: nowrap; flex-shrink: 0;
+    font-weight: 600;
   }
   .markets-list {
-    display: flex; align-items: center; gap: 12px;
+    display: flex; align-items: center; gap: 16px;
     flex-wrap: wrap;
   }
   .market-item {
-    font-family: 'JetBrains Mono', monospace; font-size: 10px;
-    letter-spacing: 0.08em; color: var(--mid);
-    white-space: nowrap;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.08em; color: var(--dark);
+    white-space: nowrap; font-weight: 500;
   }
   .market-dot {
-    color: var(--border-strong); font-size: 10px;
+    color: var(--red); font-size: 12px; font-weight: 700;
   }
   @media(max-width:768px) {
-    .markets-strip { padding: 12px 24px; gap: 12px; }
+    .markets-strip { padding: 16px 24px; gap: 14px; }
     .market-dot { display: none; }
+  }
+
+  /* ───── BRAND LOGOS ───── */
+  .brands-section {
+    background: var(--parchment);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 64px;
+  }
+  .brands-header {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 36px;
+  }
+  .brands-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); 
+  }
+  .brands-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2px;
+  }
+  .brand-logo-item {
+    border: 1px solid var(--border);
+    background: var(--cream);
+    height: 80px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px 24px;
+    transition: border-color 0.25s, background 0.25s;
+  }
+  .brand-logo-item:hover {
+    border-color: rgba(196,28,28,0.2);
+    background: var(--cream2);
+  }
+  .brand-logo-item img {
+    max-width: 100%; max-height: 36px;
+    object-fit: contain;
+    filter: grayscale(100%) opacity(0.55);
+    transition: filter 0.25s;
+  }
+  .brand-logo-item:hover img {
+    filter: grayscale(0%) opacity(1);
+  }
+  /* placeholder slot — shown when image missing */
+  .brand-logo-placeholder {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px;
+    width: 100%; height: 100%;
+    border: 1px dashed var(--border-strong);
+    color: var(--muted);
+  }
+  .brand-logo-placeholder span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  @media(max-width: 900px) {
+    .brands-grid { grid-template-columns: repeat(3, 1fr); }
+    .brands-section { padding: 40px 28px; }
+  }
+  @media(max-width: 480px) {
+    .brands-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   /* ───── STATS ───── */
@@ -432,21 +496,77 @@
   .ps-lbl { font-size:8px; color:var(--muted); font-family:'JetBrains Mono',monospace; letter-spacing:0.12em; text-transform:uppercase; }
 
   /* ───── TESTIMONIALS ───── */
-  .testimonials { background: var(--cream2); }
-  .testimonials-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:44px; }
-  .testimonial {
-    background:var(--parchment); padding:32px 28px; position:relative;
-    border:1px solid var(--border); box-shadow:var(--shadow);
-    transition: all 0.3s;
+  /* ───── TEAM PHOTOS ───── */
+  .team-section { background: var(--dark); padding: 80px 64px; }
+  .team-section .section-label { color: var(--gold); }
+  .team-section .section-label::before { background: var(--gold); }
+  .team-section .section-title { color: #fff; margin-bottom: 36px; }
+  .team-section .section-title em { color: var(--red3); }
+
+  /* 3-photo mosaic grid */
+  .team-mosaic {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 260px 260px;
+    gap: 4px;
+    margin-bottom: 4px;
   }
-  .testimonial::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--red),var(--gold),transparent); }
-  .testimonial:hover { box-shadow:var(--shadow-lg); transform:translateY(-3px); }
-  .quote-mark { font-family:'Barlow Condensed',sans-serif; font-size:64px; line-height:0.6; color:var(--red); opacity:0.18; margin-bottom:18px; }
-  .quote-text { font-family:'Inter',sans-serif; font-size:15px; font-style:italic; font-weight:400; line-height:1.75; color:var(--dark); margin-bottom:28px; }
-  .quote-author { font-size:12px; font-weight:700; letter-spacing:0.08em; color:var(--dark); margin-bottom:4px; text-transform:uppercase; }
-  .quote-company { font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; letter-spacing:0.1em; }
-  .quote-metric { position:absolute; top:36px; right:36px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--red); text-align:right; }
-  .quote-metric strong { display:block; font-size:20px; font-weight:500; margin-bottom:2px; }
+  .team-photo {
+    position: relative; overflow: hidden;
+    background: #1a1a1a;
+    cursor: pointer;
+  }
+  .team-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    display: block;
+    transition: transform 0.5s ease;
+    filter: grayscale(20%);
+  }
+  .team-photo:hover img { transform: scale(1.04); filter: grayscale(0%); }
+  .team-photo-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .team-photo:hover .team-photo-overlay { opacity: 1; }
+  .team-photo-label {
+    position: absolute; bottom: 14px; left: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .team-photo:hover .team-photo-label { opacity: 1; }
+
+  /* span rules */
+  .team-photo.span-2-col { grid-column: span 2; }
+  .team-photo.span-2-row { grid-row: span 2; }
+
+  /* placeholder state */
+  .team-photo-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px;
+    border: 1px dashed rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.2);
+  }
+  .team-photo-placeholder svg { width: 32px; height: 32px; fill: currentColor; opacity: 0.4; }
+  .team-photo-placeholder span {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+  }
+
+  @media(max-width:860px) {
+    .team-mosaic { grid-template-columns: 1fr 1fr; grid-template-rows: 200px 200px 200px; }
+    .team-photo.span-2-col { grid-column: span 1; }
+    .team-section { padding: 60px 28px; }
+  }
+  @media(max-width:560px) {
+    .team-mosaic { grid-template-columns: 1fr; grid-template-rows: repeat(5, 180px); }
+    .team-photo.span-2-row { grid-row: span 1; }
+  }
+
 
   /* ───── CTA ───── */
   .cta-section {
@@ -856,7 +976,7 @@
     .services-grid{grid-template-columns:1fr 1fr;}
     .why-grid{grid-template-columns:1fr 1fr;}
     .process-grid{grid-template-columns:1fr;gap:48px;}
-    .testimonials-grid{grid-template-columns:1fr;}
+    .results-grid{grid-template-columns:1fr;}
     .insights-grid{grid-template-columns:1fr 1fr;}
     .faq-grid{grid-template-columns:1fr;}
     .cta-section{padding:100px 28px;}
@@ -956,6 +1076,52 @@
     <span class="market-item">🇮🇳 India</span>
     <span class="market-dot">·</span>
     <span class="market-item">🇪🇺 Europe</span>
+  </div>
+</div>
+
+<!-- BRAND LOGOS -->
+<div class="brands-section">
+  <div class="brands-header">
+    <div class="brands-label">Platforms &amp; Tools We Work With</div>
+  </div>
+  <div class="brands-grid">
+
+    <!-- SLOT 1 — Meta -->
+    <div class="brand-logo-item">
+      <img src="brand-logos/meta.png" alt="Meta"
+           onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Meta</span></div>'">
+    </div>
+
+    <!-- SLOT 2 — Instagram -->
+    <div class="brand-logo-item">
+      <img src="brand-logos/instagram.png" alt="Instagram"
+           onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Instagram</span></div>'">
+    </div>
+
+    <!-- SLOT 3 — Shopify -->
+    <div class="brand-logo-item">
+      <img src="brand-logos/shopify.png" alt="Shopify"
+           onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Shopify</span></div>'">
+    </div>
+
+    <!-- SLOT 4 — WooCommerce -->
+    <div class="brand-logo-item">
+      <img src="brand-logos/woocommerce.png" alt="WooCommerce"
+           onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>WooCommerce</span></div>'">
+    </div>
+
+    <!-- SLOT 5 — Google Analytics -->
+    <div class="brand-logo-item">
+      <img src="brand-logos/google-analytics.png" alt="Google Analytics"
+           onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Google Analytics</span></div>'">
+    </div>
+
+    <!-- SLOT 6 — Klaviyo -->
+    <div class="brand-logo-item">
+      <img src="brand-logos/klaviyo.png" alt="Klaviyo"
+           onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Klaviyo</span></div>'">
+    </div>
+
   </div>
 </div>
 
@@ -1225,14 +1391,89 @@
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
-<section class="testimonials">
-  <div class="section-label reveal">Client Stories</div>
-  <h2 class="section-title reveal">What Our Clients<br><em>Are Saying</em></h2>
-  <div class="testimonials-grid reveal">
-    <div class="testimonial"><div class="quote-metric"><strong>8.4×</strong>ROAS</div><div class="quote-mark">"</div><p class="quote-text">VelmontX took our Meta Ads from a money pit to our highest-performing revenue channel. In 90 days, 2× to 8.4× ROAS.</p><div class="quote-author">Sarah Mitchell</div><div class="quote-company">CEO · D2C Fashion Brand · US</div></div>
-    <div class="testimonial"><div class="quote-metric"><strong>340</strong>Leads/Mo</div><div class="quote-mark">"</div><p class="quote-text">We were spending $6K/month with mediocre results. After 60 days with VelmontX, same budget, 340 qualified leads. The ROI speaks for itself.</p><div class="quote-author">James Whitfield</div><div class="quote-company">Director · Real Estate Group · UAE</div></div>
-    <div class="testimonial"><div class="quote-metric"><strong>11.2×</strong>ROAS</div><div class="quote-mark">"</div><p class="quote-text">The team genuinely understands the Meta algorithm at a deep level. Scaled us from $600 to $3,600/month in spend while improving ROAS every week.</p><div class="quote-author">Emma Lawson</div><div class="quote-company">Founder · Skincare Brand · UK</div></div>
+<!-- TEAM PHOTOS -->
+<section class="team-section" id="team">
+  <div class="section-label">Behind VelmontX</div>
+  <h2 class="section-title">The People<br><em>Driving Results</em></h2>
+
+  <!--
+  ═══════════════════════════════════════════════════════
+  HOW TO ADD YOUR TEAM PHOTOS
+  ───────────────────────────────────────────────────────
+  1. Create a folder called "team-photos" in your GitHub repo root
+  2. Save your images with these exact filenames:
+       team-photos/photo-1.jpg  ← large left image (meeting room / workspace)
+       team-photos/photo-2.jpg  ← top right (client meeting / call)
+       team-photos/photo-3.jpg  ← middle right (strategy session)
+       team-photos/photo-4.jpg  ← bottom left (desk / working)
+       team-photos/photo-5.jpg  ← bottom right (team / casual)
+  3. Push to GitHub — they appear automatically, no code changes needed
+  4. Best image ratio: landscape 16:9 or 4:3 works well for all slots
+  ═══════════════════════════════════════════════════════
+  -->
+
+  <div class="team-mosaic">
+
+    <!-- Photo 1 — large left, spans 2 rows -->
+    <div class="team-photo span-2-row">
+      <img src="team-photos/photo-1.jpg" alt="VelmontX workspace"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+      <div class="team-photo-placeholder" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        <span>team-photos/photo-1.jpg</span>
+      </div>
+      <div class="team-photo-overlay"></div>
+      <div class="team-photo-label">Our Workspace</div>
+    </div>
+
+    <!-- Photo 2 — top right -->
+    <div class="team-photo">
+      <img src="team-photos/photo-2.jpg" alt="Client meeting"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+      <div class="team-photo-placeholder" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        <span>team-photos/photo-2.jpg</span>
+      </div>
+      <div class="team-photo-overlay"></div>
+      <div class="team-photo-label">Client Meeting</div>
+    </div>
+
+    <!-- Photo 3 — middle right -->
+    <div class="team-photo">
+      <img src="team-photos/photo-3.jpg" alt="Strategy session"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+      <div class="team-photo-placeholder" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        <span>team-photos/photo-3.jpg</span>
+      </div>
+      <div class="team-photo-overlay"></div>
+      <div class="team-photo-label">Strategy Session</div>
+    </div>
+
+    <!-- Photo 4 — bottom left, spans 2 cols -->
+    <div class="team-photo span-2-col">
+      <img src="team-photos/photo-4.jpg" alt="Working on campaigns"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+      <div class="team-photo-placeholder" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        <span>team-photos/photo-4.jpg</span>
+      </div>
+      <div class="team-photo-overlay"></div>
+      <div class="team-photo-label">Campaign Work</div>
+    </div>
+
+    <!-- Photo 5 — bottom right -->
+    <div class="team-photo">
+      <img src="team-photos/photo-5.jpg" alt="The team"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+      <div class="team-photo-placeholder" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        <span>team-photos/photo-5.jpg</span>
+      </div>
+      <div class="team-photo-overlay"></div>
+      <div class="team-photo-label">The Team</div>
+    </div>
+
   </div>
 </section>
 
