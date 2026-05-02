@@ -797,21 +797,35 @@
   /* ───── WHATSAPP BUTTON ───── */
   .wa-btn {
     position: fixed; bottom: 28px; right: 28px; z-index: 998;
-    width: 56px; height: 56px; border-radius: 50%;
-    background: #25d366; box-shadow: 0 4px 20px rgba(37,211,102,0.4);
-    display: flex; align-items: center; justify-content: center;
+    display: flex; align-items: center; gap: 10px;
+    background: #25d366; box-shadow: 0 4px 24px rgba(37,211,102,0.45);
+    padding: 13px 20px 13px 16px;
+    border-radius: 50px;
     text-decoration: none; transition: all 0.3s;
+    animation: waPulse 2.5s ease-in-out infinite;
   }
-  .wa-btn:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(37,211,102,0.55); }
-  .wa-btn svg { width: 28px; height: 28px; fill: #fff; }
-  .wa-tooltip {
-    position: absolute; right: 68px; top: 50%; transform: translateY(-50%);
-    background: var(--dark); color: #fff; white-space: nowrap;
-    font-family: 'JetBrains Mono', monospace; font-size: 10px;
-    letter-spacing: 0.08em; padding: 7px 14px;
-    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  @keyframes waPulse {
+    0%, 100% { box-shadow: 0 4px 24px rgba(37,211,102,0.45); }
+    50%       { box-shadow: 0 4px 36px rgba(37,211,102,0.75); }
   }
-  .wa-btn:hover .wa-tooltip { opacity: 1; }
+  .wa-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(37,211,102,0.6); animation: none; }
+  .wa-btn svg { width: 22px; height: 22px; fill: #fff; flex-shrink: 0; }
+  .wa-btn-text {
+    display: flex; flex-direction: column; gap: 1px;
+  }
+  .wa-btn-label {
+    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700;
+    color: #fff; letter-spacing: 0.02em; white-space: nowrap; line-height: 1.2;
+  }
+  .wa-btn-sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    color: rgba(255,255,255,0.75); letter-spacing: 0.08em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  @media(max-width:480px) {
+    .wa-btn { bottom: 20px; right: 20px; padding: 11px 16px 11px 14px; }
+    .wa-btn-sub { display: none; }
+  }
 
   /* ───── MOBILE NAV ───── */
   .nav-hamburger {
@@ -1008,9 +1022,9 @@
     </div>
 
     <!-- SLOT 5 — Google Analytics -->
-    <div class="brand-logo-item" onclick="togglePlatform(this, 'google-analytics')">
-      <img src="brand-logos/google-analytics.png" alt="Google Analytics"
-           onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Google Analytics</span></div>'">
+    <div class="brand-logo-item" onclick="togglePlatform(this, 'google-ads')">
+      <img src="brand-logos/google-ads.png" alt="Google Ads"
+           onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Google Ads</span></div>'">
     </div>
 
     <!-- SLOT 6 — Microsoft Advertising -->
@@ -1996,9 +2010,9 @@ const platformData = {
     name: 'WooCommerce',
     desc: 'WooCommerce stores need a more hands-on tracking setup than Shopify. We handle <strong>server-side CAPI integration, product feed setup for dynamic ads, and custom conversion event configuration</strong> — so your Meta campaigns are optimising on real purchase data, not browser-limited signals.'
   },
-  'google-analytics': {
-    name: 'Google Analytics (GA4)',
-    desc: 'We use GA4 as the single source of truth for cross-channel performance. <strong>Custom event tracking, funnel analysis, audience exports to Meta, and revenue attribution</strong> — we set up GA4 properly so you can see exactly which campaigns, channels, and creatives are driving real business outcomes.'
+  'google-ads': {
+    name: 'Google Ads',
+    desc: 'We run <strong>Search, Shopping, Performance Max, and YouTube campaigns</strong> that capture high-intent demand. Combined with Meta, Google Ads completes the full funnel — Meta creates desire, Google captures it. We manage both in sync so your budget works harder across every touchpoint.'
   },
   'microsoft': {
     name: 'Microsoft Advertising',
@@ -2136,7 +2150,12 @@ if (auditForm) {
 </script>
 <!-- WHATSAPP FLOATING BUTTON -->
 <a class="wa-btn" href="https://wa.me/9596864140?text=Hi%20VelmontX%2C%20I%27d%20like%20to%20discuss%20Meta%20Ads%20for%20my%20business." target="_blank" aria-label="Contact on WhatsApp">
-  <span class="wa-tooltip">Contact on WhatsApp</span>
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.35C8.44 21.51 10.18 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.93 13.86c-.21.59-1.06 1.08-1.65 1.2-.44.09-.99.16-2.89-.62-2.43-.99-3.99-3.45-4.11-3.61-.12-.16-.98-1.3-.98-2.49 0-1.18.62-1.77.84-2.01.22-.24.48-.3.64-.3h.46c.15 0 .35-.05.55.42.2.48.69 1.68.75 1.8.06.12.1.26.02.42-.08.16-.12.26-.24.4-.12.14-.25.31-.36.42-.12.12-.24.25-.1.49.14.24.62 1.02 1.33 1.65.91.81 1.68 1.06 1.92 1.18.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.54-.12.22.08 1.42.67 1.66.79.24.12.4.18.46.28.06.1.06.56-.15 1.1z"/></svg>
+  <div class="wa-btn-text">
+    <span class="wa-btn-label">Chat with us</span>
+    <span class="wa-btn-sub">Typically replies in minutes</span>
+  </div>
+</a>
   <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="#fff">
     <path d="M16 2C8.268 2 2 8.268 2 16c0 2.478.675 4.797 1.85 6.787L2 30l7.424-1.82A13.94 13.94 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm0 25.5a11.44 11.44 0 01-5.826-1.594l-.418-.248-4.33 1.063 1.092-4.227-.272-.432A11.45 11.45 0 014.5 16C4.5 9.648 9.648 4.5 16 4.5S27.5 9.648 27.5 16 22.352 27.5 16 27.5zm6.29-8.533c-.345-.172-2.04-1.006-2.356-1.12-.316-.115-.546-.172-.776.172-.23.345-.89 1.12-1.09 1.35-.2.23-.4.258-.745.086-.345-.172-1.456-.537-2.773-1.713-1.025-.916-1.717-2.047-1.918-2.392-.2-.345-.021-.531.151-.703.154-.154.345-.4.517-.6.172-.2.23-.345.345-.575.115-.23.057-.43-.029-.602-.086-.172-.776-1.87-1.063-2.562-.28-.672-.564-.58-.776-.591l-.66-.011c-.23 0-.603.086-.919.43-.316.345-1.206 1.178-1.206 2.873s1.235 3.332 1.407 3.562c.172.23 2.43 3.71 5.888 5.205.823.355 1.465.567 1.966.726.826.263 1.578.226 2.172.137.662-.099 2.04-.834 2.328-1.638.287-.804.287-1.493.2-1.638-.086-.144-.316-.23-.66-.402z"/>
   </svg>
