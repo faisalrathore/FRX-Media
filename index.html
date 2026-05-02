@@ -236,23 +236,24 @@
   .brand-logo-item {
     border: 1px solid var(--border);
     background: var(--cream);
-    height: 80px;
+    height: 90px;
     display: flex; align-items: center; justify-content: center;
-    padding: 16px 24px;
-    transition: border-color 0.25s, background 0.25s;
+    padding: 20px 32px;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
   }
   .brand-logo-item:hover {
-    border-color: rgba(196,28,28,0.2);
-    background: var(--cream2);
+    border-color: rgba(196,28,28,0.25);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    transform: translateY(-4px) scale(1.03);
   }
   .brand-logo-item img {
-    max-width: 100%; max-height: 36px;
+    max-width: 100%; max-height: 48px;
     object-fit: contain;
-    filter: grayscale(100%) opacity(0.55);
-    transition: filter 0.25s;
+    filter: none;
+    transition: transform 0.25s;
   }
   .brand-logo-item:hover img {
-    filter: grayscale(0%) opacity(1);
+    filter: none;
   }
   /* placeholder slot — shown when image missing */
   .brand-logo-placeholder {
