@@ -361,7 +361,59 @@
   }
 
   /* ───── SHOWCASE ───── */
-  /* ── SHOWCASE / CAROUSEL ── */
+  /* ───── PLATFORM ACCORDION ───── */
+  .platform-panel {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+    grid-column: 1 / -1;
+  }
+  .platform-panel.is-open { max-height: 400px; }
+  .platform-panel-inner {
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 40px; align-items: start;
+    padding: 28px 32px;
+    background: var(--dark);
+    border-top: 2px solid var(--red);
+  }
+  .platform-panel-text { }
+  .platform-panel-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 800; text-transform: uppercase;
+    color: #fff; letter-spacing: 0.02em; margin-bottom: 10px;
+  }
+  .platform-panel-desc {
+    font-size: 13px; color: rgba(255,255,255,0.5);
+    line-height: 1.85; font-weight: 300; max-width: 560px;
+  }
+  .platform-panel-desc strong { color: rgba(255,255,255,0.8); font-weight: 500; }
+  .platform-panel-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-top: 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--red3); text-decoration: none;
+    border-bottom: 1px solid rgba(196,28,28,0.3);
+    padding-bottom: 2px; transition: border-color 0.25s, color 0.25s;
+  }
+  .platform-panel-cta:hover { color: #fff; border-color: #fff; }
+  .platform-panel-close {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; color: rgba(255,255,255,0.4);
+    transition: all 0.25s; font-size: 18px; line-height: 1;
+    margin-top: 4px;
+  }
+  .platform-panel-close:hover { background: var(--red); border-color: var(--red); color: #fff; }
+
+  /* active card state */
+  .brand-logo-item.active {
+    border-color: var(--red);
+    background: var(--dark);
+  }
+  .brand-logo-item.active img { filter: brightness(0) invert(1) opacity(0.9); }
+  .brand-logo-item.active .brand-logo-placeholder { color: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.15); }
+  .brand-logo-item.active .brand-logo-placeholder span { color: rgba(255,255,255,0.5); }
   .showcase { background: var(--cream3); overflow: hidden; padding: 80px 0; }
   .showcase-header { padding: 0 64px; max-width: 680px; margin-bottom: 44px; }
   .showcase-sub { font-size: 15px; color: var(--mid); line-height: 1.85; margin-top: 18px; font-weight: 300; }
@@ -925,46 +977,58 @@
 </div>
 
 <!-- BRAND LOGOS -->
-<div class="brands-section">
+<div class="brands-section" id="platformsSection">
   <div class="brands-header">
     <div class="brands-label">Platforms &amp; Tools We Work With</div>
   </div>
-  <div class="brands-grid">
+  <div class="brands-grid" id="brandsGrid">
 
     <!-- SLOT 1 — Meta -->
-    <div class="brand-logo-item">
+    <div class="brand-logo-item" onclick="togglePlatform(this, 'meta')">
       <img src="brand-logos/meta.png" alt="Meta"
            onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Meta</span></div>'">
     </div>
 
-    <!-- SLOT 2 — Instagram -->
-    <div class="brand-logo-item">
+    <!-- SLOT 2 — LinkedIn Ads -->
+    <div class="brand-logo-item" onclick="togglePlatform(this, 'linkedin')">
       <img src="brand-logos/linkedin-ads.png" alt="LinkedIn Ads"
            onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>LinkedIn Ads</span></div>'">
     </div>
 
     <!-- SLOT 3 — Shopify -->
-    <div class="brand-logo-item">
+    <div class="brand-logo-item" onclick="togglePlatform(this, 'shopify')">
       <img src="brand-logos/shopify.png" alt="Shopify"
            onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Shopify</span></div>'">
     </div>
 
     <!-- SLOT 4 — WooCommerce -->
-    <div class="brand-logo-item">
+    <div class="brand-logo-item" onclick="togglePlatform(this, 'woocommerce')">
       <img src="brand-logos/woocommerce.png" alt="WooCommerce"
            onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>WooCommerce</span></div>'">
     </div>
 
     <!-- SLOT 5 — Google Analytics -->
-    <div class="brand-logo-item">
+    <div class="brand-logo-item" onclick="togglePlatform(this, 'google-analytics')">
       <img src="brand-logos/google-analytics.png" alt="Google Analytics"
            onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Google Analytics</span></div>'">
     </div>
 
-    <!-- SLOT 6 — Klaviyo -->
-    <div class="brand-logo-item">
+    <!-- SLOT 6 — Microsoft Advertising -->
+    <div class="brand-logo-item" onclick="togglePlatform(this, 'microsoft')">
       <img src="brand-logos/microsoft-advertising.png" alt="Microsoft Advertising"
            onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Microsoft Advertising</span></div>'">
+    </div>
+
+    <!-- ACCORDION PANEL — spans full width, hidden by default -->
+    <div class="platform-panel" id="platformPanel">
+      <div class="platform-panel-inner">
+        <div class="platform-panel-text">
+          <div class="platform-panel-name" id="platformName"></div>
+          <p class="platform-panel-desc" id="platformDesc"></p>
+          <a class="platform-panel-cta" href="#contact">Work with us on this platform →</a>
+        </div>
+        <div class="platform-panel-close" onclick="closePlatform()">×</div>
+      </div>
     </div>
 
   </div>
@@ -1912,6 +1976,77 @@ hamburger.addEventListener('click', () => {
 function closeMobileMenu() {
   hamburger.classList.remove('open');
   mobileMenu.classList.remove('open');
+}
+
+/* ── PLATFORM ACCORDION ── */
+const platformData = {
+  'meta': {
+    name: 'Meta Ads (Facebook & Instagram)',
+    desc: 'Meta is our primary battleground. We build full-funnel campaigns — cold prospecting, retargeting, and Advantage+ — with <strong>deep audience architecture, CAPI server-side tracking, and creative strategies</strong> that compound ROAS month over month. From $500/month budgets to $50K+, we know exactly how to make Meta\'s algorithm work for your business.'
+  },
+  'linkedin': {
+    name: 'LinkedIn Ads',
+    desc: 'For B2B brands targeting professionals, decision-makers, and enterprise buyers. We run <strong>lead gen forms, thought leadership campaigns, and retargeting sequences</strong> that reach the right people at the right seniority level. LinkedIn CPLs are higher — so we make sure every lead counts.'
+  },
+  'shopify': {
+    name: 'Shopify',
+    desc: 'We integrate Meta and Google ad campaigns directly with Shopify stores — <strong>pixel setup, CAPI via Shopify\'s native integration, dynamic product ads (DPA), and catalogue campaigns</strong> that show the right product to the right person at the right time. If you\'re on Shopify, we know exactly how to scale your revenue.'
+  },
+  'woocommerce': {
+    name: 'WooCommerce',
+    desc: 'WooCommerce stores need a more hands-on tracking setup than Shopify. We handle <strong>server-side CAPI integration, product feed setup for dynamic ads, and custom conversion event configuration</strong> — so your Meta campaigns are optimising on real purchase data, not browser-limited signals.'
+  },
+  'google-analytics': {
+    name: 'Google Analytics (GA4)',
+    desc: 'We use GA4 as the single source of truth for cross-channel performance. <strong>Custom event tracking, funnel analysis, audience exports to Meta, and revenue attribution</strong> — we set up GA4 properly so you can see exactly which campaigns, channels, and creatives are driving real business outcomes.'
+  },
+  'microsoft': {
+    name: 'Microsoft Advertising',
+    desc: 'Microsoft Advertising reaches a <strong>high-intent, professional audience on Bing, LinkedIn, and the Microsoft network</strong> — often at lower CPCs than Google. We run search, shopping, and audience campaigns on Microsoft to capture demand that your competitors are ignoring, giving you a cost-efficient edge in competitive markets.'
+  }
+};
+
+function togglePlatform(card, key) {
+  const panel     = document.getElementById('platformPanel');
+  const nameEl    = document.getElementById('platformName');
+  const descEl    = document.getElementById('platformDesc');
+  const allCards  = document.querySelectorAll('.brand-logo-item');
+  const isOpen    = card.classList.contains('active');
+
+  // close all
+  allCards.forEach(c => c.classList.remove('active'));
+  panel.classList.remove('is-open');
+
+  if (!isOpen) {
+    const data = platformData[key];
+    nameEl.textContent  = data.name;
+    descEl.innerHTML    = data.desc;
+    card.classList.add('active');
+    panel.classList.add('is-open');
+    // smooth scroll so panel is visible
+    setTimeout(() => {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 60);
+  }
+}
+
+function closePlatform() {
+  document.querySelectorAll('.brand-logo-item').forEach(c => c.classList.remove('active'));
+  document.getElementById('platformPanel').classList.remove('is-open');
+}
+
+// Auto-close when section scrolls fully out of view
+const platformsSection = document.getElementById('platformsSection');
+if (platformsSection) {
+  const platformObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) {
+        const rect = e.target.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) closePlatform();
+      }
+    });
+  }, { threshold: 0 });
+  platformObs.observe(platformsSection);
 }
 
 /* ── BLOG ACCORDION ── */
