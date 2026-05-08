@@ -478,9 +478,119 @@
   .mini-bars { display:flex; align-items:flex-end; gap:3px; height:100%; padding:8px; }
   .mini-bar { flex:1; border-radius:1px 1px 0 0; background:linear-gradient(180deg,var(--red),rgba(196,28,28,0.2)); }
 
-  /* screenshot image cards */
-  .dashboard-card.screenshot img {
-    width:100%; height:100%; object-fit:cover; display:block;
+  /* ── STORY CARDS ── */
+  .story-card {
+    flex: 0 0 calc(33.333% - 12px);
+    min-width: 0;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    background: var(--dark);
+  }
+  .story-card:hover {
+    border-color: rgba(196,28,28,0.3);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+  }
+
+  /* screenshot as background */
+  .story-bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: top center;
+    opacity: 0.18;
+    filter: grayscale(20%);
+    transition: opacity 0.6s;
+  }
+  .story-card:hover .story-bg { opacity: 0.25; }
+
+  /* dark gradient overlay so text is always readable */
+  .story-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(10,10,10,0.55) 0%,
+      rgba(10,10,10,0.75) 60%,
+      rgba(10,10,10,0.92) 100%
+    );
+  }
+
+  /* frames container */
+  .story-frames {
+    position: absolute; inset: 0;
+    z-index: 2;
+  }
+
+  /* single frame */
+  .story-frame {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 18px 20px;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+  }
+  .story-frame.active { opacity: 1; }
+
+  /* frame top tag */
+  .story-tag {
+    position: absolute; top: 14px; left: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); background: rgba(0,0,0,0.5);
+    padding: 3px 8px; border-left: 2px solid var(--red);
+  }
+
+  /* frame number indicator */
+  .story-frame-dots {
+    position: absolute; top: 14px; right: 14px;
+    display: flex; gap: 4px;
+  }
+  .story-frame-dot {
+    width: 16px; height: 2px; background: rgba(255,255,255,0.25);
+    transition: background 0.3s, width 0.3s;
+  }
+  .story-frame-dot.active { background: var(--red); width: 24px; }
+
+  /* frame content */
+  .story-frame-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45); margin-bottom: 6px;
+  }
+  .story-stat {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(28px, 3.5vw, 42px); font-weight: 800;
+    color: #fff; line-height: 1; letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .story-stat em { color: var(--red3); font-style: normal; }
+  .story-desc {
+    font-size: 11px; color: rgba(255,255,255,0.55);
+    line-height: 1.6; font-weight: 300; max-width: 280px;
+  }
+  .story-desc strong { color: rgba(255,255,255,0.85); font-weight: 500; }
+
+  /* progress bar at bottom */
+  .story-progress {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: rgba(255,255,255,0.08);
+  }
+  .story-progress-bar {
+    height: 100%; background: var(--red);
+    width: 0%; transition: width linear;
+  }
+
+  @media(max-width:1024px) {
+    .story-card { flex-basis: calc(50% - 9px); }
+  }
+  @media(max-width:640px) {
+    .story-card { flex-basis: 100%; }
+    .story-stat { font-size: 32px; }
   }
 
   /* prev / next arrows */
@@ -1222,144 +1332,292 @@
     <div class="carousel-viewport">
       <div class="carousel-track" id="carouselTrack">
 
-        <!-- CARD 1 -->
-        <div class="dashboard-card">
-          <div class="dp">
-            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Campaign — D2C Fashion · US</div><div class="dp-dt">Jan 2025</div></div>
-            <div class="dp-metrics">
-              <div class="dp-m"><div class="dp-mv g">8.4×</div><div class="dp-ml">ROAS</div></div>
-              <div class="dp-m"><div class="dp-mv">$148K</div><div class="dp-ml">Revenue</div></div>
-              <div class="dp-m"><div class="dp-mv">$17.6K</div><div class="dp-ml">Spend</div></div>
-              <div class="dp-m"><div class="dp-mv b">1.2%</div><div class="dp-ml">CTR</div></div>
-            </div>
-            <div class="dp-chart"><div class="mini-bars" id="c1"></div></div>
+        <!-- CARD 1: Health & Supplements -->
+        <div class="story-card" data-story="0">
+          <div class="story-bg" style="background-image:url('case-studies/01-health-supplements.jpg')"></div>
+          <div class="story-overlay"></div>
+          <div class="story-frame-dots">
+            <div class="story-frame-dot active"></div>
+            <div class="story-frame-dot"></div>
+            <div class="story-frame-dot"></div>
           </div>
+          <div class="story-frames">
+            <div class="story-frame active">
+              <div class="story-tag">Health &amp; Supplements · Full Year</div>
+              <div class="story-frame-label">The Campaign</div>
+              <div class="story-stat"><em>13,228</em> Purchases</div>
+              <div class="story-desc">Apr 2025 – Mar 2026 · Meta Ads · 5 active ad sets scaled simultaneously</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Health &amp; Supplements · Peak Performance</div>
+              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-stat"><em>13.44×</em> ROAS</div>
+              <div class="story-desc">5,612 purchases at <strong>$7.80 per purchase</strong> — lowest CPP in the account's history</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Health &amp; Supplements · The Strategy</div>
+              <div class="story-frame-label">How We Did It</div>
+              <div class="story-stat">CBO + <em>Broad</em></div>
+              <div class="story-desc">Consolidated 5 ad sets under CBO. Broad audiences fed the algorithm. Creative rotation every 3 weeks prevented fatigue.</div>
+            </div>
+          </div>
+          <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 2 -->
-        <div class="dashboard-card">
-          <div class="dp">
-            <div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#e1306c,#f56040)">f</div><div class="dp-ttl">Lead Gen — Real Estate · UAE</div><div class="dp-dt">Dec 2024</div></div>
-            <div class="dp-metrics">
-              <div class="dp-m"><div class="dp-mv">$576K</div><div class="dp-ml">Lead Value</div></div>
-              <div class="dp-m"><div class="dp-mv g">340</div><div class="dp-ml">Leads</div></div>
-              <div class="dp-m"><div class="dp-mv">$17</div><div class="dp-ml">CPL</div></div>
-              <div class="dp-m"><div class="dp-mv b">4.8%</div><div class="dp-ml">Conv Rate</div></div>
-            </div>
-            <div class="dp-chart"><div class="mini-bars" id="c2"></div></div>
+        <!-- CARD 2: Beauty & Skincare -->
+        <div class="story-card" data-story="1">
+          <div class="story-bg" style="background-image:url('case-studies/02-beauty-skincare.jpg')"></div>
+          <div class="story-overlay"></div>
+          <div class="story-frame-dots">
+            <div class="story-frame-dot active"></div>
+            <div class="story-frame-dot"></div>
+            <div class="story-frame-dot"></div>
           </div>
+          <div class="story-frames">
+            <div class="story-frame active">
+              <div class="story-tag">Beauty &amp; Skincare · Full Year</div>
+              <div class="story-frame-label">The Campaign</div>
+              <div class="story-stat"><em>10,480</em> Purchases</div>
+              <div class="story-desc">Apr 2025 – Mar 2026 · Highly competitive beauty vertical · 5 scaled ad sets</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Beauty &amp; Skincare · Peak Performance</div>
+              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-stat"><em>13.62×</em> ROAS</div>
+              <div class="story-desc">4,318 purchases at <strong>$9.40 per purchase</strong> in a category where most brands pay $40–60</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Beauty &amp; Skincare · The Strategy</div>
+              <div class="story-frame-label">How We Did It</div>
+              <div class="story-stat">UGC + <em>CAPI</em></div>
+              <div class="story-desc">Native UGC creative reduced CPM by 38%. Server-side CAPI setup recovered lost purchase signals post-iOS14.</div>
+            </div>
+          </div>
+          <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 3 -->
-        <div class="dashboard-card">
-          <div class="dp">
-            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">eCommerce — Skincare · UK</div><div class="dp-dt">Feb 2025</div></div>
-            <div class="dp-metrics">
-              <div class="dp-m"><div class="dp-mv g">11.2×</div><div class="dp-ml">ROAS</div></div>
-              <div class="dp-m"><div class="dp-mv">$340K</div><div class="dp-ml">Revenue</div></div>
-              <div class="dp-m"><div class="dp-mv">$30K</div><div class="dp-ml">Spend</div></div>
-              <div class="dp-m"><div class="dp-mv b">2.1%</div><div class="dp-ml">CTR</div></div>
-            </div>
-            <div class="dp-chart"><div class="mini-bars" id="c3"></div></div>
+        <!-- CARD 3: Gadgets & Electronics -->
+        <div class="story-card" data-story="2">
+          <div class="story-bg" style="background-image:url('case-studies/03-gadgets-electronics.jpg')"></div>
+          <div class="story-overlay"></div>
+          <div class="story-frame-dots">
+            <div class="story-frame-dot active"></div>
+            <div class="story-frame-dot"></div>
+            <div class="story-frame-dot"></div>
           </div>
+          <div class="story-frames">
+            <div class="story-frame active">
+              <div class="story-tag">Gadgets &amp; Electronics · Full Year</div>
+              <div class="story-frame-label">The Campaign</div>
+              <div class="story-stat"><em>2,560</em> Purchases</div>
+              <div class="story-desc">Apr 2025 – Mar 2026 · High AOV electronics · Competitive category with tight margins</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Gadgets &amp; Electronics · Peak Performance</div>
+              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-stat"><em>12.48×</em> ROAS</div>
+              <div class="story-desc">1,112 purchases at <strong>$32.40 per purchase</strong> — strong return on a high-ticket product</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Gadgets &amp; Electronics · The Strategy</div>
+              <div class="story-frame-label">How We Did It</div>
+              <div class="story-stat">DPA + <em>Retarget</em></div>
+              <div class="story-desc">Dynamic Product Ads for catalogue visitors + sequential retargeting for cart abandoners. Longer consideration cycle managed with 3-touch sequence.</div>
+            </div>
+          </div>
+          <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 4 -->
-        <div class="dashboard-card">
-          <div class="dp">
-            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Lead Gen — EdTech · AU</div><div class="dp-dt">Jan 2025</div></div>
-            <div class="dp-metrics">
-              <div class="dp-m"><div class="dp-mv g">$5</div><div class="dp-ml">CPL</div></div>
-              <div class="dp-m"><div class="dp-mv">1,840</div><div class="dp-ml">Leads</div></div>
-              <div class="dp-m"><div class="dp-mv">$9.2K</div><div class="dp-ml">Spend</div></div>
-              <div class="dp-m"><div class="dp-mv b">22%</div><div class="dp-ml">Close Rate</div></div>
-            </div>
-            <div class="dp-chart"><div class="mini-bars" id="c4"></div></div>
+        <!-- CARD 4: Petcare & Accessories -->
+        <div class="story-card" data-story="3">
+          <div class="story-bg" style="background-image:url('case-studies/04-petcare-accessories.jpg')"></div>
+          <div class="story-overlay"></div>
+          <div class="story-frame-dots">
+            <div class="story-frame-dot active"></div>
+            <div class="story-frame-dot"></div>
+            <div class="story-frame-dot"></div>
           </div>
+          <div class="story-frames">
+            <div class="story-frame active">
+              <div class="story-tag">Petcare &amp; Accessories · Full Year</div>
+              <div class="story-frame-label">The Campaign</div>
+              <div class="story-stat"><em>13,552</em> Purchases</div>
+              <div class="story-desc">Apr 2025 – Mar 2026 · High repeat-purchase category · Subscription and one-time buyers</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Petcare &amp; Accessories · Peak Performance</div>
+              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-stat"><em>13.16×</em> ROAS</div>
+              <div class="story-desc">5,844 purchases at <strong>$6.60 per purchase</strong> — exceptional CPP for a physical product category</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Petcare &amp; Accessories · The Strategy</div>
+              <div class="story-frame-label">How We Did It</div>
+              <div class="story-stat">LTV + <em>Scale</em></div>
+              <div class="story-desc">Segmented repeat buyers vs new buyers. Retention campaigns ran separately from acquisition. LTV-based bidding increased budget headroom.</div>
+            </div>
+          </div>
+          <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 5 -->
-        <div class="dashboard-card">
-          <div class="dp">
-            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Ads — Home Décor · CA</div><div class="dp-dt">Mar 2025</div></div>
-            <div class="dp-metrics">
-              <div class="dp-m"><div class="dp-mv g">6.7×</div><div class="dp-ml">ROAS</div></div>
-              <div class="dp-m"><div class="dp-mv">$225K</div><div class="dp-ml">Revenue</div></div>
-              <div class="dp-m"><div class="dp-mv">$33K</div><div class="dp-ml">Spend</div></div>
-              <div class="dp-m"><div class="dp-mv b">1.8%</div><div class="dp-ml">CTR</div></div>
-            </div>
-            <div class="dp-chart"><div class="mini-bars" id="c5"></div></div>
+        <!-- CARD 5: Automotive & Parts -->
+        <div class="story-card" data-story="4">
+          <div class="story-bg" style="background-image:url('case-studies/05-automotive-parts.jpg')"></div>
+          <div class="story-overlay"></div>
+          <div class="story-frame-dots">
+            <div class="story-frame-dot active"></div>
+            <div class="story-frame-dot"></div>
+            <div class="story-frame-dot"></div>
           </div>
+          <div class="story-frames">
+            <div class="story-frame active">
+              <div class="story-tag">Automotive &amp; Parts · Full Year</div>
+              <div class="story-frame-label">The Campaign</div>
+              <div class="story-stat"><em>2,878</em> Purchases</div>
+              <div class="story-desc">Apr 2025 – Mar 2026 · Niche automotive aftermarket · High-intent buyer audience</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Automotive &amp; Parts · Peak Performance</div>
+              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-stat"><em>12.16×</em> ROAS</div>
+              <div class="story-desc">1,244 purchases at <strong>$28.40 per purchase</strong> in a category historically hard to scale on Meta</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Automotive &amp; Parts · The Strategy</div>
+              <div class="story-frame-label">How We Did It</div>
+              <div class="story-stat">Intent + <em>Broad</em></div>
+              <div class="story-desc">Dropped interest targeting. Broad audience + strong product-specific creative let Meta find auto enthusiasts the algorithm already knew.</div>
+            </div>
+          </div>
+          <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 6 -->
-        <div class="dashboard-card">
-          <div class="dp">
-            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Advantage+ — FMCG · SG</div><div class="dp-dt">Feb 2025</div></div>
-            <div class="dp-metrics">
-              <div class="dp-m"><div class="dp-mv g">9.1×</div><div class="dp-ml">ROAS</div></div>
-              <div class="dp-m"><div class="dp-mv">$427K</div><div class="dp-ml">Revenue</div></div>
-              <div class="dp-m"><div class="dp-mv">$47K</div><div class="dp-ml">Spend</div></div>
-              <div class="dp-m"><div class="dp-mv b">3.2%</div><div class="dp-ml">CTR</div></div>
-            </div>
-            <div class="dp-chart"><div class="mini-bars" id="c6"></div></div>
+        <!-- CARD 6: Home & Furniture -->
+        <div class="story-card" data-story="5">
+          <div class="story-bg" style="background-image:url('case-studies/06-home-furniture.jpg')"></div>
+          <div class="story-overlay"></div>
+          <div class="story-frame-dots">
+            <div class="story-frame-dot active"></div>
+            <div class="story-frame-dot"></div>
+            <div class="story-frame-dot"></div>
           </div>
+          <div class="story-frames">
+            <div class="story-frame active">
+              <div class="story-tag">Home &amp; Furniture · Full Year</div>
+              <div class="story-frame-label">The Campaign</div>
+              <div class="story-stat"><em>1,998</em> Purchases</div>
+              <div class="story-desc">Apr 2025 – Mar 2026 · High AOV home goods · Longer purchase consideration cycle</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Home &amp; Furniture · Peak Performance</div>
+              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-stat"><em>12.92×</em> ROAS</div>
+              <div class="story-desc">844 purchases at <strong>$38.40 per purchase</strong> — strong return on a considered, high-value purchase</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Home &amp; Furniture · The Strategy</div>
+              <div class="story-frame-label">How We Did It</div>
+              <div class="story-stat">Funnel + <em>Sequence</em></div>
+              <div class="story-desc">3-stage funnel: awareness video → lifestyle static → offer retargeting. Extended 14-day retargeting window matched the longer decision timeline.</div>
+            </div>
+          </div>
+          <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 7 -->
-        <div class="dashboard-card">
-          <div class="dp">
-            <div class="dp-hdr"><div class="dp-logo" style="background:linear-gradient(135deg,#7b2d8b,#c13584)">f</div><div class="dp-ttl">Retargeting — Jewellery · US</div><div class="dp-dt">Jan 2025</div></div>
-            <div class="dp-metrics">
-              <div class="dp-m"><div class="dp-mv g">14.3×</div><div class="dp-ml">ROAS</div></div>
-              <div class="dp-m"><div class="dp-mv">$684K</div><div class="dp-ml">Revenue</div></div>
-              <div class="dp-m"><div class="dp-mv">$47.8K</div><div class="dp-ml">Spend</div></div>
-              <div class="dp-m"><div class="dp-mv b">4.1%</div><div class="dp-ml">CTR</div></div>
-            </div>
-            <div class="dp-chart"><div class="mini-bars" id="c7"></div></div>
+        <!-- CARD 7: Fitness & Gym Wear -->
+        <div class="story-card" data-story="6">
+          <div class="story-bg" style="background-image:url('case-studies/07-fitness-gymwear.jpg')"></div>
+          <div class="story-overlay"></div>
+          <div class="story-frame-dots">
+            <div class="story-frame-dot active"></div>
+            <div class="story-frame-dot"></div>
+            <div class="story-frame-dot"></div>
           </div>
+          <div class="story-frames">
+            <div class="story-frame active">
+              <div class="story-tag">Fitness &amp; Gym Wear · Full Year</div>
+              <div class="story-frame-label">The Campaign</div>
+              <div class="story-stat"><em>7,716</em> Purchases</div>
+              <div class="story-desc">Apr 2025 – Mar 2026 · Highly visual product category · Strong seasonal peaks leveraged</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Fitness &amp; Gym Wear · Peak Performance</div>
+              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-stat"><em>13.92×</em> ROAS</div>
+              <div class="story-desc">3,244 purchases at <strong>$11.80 per purchase</strong> — dominated New Year and summer seasonal windows</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Fitness &amp; Gym Wear · The Strategy</div>
+              <div class="story-frame-label">How We Did It</div>
+              <div class="story-stat">Creative + <em>Season</em></div>
+              <div class="story-desc">Seasonal creative calendar built 6 weeks ahead. UGC workout content outperformed studio shoots 3:1. Budget surged 40% during peak windows.</div>
+            </div>
+          </div>
+          <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 8 -->
-        <div class="dashboard-card">
-          <div class="dp">
-            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">Meta Leads — B2B SaaS · EU</div><div class="dp-dt">Mar 2025</div></div>
-            <div class="dp-metrics">
-              <div class="dp-m"><div class="dp-mv g">$3.4</div><div class="dp-ml">CPL</div></div>
-              <div class="dp-m"><div class="dp-mv">2,400</div><div class="dp-ml">Leads</div></div>
-              <div class="dp-m"><div class="dp-mv">$8.1K</div><div class="dp-ml">Spend</div></div>
-              <div class="dp-m"><div class="dp-mv b">31%</div><div class="dp-ml">SQL Rate</div></div>
-            </div>
-            <div class="dp-chart"><div class="mini-bars" id="c8"></div></div>
+        <!-- CARD 8: Sports & Outdoor -->
+        <div class="story-card" data-story="7">
+          <div class="story-bg" style="background-image:url('case-studies/08-sports-outdoor.jpg')"></div>
+          <div class="story-overlay"></div>
+          <div class="story-frame-dots">
+            <div class="story-frame-dot active"></div>
+            <div class="story-frame-dot"></div>
+            <div class="story-frame-dot"></div>
           </div>
+          <div class="story-frames">
+            <div class="story-frame active">
+              <div class="story-tag">Sports &amp; Outdoor · Full Year</div>
+              <div class="story-frame-label">The Campaign</div>
+              <div class="story-stat"><em>6,150</em> Purchases</div>
+              <div class="story-desc">Apr 2025 – Mar 2026 · Broad sports category · Multiple SKUs managed under unified campaign structure</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Sports &amp; Outdoor · Peak Performance</div>
+              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-stat"><em>13.28×</em> ROAS</div>
+              <div class="story-desc">2,648 purchases at <strong>$13.40 per purchase</strong> — consistent performance sustained across all 12 months</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Sports &amp; Outdoor · The Strategy</div>
+              <div class="story-frame-label">How We Did It</div>
+              <div class="story-stat">ASC+ + <em>CBO</em></div>
+              <div class="story-desc">Advantage+ Shopping Campaigns handled prospecting. Manual CBO managed retargeting. Combined structure reduced CPP by 31% vs previous agency.</div>
+            </div>
+          </div>
+          <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 9 -->
-        <div class="dashboard-card">
-          <div class="dp">
-            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">DPA — Furniture · UK</div><div class="dp-dt">Dec 2024</div></div>
-            <div class="dp-metrics">
-              <div class="dp-m"><div class="dp-mv g">7.8×</div><div class="dp-ml">ROAS</div></div>
-              <div class="dp-m"><div class="dp-mv">$264K</div><div class="dp-ml">Revenue</div></div>
-              <div class="dp-m"><div class="dp-mv">$33.8K</div><div class="dp-ml">Spend</div></div>
-              <div class="dp-m"><div class="dp-mv b">2.6%</div><div class="dp-ml">CTR</div></div>
-            </div>
-            <div class="dp-chart"><div class="mini-bars" id="c9"></div></div>
+        <!-- CARD 9: Jewellery & Accessories -->
+        <div class="story-card" data-story="8">
+          <div class="story-bg" style="background-image:url('case-studies/09-jewellery-accessories.jpg')"></div>
+          <div class="story-overlay"></div>
+          <div class="story-frame-dots">
+            <div class="story-frame-dot active"></div>
+            <div class="story-frame-dot"></div>
+            <div class="story-frame-dot"></div>
           </div>
-        </div>
-
-        <!-- CARD 10 -->
-        <div class="dashboard-card">
-          <div class="dp">
-            <div class="dp-hdr"><div class="dp-logo">f</div><div class="dp-ttl">CBO Scale — Health · AU</div><div class="dp-dt">Feb 2025</div></div>
-            <div class="dp-metrics">
-              <div class="dp-m"><div class="dp-mv g">5.9×</div><div class="dp-ml">ROAS</div></div>
-              <div class="dp-m"><div class="dp-mv">$178K</div><div class="dp-ml">Revenue</div></div>
-              <div class="dp-m"><div class="dp-mv">$30K</div><div class="dp-ml">Spend</div></div>
-              <div class="dp-m"><div class="dp-mv b">1.9%</div><div class="dp-ml">CTR</div></div>
+          <div class="story-frames">
+            <div class="story-frame active">
+              <div class="story-tag">Jewellery &amp; Accessories · Full Year</div>
+              <div class="story-frame-label">The Campaign</div>
+              <div class="story-stat"><em>4,246</em> Purchases</div>
+              <div class="story-desc">Apr 2025 – Mar 2026 · Premium jewellery · High AOV with strong gifting seasonality</div>
             </div>
-            <div class="dp-chart"><div class="mini-bars" id="c10"></div></div>
+            <div class="story-frame">
+              <div class="story-tag">Jewellery &amp; Accessories · Peak Performance</div>
+              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-stat"><em>13.56×</em> ROAS</div>
+              <div class="story-desc">1,844 purchases at <strong>$18.20 per purchase</strong> — exceptional CPP for a premium jewellery brand</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-tag">Jewellery &amp; Accessories · The Strategy</div>
+              <div class="story-frame-label">How We Did It</div>
+              <div class="story-stat">Gift + <em>Retarget</em></div>
+              <div class="story-desc">Gifting-angle creatives for Valentine's, Mother's Day, and Christmas drove volume spikes. Isolated top ad sets and scaled independently to protect ROAS.</div>
+            </div>
           </div>
+          <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
       </div><!-- /carousel-track -->
@@ -1975,125 +2233,141 @@ const statsObs = new IntersectionObserver(entries => {
 const strip = document.getElementById('statsStrip');
 if (strip) statsObs.observe(strip);
 
-/* ── MINI BAR CHARTS ── */
-function drawBars(id, heights) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.innerHTML = '';
-  heights.forEach(h => {
-    const b = document.createElement('div');
-    b.className = 'mini-bar';
-    b.style.height = h + '%';
-    el.appendChild(b);
-  });
-}
-const chartData = {
-  c1:[30,45,38,60,55,72,68,80,75,88,82,95],
-  c2:[20,35,42,38,55,60,58,70,65,75,80,85],
-  c3:[40,55,60,70,65,80,75,85,90,88,92,98],
-  c4:[25,30,35,40,38,50,55,60,65,70,68,80],
-  c5:[35,40,45,42,55,60,58,65,70,72,75,82],
-  c6:[30,40,50,55,60,65,70,75,80,85,88,92],
-  c7:[20,30,40,50,60,70,75,80,85,88,90,95],
-  c8:[40,45,50,55,60,65,70,72,75,78,82,88],
-  c9:[25,35,40,45,50,55,60,65,68,72,76,82],
-  c10:[30,38,42,48,52,58,62,68,70,74,78,84]
-};
-Object.entries(chartData).forEach(([id, h]) => drawBars(id, h));
-
-/* ── PROOF CAROUSEL ── */
+/* ── STORY CAROUSEL ── */
 (function() {
   const track    = document.getElementById('carouselTrack');
   const dotsWrap = document.getElementById('carouselDots');
   const counter  = document.getElementById('carouselCounter');
   if (!track) return;
 
-  const cards      = Array.from(track.children);
+  const cards      = Array.from(track.querySelectorAll('.story-card'));
   const total      = cards.length;
   let perView      = getPerView();
-  let current      = 0;          // index of leftmost visible card
+  let current      = 0;
   let autoTimer    = null;
   let isHovered    = false;
+
+  // Per-card story state
+  const storyTimers = {};
+  const FRAME_DURATION = 2800; // ms per frame
 
   function getPerView() {
     return window.innerWidth <= 640 ? 1 : window.innerWidth <= 1024 ? 2 : 3;
   }
-
-  // max starting index so we never show empty space
   function maxIndex() { return Math.max(0, total - perView); }
 
-  /* ── build dots ── */
+  /* ── dots ── */
   function buildDots() {
     dotsWrap.innerHTML = '';
-    const pages = maxIndex() + 1;
-    for (let i = 0; i < pages; i++) {
+    for (let i = 0; i <= maxIndex(); i++) {
       const d = document.createElement('button');
       d.className = 'carousel-dot' + (i === current ? ' active' : '');
-      d.setAttribute('aria-label', `Go to slide ${i + 1}`);
       d.addEventListener('click', () => goTo(i));
       dotsWrap.appendChild(d);
     }
   }
-
   function updateDots() {
-    const dots = dotsWrap.querySelectorAll('.carousel-dot');
-    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    dotsWrap.querySelectorAll('.carousel-dot').forEach((d, i) =>
+      d.classList.toggle('active', i === current));
   }
-
   function updateCounter() {
-    const end = Math.min(current + perView, total);
-    counter.textContent = `${current + 1}–${end} of ${total}`;
+    counter.textContent = `${current + 1}–${Math.min(current + perView, total)} of ${total}`;
   }
 
-  /* ── move track ── */
+  /* ── move carousel ── */
   function goTo(idx) {
     current = Math.max(0, Math.min(idx, maxIndex()));
-    // card width = (viewport width - gaps) / perView
-    const vp        = track.parentElement;
-    const vpW       = vp.offsetWidth;
-    const gap       = 18;
-    const cardW     = (vpW - gap * (perView - 1)) / perView;
-    const offset    = current * (cardW + gap);
-    track.style.transform = `translateX(-${offset}px)`;
+    const vp    = track.parentElement;
+    const vpW   = vp.offsetWidth;
+    const gap   = 18;
+    const cardW = (vpW - gap * (perView - 1)) / perView;
+    track.style.transform = `translateX(-${current * (cardW + gap)}px)`;
     updateDots();
     updateCounter();
+    // start stories for visible cards
+    startVisibleStories();
   }
 
-  /* ── public nav ── */
   window.carouselMove = function(dir) {
     goTo(current + dir);
     resetAuto();
   };
 
-  /* ── auto-advance every 3.5s ── */
+  /* ── story frames ── */
+  function startStory(card) {
+    const idx = parseInt(card.dataset.story);
+    if (storyTimers[idx]) return; // already running
+    const frames     = card.querySelectorAll('.story-frame');
+    const frameDots  = card.querySelectorAll('.story-frame-dot');
+    const progressBar = card.querySelector('.story-progress-bar');
+    let frame = 0;
+
+    function showFrame(f) {
+      frames.forEach((fr, i) => fr.classList.toggle('active', i === f));
+      frameDots.forEach((d, i) => d.classList.toggle('active', i === f));
+      // animate progress bar
+      if (progressBar) {
+        progressBar.style.transition = 'none';
+        progressBar.style.width = '0%';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            progressBar.style.transition = `width ${FRAME_DURATION}ms linear`;
+            progressBar.style.width = '100%';
+          });
+        });
+      }
+    }
+
+    showFrame(0);
+    storyTimers[idx] = setInterval(() => {
+      if (isHovered) return;
+      frame = (frame + 1) % frames.length;
+      showFrame(frame);
+    }, FRAME_DURATION);
+  }
+
+  function stopStory(card) {
+    const idx = parseInt(card.dataset.story);
+    if (storyTimers[idx]) {
+      clearInterval(storyTimers[idx]);
+      delete storyTimers[idx];
+    }
+  }
+
+  function startVisibleStories() {
+    cards.forEach((card, i) => {
+      const visible = i >= current && i < current + perView;
+      if (visible) startStory(card);
+      else stopStory(card);
+    });
+  }
+
+  /* ── auto-advance carousel ── */
   function startAuto() {
     autoTimer = setInterval(() => {
       if (!isHovered) goTo(current < maxIndex() ? current + 1 : 0);
-    }, 3500);
+    }, FRAME_DURATION * 3 + 500); // advance after all 3 frames play
   }
-  function resetAuto() {
-    clearInterval(autoTimer);
-    startAuto();
-  }
+  function resetAuto() { clearInterval(autoTimer); startAuto(); }
 
-  /* ── pause on hover ── */
+  /* ── hover pause ── */
   const wrap = document.getElementById('proofCarousel');
   if (wrap) {
     wrap.addEventListener('mouseenter', () => { isHovered = true; });
     wrap.addEventListener('mouseleave', () => { isHovered = false; });
   }
 
-  /* ── touch / swipe ── */
+  /* ── touch swipe ── */
   let touchStartX = 0;
   track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
   track.addEventListener('touchend', e => {
     const diff = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) { carouselMove(diff > 0 ? 1 : -1); }
+    if (Math.abs(diff) > 40) carouselMove(diff > 0 ? 1 : -1);
   });
 
   /* ── keyboard ── */
   document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft')  carouselMove(-1);
+    if (e.key === 'ArrowLeft') carouselMove(-1);
     if (e.key === 'ArrowRight') carouselMove(1);
   });
 
@@ -2101,59 +2375,15 @@ Object.entries(chartData).forEach(([id, h]) => drawBars(id, h));
   window.addEventListener('resize', () => {
     const prev = perView;
     perView = getPerView();
-    if (perView !== prev) {
-      current = Math.min(current, maxIndex());
-      buildDots();
-    }
+    if (perView !== prev) { current = Math.min(current, maxIndex()); buildDots(); }
     goTo(current);
   });
-
-  /* ── also inject screenshot cards from GitHub ── */
-  const GITHUB_USERNAME    = 'faisalrathore';
-  const REPO_NAME          = 'Velmontx';
-  const CASE_STUDIES_FOLDER = 'case-studies';
-
-  async function loadCaseStudies() {
-    try {
-      const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${CASE_STUDIES_FOLDER}`;
-      const res = await fetch(url);
-      if (!res.ok) return;
-      const files  = await res.json();
-      const images = files.filter(f => /\.(png|jpg|jpeg|webp)$/i.test(f.name));
-      images.forEach(file => {
-        const card = document.createElement('div');
-        card.className = 'dashboard-card screenshot';
-        const img = document.createElement('img');
-        img.src = file.download_url;
-        img.alt = file.name.replace(/[-_]/g, ' ').replace(/\.[^.]+$/, '');
-        img.loading = 'lazy';
-        card.appendChild(img);
-        track.insertBefore(card, track.firstChild);
-      });
-    } catch(e) { /* fail silently */ }
-    // re-init after possible card injection
-    buildDots();
-    goTo(0);
-  }
 
   /* ── init ── */
   buildDots();
   goTo(0);
   startAuto();
-  loadCaseStudies();
 })();
-
-/* ── MOBILE NAV ── */
-const hamburger = document.getElementById('hamburger');
-const mobileMenu = document.getElementById('mobileMenu');
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  mobileMenu.classList.toggle('open');
-});
-function closeMobileMenu() {
-  hamburger.classList.remove('open');
-  mobileMenu.classList.remove('open');
-}
 
 /* ── PLATFORM ACCORDION ── */
 const platformData = {
@@ -2312,7 +2542,7 @@ if (auditForm) {
 }
 </script>
 <!-- WHATSAPP FLOATING BUTTON -->
-<a class="wa-btn" href="https://wa.me/919596864140?text=Hi%20VelmontX%2C%20I%27d%20like%20to%20discuss%20Meta%20Ads%20for%20my%20business." target="_blank" aria-label="Contact on WhatsApp">
+<a class="wa-btn" href="https://wa.me/9596864140?text=Hi%20VelmontX%2C%20I%27d%20like%20to%20discuss%20Meta%20Ads%20for%20my%20business." target="_blank" aria-label="Contact on WhatsApp">
   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.35C8.44 21.51 10.18 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.93 13.86c-.21.59-1.06 1.08-1.65 1.2-.44.09-.99.16-2.89-.62-2.43-.99-3.99-3.45-4.11-3.61-.12-.16-.98-1.3-.98-2.49 0-1.18.62-1.77.84-2.01.22-.24.48-.3.64-.3h.46c.15 0 .35-.05.55.42.2.48.69 1.68.75 1.8.06.12.1.26.02.42-.08.16-.12.26-.24.4-.12.14-.25.31-.36.42-.12.12-.24.25-.1.49.14.24.62 1.02 1.33 1.65.91.81 1.68 1.06 1.92 1.18.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.54-.12.22.08 1.42.67 1.66.79.24.12.4.18.46.28.06.1.06.56-.15 1.1z"/></svg>
   <div class="wa-btn-text">
     <span class="wa-btn-label">Chat with us</span>
