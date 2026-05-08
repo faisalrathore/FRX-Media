@@ -369,134 +369,6 @@
   }
 
   /* ───── SHOWCASE ───── */
-  /* ───── STORY MODAL ───── */
-  .story-modal-backdrop {
-    position: fixed; inset: 0; z-index: 1000;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(6px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.35s ease;
-  }
-  .story-modal-backdrop.open {
-    opacity: 1; pointer-events: all;
-  }
-  .story-modal {
-    background: var(--dark);
-    width: 100%; max-width: 420px;
-    max-height: 90vh;
-    overflow-y: auto;
-    border: 1px solid rgba(255,255,255,0.08);
-    position: relative;
-    transform: translateY(32px) scale(0.97);
-    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-    scrollbar-width: none;
-  }
-  .story-modal::-webkit-scrollbar { display: none; }
-  .story-modal-backdrop.open .story-modal {
-    transform: translateY(0) scale(1);
-  }
-
-  /* close button */
-  .story-modal-close {
-    position: absolute; top: 14px; right: 14px; z-index: 10;
-    width: 32px; height: 32px; border-radius: 50%;
-    background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15);
-    color: #fff; font-size: 18px; line-height: 1;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: background 0.2s;
-  }
-  .story-modal-close:hover { background: var(--red); border-color: var(--red); }
-
-  /* screenshot top */
-  .story-modal-img {
-    width: 100%;
-    aspect-ratio: 16/9;
-    background-size: cover; background-position: top center;
-    position: relative; flex-shrink: 0;
-  }
-  .story-modal-img::after {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-    height: 60px;
-    background: linear-gradient(to bottom, transparent, var(--dark));
-  }
-
-  /* body */
-  .story-modal-body { padding: 24px 26px 32px; }
-
-  .story-modal-tag {
-    font-family: 'JetBrains Mono', monospace; font-size: 9px;
-    letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--red3); margin-bottom: 18px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .story-modal-tag::before {
-    content: ''; width: 20px; height: 1px; background: var(--red);
-  }
-
-  /* section divider */
-  .story-modal-section {
-    margin-bottom: 22px; padding-bottom: 22px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .story-modal-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-
-  .story-modal-section-label {
-    font-family: 'JetBrains Mono', monospace; font-size: 8px;
-    letter-spacing: 0.28em; text-transform: uppercase;
-    color: rgba(255,255,255,0.3); margin-bottom: 10px;
-  }
-  .story-modal-headline {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 36px; font-weight: 800; color: #fff;
-    line-height: 1; letter-spacing: -0.01em; margin-bottom: 6px;
-  }
-  .story-modal-headline em { color: var(--red3); font-style: normal; }
-  .story-modal-sub {
-    font-size: 13px; color: rgba(255,255,255,0.5);
-    line-height: 1.7; font-weight: 300;
-  }
-  .story-modal-sub strong { color: rgba(255,255,255,0.85); font-weight: 500; }
-
-  .story-modal-stats {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 2px; margin-top: 14px;
-  }
-  .story-modal-stat {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    padding: 12px 14px;
-  }
-  .story-modal-stat-val {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 22px; font-weight: 800; color: #fff; line-height: 1;
-    margin-bottom: 3px;
-  }
-  .story-modal-stat-val em { color: var(--red3); font-style: normal; }
-  .story-modal-stat-label {
-    font-family: 'JetBrains Mono', monospace; font-size: 8px;
-    letter-spacing: 0.15em; text-transform: uppercase;
-    color: rgba(255,255,255,0.3);
-  }
-
-  .story-modal-cta {
-    display: block; text-align: center;
-    margin-top: 24px; padding: 14px;
-    background: var(--red); color: #fff;
-    font-family: 'Inter', sans-serif; font-size: 11px;
-    font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
-    text-decoration: none; transition: background 0.2s;
-  }
-  .story-modal-cta:hover { background: var(--red2); }
-
-  @media(max-width: 480px) {
-    .story-modal-backdrop { padding: 0; align-items: flex-end; }
-    .story-modal { max-width: 100%; max-height: 92vh; border-radius: 0; }
-    .story-modal-backdrop.open .story-modal { transform: translateY(0); }
-    .story-modal-backdrop .story-modal { transform: translateY(100%); }
-  }
-
   /* ───── PLATFORM ACCORDION ───── */
   .platform-panel {
     max-height: 0; overflow: hidden;
@@ -606,256 +478,9 @@
   .mini-bars { display:flex; align-items:flex-end; gap:3px; height:100%; padding:8px; }
   .mini-bar { flex:1; border-radius:1px 1px 0 0; background:linear-gradient(180deg,var(--red),rgba(196,28,28,0.2)); }
 
-  /* ───── STORY MODAL ───── */
-  .story-modal-backdrop {
-    position: fixed; inset: 0; z-index: 9998;
-    background: rgba(0,0,0,0.85);
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  .story-modal-backdrop.open {
-    opacity: 1; pointer-events: all;
-  }
-  .story-modal {
-    background: var(--dark);
-    width: 100%; max-width: 420px;
-    max-height: 92vh;
-    overflow-y: auto;
-    position: relative;
-    border: 1px solid rgba(255,255,255,0.08);
-    transform: translateY(32px) scale(0.97);
-    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-    scrollbar-width: none;
-  }
-  .story-modal::-webkit-scrollbar { display: none; }
-  .story-modal-backdrop.open .story-modal {
-    transform: translateY(0) scale(1);
-  }
-
-  /* screenshot top */
-  .modal-screenshot {
-    width: 100%; aspect-ratio: 16/9;
-    background-size: cover; background-position: top center;
-    position: relative; flex-shrink: 0;
-  }
-  .modal-screenshot-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to bottom, transparent 50%, var(--dark) 100%);
-  }
-
-  /* close button */
-  .modal-close {
-    position: absolute; top: 12px; right: 12px; z-index: 2;
-    width: 32px; height: 32px; border-radius: 50%;
-    background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15);
-    color: #fff; font-size: 16px; line-height: 1;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s;
-  }
-  .modal-close:hover { background: var(--red); border-color: var(--red); }
-
-  /* modal body */
-  .modal-body { padding: 20px 24px 32px; }
-
-  .modal-industry {
-    font-family: 'JetBrains Mono', monospace; font-size: 9px;
-    letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--red3); margin-bottom: 4px;
-  }
-  .modal-period {
-    font-family: 'JetBrains Mono', monospace; font-size: 8px;
-    letter-spacing: 0.12em; color: rgba(255,255,255,0.3);
-    margin-bottom: 20px;
-  }
-
-  /* section blocks */
-  .modal-block {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .modal-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-
-  .modal-block-label {
-    font-family: 'JetBrains Mono', monospace; font-size: 8px;
-    letter-spacing: 0.25em; text-transform: uppercase;
-    color: rgba(255,255,255,0.28); margin-bottom: 10px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .modal-block-label::before {
-    content: ''; width: 20px; height: 1px; background: var(--red); flex-shrink: 0;
-  }
-
-  .modal-stats {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-  }
-  .modal-stat {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
-    padding: 12px 14px;
-  }
-  .modal-stat-val {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 26px; font-weight: 800; color: #fff;
-    line-height: 1; margin-bottom: 3px;
-  }
-  .modal-stat-val em { color: var(--red3); font-style: normal; }
-  .modal-stat-label {
-    font-family: 'JetBrains Mono', monospace; font-size: 7px;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: rgba(255,255,255,0.3);
-  }
-
-  .modal-strategy {
-    font-size: 13px; color: rgba(255,255,255,0.55);
-    line-height: 1.85; font-weight: 300;
-  }
-  .modal-strategy strong { color: rgba(255,255,255,0.85); font-weight: 500; }
-
-  .modal-cta {
-    display: block; text-align: center; margin-top: 24px;
-    padding: 14px; background: var(--red); color: #fff;
-    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700;
-    letter-spacing: 0.15em; text-transform: uppercase;
-    text-decoration: none; transition: background 0.2s;
-  }
-  .modal-cta:hover { background: var(--red2); }
-
-  @media(max-width:480px) {
-    .story-modal-backdrop { padding: 0; align-items: flex-end; }
-    .story-modal { max-width: 100%; max-height: 88vh; border-radius: 0; }
-    .story-modal-backdrop.open .story-modal { transform: translateY(0); }
-    .story-modal-backdrop .story-modal { transform: translateY(100%); }
-  }
-
-  /* ───── STORY CARDS ───── */
-  .story-card {
-    flex: 0 0 calc(33.333% - 12px);
-    min-width: 0;
-    position: relative;
-    aspect-ratio: 16 / 9;
-    border-radius: 2px;
-    border: 1px solid var(--border);
-    overflow: hidden;
-    cursor: pointer;
-    box-shadow: var(--shadow);
-    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
-    background: var(--dark);
-  }
-  .story-card:hover {
-    border-color: rgba(196,28,28,0.3);
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-3px);
-  }
-
-  /* screenshot as background */
-  .story-bg {
-    position: absolute; inset: 0;
-    background-size: cover; background-position: top center;
-    opacity: 0.35;
-    filter: grayscale(10%);
-    transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
-  }
-  /* hover — full screenshot reveal, overlay fades, content fades out */
-  .story-card:hover .story-bg {
-    opacity: 1;
-    filter: grayscale(0%);
-    transform: scale(1.03);
-  }
-  .story-card:hover .story-overlay { opacity: 0; }
-  .story-card:hover .story-frames { opacity: 0; }
-  .story-card:hover .story-progress { opacity: 0; }
-  .story-card:hover .story-frame-dots { opacity: 0; }
-
-  /* dark gradient overlay so text is always readable */
-  .story-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(10,10,10,0.4) 0%,
-      rgba(10,10,10,0.65) 50%,
-      rgba(10,10,10,0.88) 100%
-    );
-    transition: opacity 0.5s ease;
-  }
-
-  /* frames container */
-  .story-frames {
-    position: absolute; inset: 0;
-    z-index: 2;
-    transition: opacity 0.4s ease;
-  }
-
-  /* single frame */
-  .story-frame {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    justify-content: flex-end;
-    padding: 18px 20px;
-    opacity: 0;
-    transition: opacity 0.7s ease;
-  }
-  .story-frame.active { opacity: 1; }
-
-  /* frame top tag — white now, bigger */
-  .story-tag {
-    position: absolute; top: 14px; left: 16px;
-    font-family: 'JetBrains Mono', monospace; font-size: 9px;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: #fff; background: rgba(0,0,0,0.55);
-    padding: 4px 10px; border-left: 2px solid var(--red);
-  }
-
-  /* frame number indicator */
-  .story-frame-dots {
-    position: absolute; top: 14px; right: 14px;
-    display: flex; gap: 4px;
-    transition: opacity 0.4s ease;
-  }
-  .story-frame-dot {
-    width: 16px; height: 2px; background: rgba(255,255,255,0.25);
-    transition: background 0.3s, width 0.3s;
-  }
-  .story-frame-dot.active { background: var(--red); width: 24px; }
-
-  /* frame content */
-  .story-frame-label {
-    font-family: 'JetBrains Mono', monospace; font-size: 9px;
-    letter-spacing: 0.2em; text-transform: uppercase;
-    color: rgba(255,255,255,0.55); margin-bottom: 6px;
-  }
-  .story-stat {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(30px, 3.5vw, 44px); font-weight: 800;
-    color: #fff; line-height: 1; letter-spacing: -0.01em;
-    margin-bottom: 4px;
-  }
-  .story-stat em { color: var(--red3); font-style: normal; }
-  .story-desc {
-    font-size: 12px; color: rgba(255,255,255,0.65);
-    line-height: 1.6; font-weight: 300; max-width: 280px;
-  }
-  .story-desc strong { color: #fff; font-weight: 500; }
-
-  /* progress bar at bottom */
-  .story-progress {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    height: 2px; background: rgba(255,255,255,0.08);
-    transition: opacity 0.4s ease;
-  }
-  .story-progress-bar {
-    height: 100%; background: var(--red);
-    width: 0%; transition: width linear;
-  }
-
-  @media(max-width:1024px) {
-    .story-card { flex-basis: calc(50% - 9px); }
-  }
-  @media(max-width:640px) {
-    .story-card { flex-basis: 100%; }
-    .story-stat { font-size: 32px; }
+  /* screenshot image cards */
+  .dashboard-card.screenshot img {
+    width:100%; height:100%; object-fit:cover; display:block;
   }
 
   /* prev / next arrows */
@@ -1327,109 +952,176 @@
     .results-grid{grid-template-columns:1fr;}
     .insights-grid{grid-template-columns:1fr 1fr;}
     .faq-grid{grid-template-columns:1fr;}
-    .cta-section{padding:80px 28px;}
+    .cta-section{padding:100px 28px;}
     footer{flex-direction:column;gap:24px;text-align:center;padding:40px 28px;}
     .footer-links{flex-wrap:wrap;justify-content:center;}
     .showcase-header{padding:0 28px;}
     .why-section{padding:56px 28px;}
   }
   @media(max-width:640px){
-    /* General */
-    section{ padding: 44px 20px; }
-    .section-title { font-size: clamp(28px, 8vw, 42px); margin-bottom: 8px; }
-    .section-label { margin-bottom: 10px; }
-
-    /* Hero */
-    .hero-title { font-size: clamp(36px, 11vw, 56px); }
-    .hero-sub { font-size: 13px; margin-bottom: 24px; }
-    .hero-actions { flex-direction: column; align-items: center; gap: 12px; }
-    .btn-primary, .btn-ghost { width: 100%; text-align: center; padding: 14px 24px; }
-    .hero-divider { margin: 16px auto; }
-
-    /* Stats */
-    .stats-strip { grid-template-columns: repeat(2,1fr); gap: 0; }
-    .stat-item { padding: 20px 16px; }
-    .stat-num { font-size: clamp(28px, 8vw, 36px); }
-
-    /* Markets */
-    .markets-strip { padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
-    .market-dot { display: none; }
-    .market-item { font-size: 10px; }
-
-    /* Brands */
-    .brands-section { padding: 32px 20px; }
-    .brands-grid { grid-template-columns: repeat(3,1fr); gap: 2px; }
-    .brand-logo-item { height: 64px; padding: 10px 14px; }
-    .brand-logo-item img { max-height: 32px; }
-
-    /* Services — compact accordion-like on mobile */
-    .services-grid { grid-template-columns: 1fr; gap: 2px; }
-    .service-card { padding: 18px 20px; display: flex; flex-direction: row; align-items: flex-start; gap: 14px; }
-    .service-card::before { display: none; }
-    .service-num { font-size: 8px; margin-bottom: 0; flex-shrink: 0; width: 60px; padding-top: 4px; }
-    .service-name { font-size: 16px; margin-bottom: 6px; }
-    .service-desc { font-size: 12px; line-height: 1.7; }
-    .service-tag { font-size: 8px; margin-top: 8px; }
-
-    /* Why VelmontX */
-    .why-section { padding: 44px 20px; }
-    .why-grid { grid-template-columns: 1fr; gap: 2px; margin-top: 28px; }
-    .why-card { padding: 20px 18px; display: flex; flex-direction: row; align-items: flex-start; gap: 14px; }
-    .why-icon { font-size: 8px; flex-shrink: 0; width: 70px; padding-top: 3px; margin-bottom: 0; }
-    .why-title { font-size: 15px; margin-bottom: 6px; }
-    .why-desc { font-size: 12px; line-height: 1.7; }
-
-    /* Process */
-    .process-grid { grid-template-columns: 1fr; gap: 32px; }
-    .process-step { padding: 16px 0; gap: 16px; }
-    .step-num { font-size: 28px; }
-    .step-title { font-size: 16px; }
-    .step-desc { font-size: 12px; }
-
-    /* Carousel */
-    .carousel-wrap { padding: 0 14px; }
-    .dashboard-card { flex-basis: 100%; }
-    .dp-metrics { grid-template-columns: repeat(2,1fr); }
-    .carousel-btn { width: 36px; height: 36px; }
-
-    /* Blog / Insights */
-    .insights-header { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 24px; }
-    .insights-grid { grid-template-columns: 1fr; }
-    .blog-trigger { padding: 18px 16px; gap: 14px; }
-    .blog-headline { font-size: 18px; }
-    .blog-deck { font-size: 12px; }
-    .blog-toggle { width: 32px; height: 32px; }
-    .blog-content { padding: 0 16px 28px; grid-template-columns: 1fr; gap: 24px; }
-    .blog-sidebar { padding-top: 0; }
-
-    /* Platform accordion */
-    .platform-panel-inner { grid-template-columns: 1fr; gap: 16px; padding: 20px 18px; }
-    .platform-panel-name { font-size: 18px; }
-    .platform-panel-desc { font-size: 12px; }
-
-    /* FAQ */
-    .faq-q { font-size: 14px; padding: 16px 14px; }
-    .faq-a p { font-size: 13px; padding: 0 14px 16px; }
-
-    /* Photo break */
-    .photo-break { height: 220px; }
-    .photo-break-content { padding: 0 24px; }
-    .photo-break-quote { font-size: clamp(18px, 5vw, 26px); }
-
-    /* CTA form */
-    .cta-section { padding: 56px 20px; }
-    .form-row { grid-template-columns: 1fr; }
-    .form-submit-row { flex-direction: column; align-items: stretch; }
-    .form-submit-btn { text-align: center; padding: 16px; }
-
-    /* Footer */
-    footer { padding: 32px 20px; }
-
-    /* WhatsApp */
-    .wa-btn { bottom: 16px; right: 16px; padding: 10px 14px 10px 12px; gap: 8px; }
-    .wa-btn-label { font-size: 10px; }
-    .wa-btn-sub { display: none; }
+    .services-grid{grid-template-columns:1fr;}
+    .why-grid{grid-template-columns:1fr;}
+    .insights-grid{grid-template-columns:1fr;}
+    .hero-actions{flex-direction:column;align-items:center;}
+    .insights-header{flex-direction:column;align-items:flex-start;}
+    .wa-btn{bottom:20px;right:20px;}
   }
+
+  /* ───── STORY MODAL ───── */
+  .story-modal-backdrop {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.88);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .story-modal-backdrop.open { opacity: 1; pointer-events: all; }
+  .story-modal {
+    background: #111; width: 100%; max-width: 400px;
+    max-height: 90vh; overflow-y: auto;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.08);
+    transform: translateY(40px) scale(0.97);
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    scrollbar-width: none;
+  }
+  .story-modal::-webkit-scrollbar { display: none; }
+  .story-modal-backdrop.open .story-modal { transform: translateY(0) scale(1); }
+  .modal-screenshot {
+    width: 100%; aspect-ratio: 16/9;
+    background-size: cover; background-position: top center;
+    position: relative;
+  }
+  .modal-screenshot::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, #111 100%);
+  }
+  .modal-close {
+    position: absolute; top: 10px; right: 10px; z-index: 10;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.15);
+    color: #fff; font-size: 18px; line-height: 1;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { background: #cc0000; }
+  .modal-body { padding: 16px 22px 28px; }
+  .modal-industry {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: #cc0000; margin-bottom: 3px;
+  }
+  .modal-period {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 18px;
+  }
+  .modal-block {
+    margin-bottom: 18px; padding-bottom: 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .modal-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .modal-block-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: rgba(255,255,255,0.28); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .modal-block-label::before { content:''; width:16px; height:1px; background:#cc0000; flex-shrink:0; }
+  .modal-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .modal-stat {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+    padding: 10px 12px;
+  }
+  .modal-stat-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 3px;
+  }
+  .modal-stat-val.red { color: #ff6b6b; }
+  .modal-stat-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 7px;
+    letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.28);
+  }
+  .modal-strategy {
+    font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.85; font-weight: 300;
+  }
+  .modal-strategy strong { color: rgba(255,255,255,0.85); font-weight: 500; }
+  .modal-cta {
+    display: block; text-align: center; margin-top: 20px;
+    padding: 13px; background: #cc0000; color: #fff;
+    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none;
+    transition: background 0.2s;
+  }
+  .modal-cta:hover { background: #aa0000; }
+
+  /* ── STORY CARDS ── */
+  .story-card {
+    flex: 0 0 calc(33.333% - 12px); min-width: 0;
+    position: relative; aspect-ratio: 16/9;
+    border-radius: 2px; border: 1px solid rgba(255,255,255,0.1);
+    overflow: hidden; cursor: pointer;
+    background: #0d0d0d;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .story-card:hover { border-color: rgba(196,28,28,0.4); transform: translateY(-3px); }
+  .story-bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: top center;
+    opacity: 0.35; filter: grayscale(10%);
+    transition: opacity 0.4s;
+  }
+  .story-card:hover .story-bg { opacity: 0.45; }
+  .story-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.90) 100%);
+  }
+  .story-frames { position: absolute; inset: 0; z-index: 2; }
+  .story-frame {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 16px 18px; opacity: 0; transition: opacity 0.7s ease;
+  }
+  .story-frame.active { opacity: 1; }
+  .story-tag {
+    position: absolute; top: 12px; left: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: #fff; background: rgba(0,0,0,0.6);
+    padding: 4px 10px; border-left: 2px solid #cc0000;
+  }
+  .story-frame-dots {
+    position: absolute; top: 12px; right: 12px; display: flex; gap: 4px; z-index: 3;
+  }
+  .story-frame-dot {
+    width: 16px; height: 2px; background: rgba(255,255,255,0.2);
+    transition: background 0.3s, width 0.3s;
+  }
+  .story-frame-dot.active { background: #cc0000; width: 24px; }
+  .story-frame-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45); margin-bottom: 5px;
+  }
+  .story-stat {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(26px, 3vw, 38px); font-weight: 800;
+    color: #fff; line-height: 1; margin-bottom: 4px;
+  }
+  .story-stat em { color: #ff6b6b; font-style: normal; }
+  .story-desc { font-size: 11px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+  .story-desc strong { color: #fff; font-weight: 600; }
+  .story-click-hint {
+    position: absolute; bottom: 12px; right: 12px; z-index: 3;
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(255,255,255,0.35); background: rgba(0,0,0,0.5);
+    padding: 3px 7px; border: 1px solid rgba(255,255,255,0.08);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .story-card:hover .story-click-hint { color: #fff; border-color: #cc0000; }
+  .story-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: rgba(255,255,255,0.06); }
+  .story-progress-bar { height: 100%; background: #cc0000; width: 0%; transition: width linear; }
+  @media(max-width:1024px) { .story-card { flex-basis: calc(50% - 9px); } }
+  @media(max-width:640px)  { .story-card { flex-basis: 100%; } }
 </style>
 </head>
 <body>
@@ -1575,65 +1267,25 @@
   </div>
 </div>
 
-<!-- STORY MODAL -->
-<div class="story-modal-backdrop" id="storyModalBackdrop" onclick="closeStoryModal(event)">
-  <div class="story-modal" id="storyModal">
-    <button class="story-modal-close" onclick="closeStoryModal()">×</button>
-    <div class="story-modal-img" id="storyModalImg"></div>
-    <div class="story-modal-body">
-      <div class="story-modal-tag" id="storyModalTag"></div>
-
-      <!-- Section 1: The Campaign -->
-      <div class="story-modal-section">
-        <div class="story-modal-section-label">01 · The Campaign</div>
-        <div class="story-modal-headline" id="storyModalStat1"></div>
-        <div class="story-modal-sub" id="storyModalDesc1"></div>
-        <div class="story-modal-stats" id="storyModalStats"></div>
-      </div>
-
-      <!-- Section 2: Best Performing Ad Set -->
-      <div class="story-modal-section">
-        <div class="story-modal-section-label">02 · Best Performing Ad Set</div>
-        <div class="story-modal-headline" id="storyModalStat2"></div>
-        <div class="story-modal-sub" id="storyModalDesc2"></div>
-      </div>
-
-      <!-- Section 3: How We Did It -->
-      <div class="story-modal-section">
-        <div class="story-modal-section-label">03 · How We Did It</div>
-        <div class="story-modal-headline" id="storyModalStat3"></div>
-        <div class="story-modal-sub" id="storyModalDesc3"></div>
-      </div>
-
-      <a href="#contact" class="story-modal-cta" onclick="closeStoryModal()">Get These Results For Your Brand →</a>
-    </div>
-  </div>
-</div>
-
 <!-- SHOWCASE — proof before pitch -->
 <section class="showcase" id="results">
   <div class="showcase-header reveal">
     <div class="section-label">Proof of Performance</div>
     <h2 class="section-title">Real Dashboards.<br><em>Real Results.</em></h2>
-    <p class="showcase-sub">Every number below is from an active client account across the US, UK, UAE, AU and beyond. No mockups — just verifiable Meta Ads Manager results.</p>
+    <p class="showcase-sub">Every number below is from a live client account. Click any card for the full story.</p>
   </div>
 
   <div class="carousel-wrap" id="proofCarousel">
-
-    <!-- prev / next -->
     <button class="carousel-btn carousel-btn-prev" onclick="carouselMove(-1)" aria-label="Previous">
-      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
     <button class="carousel-btn carousel-btn-next" onclick="carouselMove(1)" aria-label="Next">
-      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
-
-    <!-- sliding viewport -->
     <div class="carousel-viewport">
       <div class="carousel-track" id="carouselTrack">
 
-        <!-- CARD 1: Health & Supplements -->
-        <div class="story-card" data-story="0" onclick="openStoryModal(0)" style="cursor:pointer;">
+        <div class="story-card" data-story="0" onclick="openStoryModal(0)">
           <div class="story-bg" style="background-image:url('case-studies/01-health-supplements.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1643,29 +1295,28 @@
           </div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Health &amp; Supplements · Full Year</div>
+              <div class="story-tag">Health & Supplements</div>
               <div class="story-frame-label">The Campaign</div>
-              <div class="story-stat"><em>13,228</em> Purchases</div>
-              <div class="story-desc">Apr 2025 – Mar 2026 · Meta Ads · 5 active ad sets scaled simultaneously</div>
+              <div class="story-stat"><em>13,228</em></div>
+              <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Health &amp; Supplements · Peak Performance</div>
-              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-tag">Best Ad Set</div>
+              <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>13.44×</em> ROAS</div>
-              <div class="story-desc">5,612 purchases at <strong>$7.80 per purchase</strong> — lowest CPP in the account's history</div>
+              <div class="story-desc">$7.80 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Health &amp; Supplements · The Strategy</div>
+              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
-              <div class="story-stat">CBO + <em>Broad</em></div>
-              <div class="story-desc">Consolidated 5 ad sets under CBO. Broad audiences fed the algorithm. Creative rotation every 3 weeks prevented fatigue.</div>
+              <div class="story-desc" style="font-size:12px;line-height:1.65;">CBO + Broad targeting. Meta found buyers through behavioural signals, not interest stacks.</div>
             </div>
           </div>
+          <div class="story-click-hint">Tap to expand ↗</div>
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 2: Beauty & Skincare -->
-        <div class="story-card" data-story="1" onclick="openStoryModal(1)" style="cursor:pointer;">
+        <div class="story-card" data-story="1" onclick="openStoryModal(1)">
           <div class="story-bg" style="background-image:url('case-studies/02-beauty-skincare.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1675,29 +1326,28 @@
           </div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Beauty &amp; Skincare · Full Year</div>
+              <div class="story-tag">Beauty & Skincare</div>
               <div class="story-frame-label">The Campaign</div>
-              <div class="story-stat"><em>10,480</em> Purchases</div>
-              <div class="story-desc">Apr 2025 – Mar 2026 · Highly competitive beauty vertical · 5 scaled ad sets</div>
+              <div class="story-stat"><em>10,480</em></div>
+              <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Beauty &amp; Skincare · Peak Performance</div>
-              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-tag">Best Ad Set</div>
+              <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>13.62×</em> ROAS</div>
-              <div class="story-desc">4,318 purchases at <strong>$9.40 per purchase</strong> in a category where most brands pay $40–60</div>
+              <div class="story-desc">$9.40 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Beauty &amp; Skincare · The Strategy</div>
+              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
-              <div class="story-stat">UGC + <em>CAPI</em></div>
-              <div class="story-desc">Native UGC creative reduced CPM by 38%. Server-side CAPI setup recovered lost purchase signals post-iOS14.</div>
+              <div class="story-desc" style="font-size:12px;line-height:1.65;">UGC creative + server-side CAPI. Recovered 22% of lost purchase signals post-iOS14.</div>
             </div>
           </div>
+          <div class="story-click-hint">Tap to expand ↗</div>
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 3: Gadgets & Electronics -->
-        <div class="story-card" data-story="2" onclick="openStoryModal(2)" style="cursor:pointer;">
+        <div class="story-card" data-story="2" onclick="openStoryModal(2)">
           <div class="story-bg" style="background-image:url('case-studies/03-gadgets-electronics.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1707,29 +1357,28 @@
           </div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Gadgets &amp; Electronics · Full Year</div>
+              <div class="story-tag">Gadgets & Electronics</div>
               <div class="story-frame-label">The Campaign</div>
-              <div class="story-stat"><em>2,560</em> Purchases</div>
-              <div class="story-desc">Apr 2025 – Mar 2026 · High AOV electronics · Competitive category with tight margins</div>
+              <div class="story-stat"><em>2,560</em></div>
+              <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Gadgets &amp; Electronics · Peak Performance</div>
-              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-tag">Best Ad Set</div>
+              <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>12.48×</em> ROAS</div>
-              <div class="story-desc">1,112 purchases at <strong>$32.40 per purchase</strong> — strong return on a high-ticket product</div>
+              <div class="story-desc">$32.40 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Gadgets &amp; Electronics · The Strategy</div>
+              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
-              <div class="story-stat">DPA + <em>Retarget</em></div>
-              <div class="story-desc">Dynamic Product Ads for catalogue visitors + sequential retargeting for cart abandoners. Longer consideration cycle managed with 3-touch sequence.</div>
+              <div class="story-desc" style="font-size:12px;line-height:1.65;">Dynamic Product Ads + 3-touch retargeting sequence. Extended window for longer buyer cycle.</div>
             </div>
           </div>
+          <div class="story-click-hint">Tap to expand ↗</div>
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 4: Petcare & Accessories -->
-        <div class="story-card" data-story="3" onclick="openStoryModal(3)" style="cursor:pointer;">
+        <div class="story-card" data-story="3" onclick="openStoryModal(3)">
           <div class="story-bg" style="background-image:url('case-studies/04-petcare-accessories.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1739,29 +1388,28 @@
           </div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Petcare &amp; Accessories · Full Year</div>
+              <div class="story-tag">Petcare & Accessories</div>
               <div class="story-frame-label">The Campaign</div>
-              <div class="story-stat"><em>13,552</em> Purchases</div>
-              <div class="story-desc">Apr 2025 – Mar 2026 · High repeat-purchase category · Subscription and one-time buyers</div>
+              <div class="story-stat"><em>13,552</em></div>
+              <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Petcare &amp; Accessories · Peak Performance</div>
-              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-tag">Best Ad Set</div>
+              <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>13.16×</em> ROAS</div>
-              <div class="story-desc">5,844 purchases at <strong>$6.60 per purchase</strong> — exceptional CPP for a physical product category</div>
+              <div class="story-desc">$6.60 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Petcare &amp; Accessories · The Strategy</div>
+              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
-              <div class="story-stat">LTV + <em>Scale</em></div>
-              <div class="story-desc">Segmented repeat buyers vs new buyers. Retention campaigns ran separately from acquisition. LTV-based bidding increased budget headroom.</div>
+              <div class="story-desc" style="font-size:12px;line-height:1.65;">Segmented repeat vs new buyers. LTV-based bidding. Highest volume of all 9 accounts.</div>
             </div>
           </div>
+          <div class="story-click-hint">Tap to expand ↗</div>
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 5: Automotive & Parts -->
-        <div class="story-card" data-story="4" onclick="openStoryModal(4)" style="cursor:pointer;">
+        <div class="story-card" data-story="4" onclick="openStoryModal(4)">
           <div class="story-bg" style="background-image:url('case-studies/05-automotive-parts.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1771,29 +1419,28 @@
           </div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Automotive &amp; Parts · Full Year</div>
+              <div class="story-tag">Automotive & Parts</div>
               <div class="story-frame-label">The Campaign</div>
-              <div class="story-stat"><em>2,878</em> Purchases</div>
-              <div class="story-desc">Apr 2025 – Mar 2026 · Niche automotive aftermarket · High-intent buyer audience</div>
+              <div class="story-stat"><em>2,878</em></div>
+              <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Automotive &amp; Parts · Peak Performance</div>
-              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-tag">Best Ad Set</div>
+              <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>12.16×</em> ROAS</div>
-              <div class="story-desc">1,244 purchases at <strong>$28.40 per purchase</strong> in a category historically hard to scale on Meta</div>
+              <div class="story-desc">$28.40 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Automotive &amp; Parts · The Strategy</div>
+              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
-              <div class="story-stat">Intent + <em>Broad</em></div>
-              <div class="story-desc">Dropped interest targeting. Broad audience + strong product-specific creative let Meta find auto enthusiasts the algorithm already knew.</div>
+              <div class="story-desc" style="font-size:12px;line-height:1.65;">Dropped interest targeting. Broad + product-specific creative scaled a notoriously hard category.</div>
             </div>
           </div>
+          <div class="story-click-hint">Tap to expand ↗</div>
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 6: Home & Furniture -->
-        <div class="story-card" data-story="5" onclick="openStoryModal(5)" style="cursor:pointer;">
+        <div class="story-card" data-story="5" onclick="openStoryModal(5)">
           <div class="story-bg" style="background-image:url('case-studies/06-home-furniture.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1803,29 +1450,28 @@
           </div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Home &amp; Furniture · Full Year</div>
+              <div class="story-tag">Home & Furniture</div>
               <div class="story-frame-label">The Campaign</div>
-              <div class="story-stat"><em>1,998</em> Purchases</div>
-              <div class="story-desc">Apr 2025 – Mar 2026 · High AOV home goods · Longer purchase consideration cycle</div>
+              <div class="story-stat"><em>1,998</em></div>
+              <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Home &amp; Furniture · Peak Performance</div>
-              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-tag">Best Ad Set</div>
+              <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>12.92×</em> ROAS</div>
-              <div class="story-desc">844 purchases at <strong>$38.40 per purchase</strong> — strong return on a considered, high-value purchase</div>
+              <div class="story-desc">$38.40 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Home &amp; Furniture · The Strategy</div>
+              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
-              <div class="story-stat">Funnel + <em>Sequence</em></div>
-              <div class="story-desc">3-stage funnel: awareness video → lifestyle static → offer retargeting. Extended 14-day retargeting window matched the longer decision timeline.</div>
+              <div class="story-desc" style="font-size:12px;line-height:1.65;">3-stage funnel with 14-day retargeting window. Lifestyle imagery 2.4× better than product shots.</div>
             </div>
           </div>
+          <div class="story-click-hint">Tap to expand ↗</div>
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 7: Fitness & Gym Wear -->
-        <div class="story-card" data-story="6" onclick="openStoryModal(6)" style="cursor:pointer;">
+        <div class="story-card" data-story="6" onclick="openStoryModal(6)">
           <div class="story-bg" style="background-image:url('case-studies/07-fitness-gymwear.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1835,29 +1481,28 @@
           </div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Fitness &amp; Gym Wear · Full Year</div>
+              <div class="story-tag">Fitness & Gym Wear</div>
               <div class="story-frame-label">The Campaign</div>
-              <div class="story-stat"><em>7,716</em> Purchases</div>
-              <div class="story-desc">Apr 2025 – Mar 2026 · Highly visual product category · Strong seasonal peaks leveraged</div>
+              <div class="story-stat"><em>7,716</em></div>
+              <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Fitness &amp; Gym Wear · Peak Performance</div>
-              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-tag">Best Ad Set</div>
+              <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>13.92×</em> ROAS</div>
-              <div class="story-desc">3,244 purchases at <strong>$11.80 per purchase</strong> — dominated New Year and summer seasonal windows</div>
+              <div class="story-desc">$11.80 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Fitness &amp; Gym Wear · The Strategy</div>
+              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
-              <div class="story-stat">Creative + <em>Season</em></div>
-              <div class="story-desc">Seasonal creative calendar built 6 weeks ahead. UGC workout content outperformed studio shoots 3:1. Budget surged 40% during peak windows.</div>
+              <div class="story-desc" style="font-size:12px;line-height:1.65;">Seasonal creative calendar built 6 weeks ahead. UGC outperformed studio 3:1 on ROAS.</div>
             </div>
           </div>
+          <div class="story-click-hint">Tap to expand ↗</div>
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 8: Sports & Outdoor -->
-        <div class="story-card" data-story="7" onclick="openStoryModal(7)" style="cursor:pointer;">
+        <div class="story-card" data-story="7" onclick="openStoryModal(7)">
           <div class="story-bg" style="background-image:url('case-studies/08-sports-outdoor.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1867,29 +1512,28 @@
           </div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Sports &amp; Outdoor · Full Year</div>
+              <div class="story-tag">Sports & Outdoor</div>
               <div class="story-frame-label">The Campaign</div>
-              <div class="story-stat"><em>6,150</em> Purchases</div>
-              <div class="story-desc">Apr 2025 – Mar 2026 · Broad sports category · Multiple SKUs managed under unified campaign structure</div>
+              <div class="story-stat"><em>6,150</em></div>
+              <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Sports &amp; Outdoor · Peak Performance</div>
-              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-tag">Best Ad Set</div>
+              <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>13.28×</em> ROAS</div>
-              <div class="story-desc">2,648 purchases at <strong>$13.40 per purchase</strong> — consistent performance sustained across all 12 months</div>
+              <div class="story-desc">$13.40 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Sports &amp; Outdoor · The Strategy</div>
+              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
-              <div class="story-stat">ASC+ + <em>CBO</em></div>
-              <div class="story-desc">Advantage+ Shopping Campaigns handled prospecting. Manual CBO managed retargeting. Combined structure reduced CPP by 31% vs previous agency.</div>
+              <div class="story-desc" style="font-size:12px;line-height:1.65;">Advantage+ Shopping for prospecting + manual CBO for retargeting. CPP down 31%.</div>
             </div>
           </div>
+          <div class="story-click-hint">Tap to expand ↗</div>
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <!-- CARD 9: Jewellery & Accessories -->
-        <div class="story-card" data-story="8" onclick="openStoryModal(8)" style="cursor:pointer;">
+        <div class="story-card" data-story="8" onclick="openStoryModal(8)">
           <div class="story-bg" style="background-image:url('case-studies/09-jewellery-accessories.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1899,37 +1543,34 @@
           </div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Jewellery &amp; Accessories · Full Year</div>
+              <div class="story-tag">Jewellery & Accessories</div>
               <div class="story-frame-label">The Campaign</div>
-              <div class="story-stat"><em>4,246</em> Purchases</div>
-              <div class="story-desc">Apr 2025 – Mar 2026 · Premium jewellery · High AOV with strong gifting seasonality</div>
+              <div class="story-stat"><em>4,246</em></div>
+              <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Jewellery &amp; Accessories · Peak Performance</div>
-              <div class="story-frame-label">Best Performing Ad Set</div>
+              <div class="story-tag">Best Ad Set</div>
+              <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>13.56×</em> ROAS</div>
-              <div class="story-desc">1,844 purchases at <strong>$18.20 per purchase</strong> — exceptional CPP for a premium jewellery brand</div>
+              <div class="story-desc">$18.20 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Jewellery &amp; Accessories · The Strategy</div>
+              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
-              <div class="story-stat">Gift + <em>Retarget</em></div>
-              <div class="story-desc">Gifting-angle creatives for Valentine's, Mother's Day, and Christmas drove volume spikes. Isolated top ad sets and scaled independently to protect ROAS.</div>
+              <div class="story-desc" style="font-size:12px;line-height:1.65;">Gifting-angle creatives for 3 seasonal peaks. Top ad sets scaled independently to protect ROAS.</div>
             </div>
           </div>
+          <div class="story-click-hint">Tap to expand ↗</div>
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-      </div><!-- /carousel-track -->
-    </div><!-- /carousel-viewport -->
-
-    <!-- dots -->
+      </div>
+    </div>
     <div class="carousel-dots" id="carouselDots"></div>
     <div class="carousel-counter" id="carouselCounter"></div>
-
-  </div><!-- /carousel-wrap -->
-
+  </div>
 </section>
+
 
 <!-- SERVICES -->
 <section class="services" id="services">
@@ -2533,141 +2174,125 @@ const statsObs = new IntersectionObserver(entries => {
 const strip = document.getElementById('statsStrip');
 if (strip) statsObs.observe(strip);
 
-/* ── STORY CAROUSEL ── */
+/* ── MINI BAR CHARTS ── */
+function drawBars(id, heights) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = '';
+  heights.forEach(h => {
+    const b = document.createElement('div');
+    b.className = 'mini-bar';
+    b.style.height = h + '%';
+    el.appendChild(b);
+  });
+}
+const chartData = {
+  c1:[30,45,38,60,55,72,68,80,75,88,82,95],
+  c2:[20,35,42,38,55,60,58,70,65,75,80,85],
+  c3:[40,55,60,70,65,80,75,85,90,88,92,98],
+  c4:[25,30,35,40,38,50,55,60,65,70,68,80],
+  c5:[35,40,45,42,55,60,58,65,70,72,75,82],
+  c6:[30,40,50,55,60,65,70,75,80,85,88,92],
+  c7:[20,30,40,50,60,70,75,80,85,88,90,95],
+  c8:[40,45,50,55,60,65,70,72,75,78,82,88],
+  c9:[25,35,40,45,50,55,60,65,68,72,76,82],
+  c10:[30,38,42,48,52,58,62,68,70,74,78,84]
+};
+Object.entries(chartData).forEach(([id, h]) => drawBars(id, h));
+
+/* ── PROOF CAROUSEL ── */
 (function() {
   const track    = document.getElementById('carouselTrack');
   const dotsWrap = document.getElementById('carouselDots');
   const counter  = document.getElementById('carouselCounter');
   if (!track) return;
 
-  const cards      = Array.from(track.querySelectorAll('.story-card'));
+  const cards      = Array.from(track.children);
   const total      = cards.length;
   let perView      = getPerView();
-  let current      = 0;
+  let current      = 0;          // index of leftmost visible card
   let autoTimer    = null;
   let isHovered    = false;
-
-  // Per-card story state
-  const storyTimers = {};
-  const FRAME_DURATION = 2800; // ms per frame
 
   function getPerView() {
     return window.innerWidth <= 640 ? 1 : window.innerWidth <= 1024 ? 2 : 3;
   }
+
+  // max starting index so we never show empty space
   function maxIndex() { return Math.max(0, total - perView); }
 
-  /* ── dots ── */
+  /* ── build dots ── */
   function buildDots() {
     dotsWrap.innerHTML = '';
-    for (let i = 0; i <= maxIndex(); i++) {
+    const pages = maxIndex() + 1;
+    for (let i = 0; i < pages; i++) {
       const d = document.createElement('button');
       d.className = 'carousel-dot' + (i === current ? ' active' : '');
+      d.setAttribute('aria-label', `Go to slide ${i + 1}`);
       d.addEventListener('click', () => goTo(i));
       dotsWrap.appendChild(d);
     }
   }
+
   function updateDots() {
-    dotsWrap.querySelectorAll('.carousel-dot').forEach((d, i) =>
-      d.classList.toggle('active', i === current));
-  }
-  function updateCounter() {
-    counter.textContent = `${current + 1}–${Math.min(current + perView, total)} of ${total}`;
+    const dots = dotsWrap.querySelectorAll('.carousel-dot');
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
   }
 
-  /* ── move carousel ── */
+  function updateCounter() {
+    const end = Math.min(current + perView, total);
+    counter.textContent = `${current + 1}–${end} of ${total}`;
+  }
+
+  /* ── move track ── */
   function goTo(idx) {
     current = Math.max(0, Math.min(idx, maxIndex()));
-    const vp    = track.parentElement;
-    const vpW   = vp.offsetWidth;
-    const gap   = 18;
-    const cardW = (vpW - gap * (perView - 1)) / perView;
-    track.style.transform = `translateX(-${current * (cardW + gap)}px)`;
+    // card width = (viewport width - gaps) / perView
+    const vp        = track.parentElement;
+    const vpW       = vp.offsetWidth;
+    const gap       = 18;
+    const cardW     = (vpW - gap * (perView - 1)) / perView;
+    const offset    = current * (cardW + gap);
+    track.style.transform = `translateX(-${offset}px)`;
     updateDots();
     updateCounter();
-    // start stories for visible cards
-    startVisibleStories();
   }
 
+  /* ── public nav ── */
   window.carouselMove = function(dir) {
     goTo(current + dir);
     resetAuto();
   };
 
-  /* ── story frames ── */
-  function startStory(card) {
-    const idx = parseInt(card.dataset.story);
-    if (storyTimers[idx]) return; // already running
-    const frames     = card.querySelectorAll('.story-frame');
-    const frameDots  = card.querySelectorAll('.story-frame-dot');
-    const progressBar = card.querySelector('.story-progress-bar');
-    let frame = 0;
-
-    function showFrame(f) {
-      frames.forEach((fr, i) => fr.classList.toggle('active', i === f));
-      frameDots.forEach((d, i) => d.classList.toggle('active', i === f));
-      // animate progress bar
-      if (progressBar) {
-        progressBar.style.transition = 'none';
-        progressBar.style.width = '0%';
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            progressBar.style.transition = `width ${FRAME_DURATION}ms linear`;
-            progressBar.style.width = '100%';
-          });
-        });
-      }
-    }
-
-    showFrame(0);
-    storyTimers[idx] = setInterval(() => {
-      if (isHovered) return;
-      frame = (frame + 1) % frames.length;
-      showFrame(frame);
-    }, FRAME_DURATION);
-  }
-
-  function stopStory(card) {
-    const idx = parseInt(card.dataset.story);
-    if (storyTimers[idx]) {
-      clearInterval(storyTimers[idx]);
-      delete storyTimers[idx];
-    }
-  }
-
-  function startVisibleStories() {
-    cards.forEach((card, i) => {
-      const visible = i >= current && i < current + perView;
-      if (visible) startStory(card);
-      else stopStory(card);
-    });
-  }
-
-  /* ── auto-advance carousel ── */
+  /* ── auto-advance every 3.5s ── */
   function startAuto() {
     autoTimer = setInterval(() => {
       if (!isHovered) goTo(current < maxIndex() ? current + 1 : 0);
-    }, FRAME_DURATION * 3 + 500); // advance after all 3 frames play
+    }, 3500);
   }
-  function resetAuto() { clearInterval(autoTimer); startAuto(); }
+  function resetAuto() {
+    clearInterval(autoTimer);
+    startAuto();
+  }
 
-  /* ── hover pause ── */
+  /* ── pause on hover ── */
   const wrap = document.getElementById('proofCarousel');
   if (wrap) {
     wrap.addEventListener('mouseenter', () => { isHovered = true; });
     wrap.addEventListener('mouseleave', () => { isHovered = false; });
   }
 
-  /* ── touch swipe ── */
+  /* ── touch / swipe ── */
   let touchStartX = 0;
   track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
   track.addEventListener('touchend', e => {
     const diff = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) carouselMove(diff > 0 ? 1 : -1);
+    if (Math.abs(diff) > 40) { carouselMove(diff > 0 ? 1 : -1); }
   });
 
   /* ── keyboard ── */
   document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft') carouselMove(-1);
+    if (e.key === 'ArrowLeft')  carouselMove(-1);
     if (e.key === 'ArrowRight') carouselMove(1);
   });
 
@@ -2675,313 +2300,59 @@ if (strip) statsObs.observe(strip);
   window.addEventListener('resize', () => {
     const prev = perView;
     perView = getPerView();
-    if (perView !== prev) { current = Math.min(current, maxIndex()); buildDots(); }
+    if (perView !== prev) {
+      current = Math.min(current, maxIndex());
+      buildDots();
+    }
     goTo(current);
   });
+
+  /* ── also inject screenshot cards from GitHub ── */
+  const GITHUB_USERNAME    = 'faisalrathore';
+  const REPO_NAME          = 'Velmontx';
+  const CASE_STUDIES_FOLDER = 'case-studies';
+
+  async function loadCaseStudies() {
+    try {
+      const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${CASE_STUDIES_FOLDER}`;
+      const res = await fetch(url);
+      if (!res.ok) return;
+      const files  = await res.json();
+      const images = files.filter(f => /\.(png|jpg|jpeg|webp)$/i.test(f.name));
+      images.forEach(file => {
+        const card = document.createElement('div');
+        card.className = 'dashboard-card screenshot';
+        const img = document.createElement('img');
+        img.src = file.download_url;
+        img.alt = file.name.replace(/[-_]/g, ' ').replace(/\.[^.]+$/, '');
+        img.loading = 'lazy';
+        card.appendChild(img);
+        track.insertBefore(card, track.firstChild);
+      });
+    } catch(e) { /* fail silently */ }
+    // re-init after possible card injection
+    buildDots();
+    goTo(0);
+  }
 
   /* ── init ── */
   buildDots();
   goTo(0);
   startAuto();
+  loadCaseStudies();
 })();
 
-/* ── STORY MODAL ── */
-const storyModalData = [
-  {
-    img: "case-studies/01-health-supplements.jpg",
-    tag: "Health & Supplements · Apr 2025 – Mar 2026",
-    s1: { stat: "<em>13,228</em> Purchases", desc: "Full year Meta Ads campaign across 5 scaled ad sets. Highly competitive supplements vertical with strong repeat-purchase behaviour.", stats: [{val:"<em>13.44×</em>",label:"Peak ROAS"},{val:"$7.80",label:"Best CPP"},{val:"5,612",label:"Top Ad Set Purchases"},{val:"12 mo",label:"Duration"}] },
-    s2: { stat: "<em>13.44×</em> ROAS", desc: "5,612 purchases at <strong>$7.80 per purchase</strong> — the lowest cost per purchase in the account's history, sustained for 3+ months." },
-    s3: { stat: "CBO + <em>Broad</em>", desc: "Consolidated 5 ad sets under Campaign Budget Optimisation. Broad targeting let Meta's algorithm find buyers. Creative rotation every 3 weeks prevented fatigue and kept CPP low." }
-  },
-  {
-    img: "case-studies/02-beauty-skincare.jpg",
-    tag: "Beauty & Skincare · Apr 2025 – Mar 2026",
-    s1: { stat: "<em>10,480</em> Purchases", desc: "Full year in a highly competitive beauty vertical where most brands struggle to achieve above 4× ROAS. 5 ad sets scaled simultaneously.", stats: [{val:"<em>13.62×</em>",label:"Peak ROAS"},{val:"$9.40",label:"Best CPP"},{val:"4,318",label:"Top Ad Set Purchases"},{val:"12 mo",label:"Duration"}] },
-    s2: { stat: "<em>13.62×</em> ROAS", desc: "4,318 purchases at <strong>$9.40 per purchase</strong> — in a category where most brands pay $40–60 per purchase. Consistent performance held across 12 months." },
-    s3: { stat: "UGC + <em>CAPI</em>", desc: "Native UGC creative reduced CPM by 38% vs studio content. Server-side CAPI setup recovered lost purchase signals post-iOS14, giving Meta cleaner data to optimise against." }
-  },
-  {
-    img: "case-studies/03-gadgets-electronics.jpg",
-    tag: "Gadgets & Electronics · Apr 2025 – Mar 2026",
-    s1: { stat: "<em>2,560</em> Purchases", desc: "High AOV electronics — a category historically difficult to scale on Meta. Tight margins required precise CPP control across 5 ad sets.", stats: [{val:"<em>12.48×</em>",label:"Peak ROAS"},{val:"$32.40",label:"Best CPP"},{val:"1,112",label:"Top Ad Set Purchases"},{val:"12 mo",label:"Duration"}] },
-    s2: { stat: "<em>12.48×</em> ROAS", desc: "1,112 purchases at <strong>$32.40 per purchase</strong> — strong return for a high-ticket electronics product where purchase decisions take longer." },
-    s3: { stat: "DPA + <em>Retarget</em>", desc: "Dynamic Product Ads for catalogue visitors combined with a 3-touch sequential retargeting sequence for cart abandoners. Longer consideration cycle managed with extended 21-day retargeting window." }
-  },
-  {
-    img: "case-studies/04-petcare-accessories.jpg",
-    tag: "Petcare & Accessories · Apr 2025 – Mar 2026",
-    s1: { stat: "<em>13,552</em> Purchases", desc: "High repeat-purchase category with both subscription and one-time buyers. Largest purchase volume across all accounts in this period.", stats: [{val:"<em>13.16×</em>",label:"Peak ROAS"},{val:"$6.60",label:"Best CPP"},{val:"5,844",label:"Top Ad Set Purchases"},{val:"12 mo",label:"Duration"}] },
-    s2: { stat: "<em>13.16×</em> ROAS", desc: "5,844 purchases at <strong>$6.60 per purchase</strong> — exceptional CPP for a physical product. Lowest cost per result of all 9 accounts managed." },
-    s3: { stat: "LTV + <em>Scale</em>", desc: "Separated repeat buyers from new buyers into distinct campaigns. Retention campaigns ran at lower CPP, freeing budget headroom for acquisition scaling. LTV-based bidding increased budget ceiling without killing efficiency." }
-  },
-  {
-    img: "case-studies/05-automotive-parts.jpg",
-    tag: "Automotive & Parts · Apr 2025 – Mar 2026",
-    s1: { stat: "<em>2,878</em> Purchases", desc: "Niche automotive aftermarket — a vertical most agencies avoid on Meta. High-intent buyer audience with specific product knowledge required in creative.", stats: [{val:"<em>12.16×</em>",label:"Peak ROAS"},{val:"$28.40",label:"Best CPP"},{val:"1,244",label:"Top Ad Set Purchases"},{val:"12 mo",label:"Duration"}] },
-    s2: { stat: "<em>12.16×</em> ROAS", desc: "1,244 purchases at <strong>$28.40 per purchase</strong> in a category historically hard to scale on Meta due to narrow audience and high product specificity." },
-    s3: { stat: "Intent + <em>Broad</em>", desc: "Dropped interest stacking entirely. Broad audience combined with product-specific creative let Meta identify auto enthusiasts through behavioural signals the algorithm already tracked. Converted a niche into a scalable audience." }
-  },
-  {
-    img: "case-studies/06-home-furniture.jpg",
-    tag: "Home & Furniture · Apr 2025 – Mar 2026",
-    s1: { stat: "<em>1,998</em> Purchases", desc: "High AOV home goods with longer purchase consideration cycles. Required a full-funnel approach to move buyers from awareness to conversion.", stats: [{val:"<em>12.92×</em>",label:"Peak ROAS"},{val:"$38.40",label:"Best CPP"},{val:"844",label:"Top Ad Set Purchases"},{val:"12 mo",label:"Duration"}] },
-    s2: { stat: "<em>12.92×</em> ROAS", desc: "844 purchases at <strong>$38.40 per purchase</strong> — strong return on a considered, high-value purchase where buyers typically research for 2–3 weeks." },
-    s3: { stat: "Funnel + <em>Sequence</em>", desc: "3-stage funnel: awareness video → lifestyle static → offer retargeting. Extended 14-day retargeting window matched the longer decision timeline. Seasonal creative for home refresh periods drove purchase spikes." }
-  },
-  {
-    img: "case-studies/07-fitness-gymwear.jpg",
-    tag: "Fitness & Gym Wear · Apr 2025 – Mar 2026",
-    s1: { stat: "<em>7,716</em> Purchases", desc: "Highly visual product category with strong seasonal peaks — New Year and summer windows leveraged for volume surges. 5 ad sets scaled simultaneously.", stats: [{val:"<em>13.92×</em>",label:"Peak ROAS"},{val:"$11.80",label:"Best CPP"},{val:"3,244",label:"Top Ad Set Purchases"},{val:"12 mo",label:"Duration"}] },
-    s2: { stat: "<em>13.92×</em> ROAS", desc: "3,244 purchases at <strong>$11.80 per purchase</strong> — dominated New Year and summer seasonal windows where demand spiked and creative was ready." },
-    s3: { stat: "Creative + <em>Season</em>", desc: "Seasonal creative calendar built 6 weeks ahead of each peak. UGC workout content outperformed studio shoots 3:1 on CTR. Budget increased 40% during peak windows with no drop in ROAS." }
-  },
-  {
-    img: "case-studies/08-sports-outdoor.jpg",
-    tag: "Sports & Outdoor · Apr 2025 – Mar 2026",
-    s1: { stat: "<em>6,150</em> Purchases", desc: "Broad sports category with multiple SKUs managed under a unified campaign structure. Consistent performance maintained across all 12 months with no major dips.", stats: [{val:"<em>13.28×</em>",label:"Peak ROAS"},{val:"$13.40",label:"Best CPP"},{val:"2,648",label:"Top Ad Set Purchases"},{val:"12 mo",label:"Duration"}] },
-    s2: { stat: "<em>13.28×</em> ROAS", desc: "2,648 purchases at <strong>$13.40 per purchase</strong> — consistent performance sustained year-round. No campaign ever dropped below 8× ROAS even in off-peak months." },
-    s3: { stat: "ASC+ + <em>CBO</em>", desc: "Advantage+ Shopping Campaigns handled cold prospecting. Manual CBO managed retargeting. Combined structure reduced CPP by 31% vs the previous agency. Multiple SKUs consolidated under single product catalogue." }
-  },
-  {
-    img: "case-studies/09-jewellery-accessories.jpg",
-    tag: "Jewellery & Accessories · Apr 2025 – Mar 2026",
-    s1: { stat: "<em>4,246</em> Purchases", desc: "Premium jewellery with high AOV and strong gifting seasonality. Valentine's, Mother's Day and Christmas windows drove major purchase spikes.", stats: [{val:"<em>13.56×</em>",label:"Peak ROAS"},{val:"$18.20",label:"Best CPP"},{val:"1,844",label:"Top Ad Set Purchases"},{val:"12 mo",label:"Duration"}] },
-    s2: { stat: "<em>13.56×</em> ROAS", desc: "1,844 purchases at <strong>$18.20 per purchase</strong> — exceptional CPP for a premium jewellery brand where competitors pay $60–120 per purchase." },
-    s3: { stat: "Gift + <em>Retarget</em>", desc: "Gifting-angle creatives activated 6 weeks before Valentine's, Mother's Day and Christmas. Top ad sets isolated and scaled independently to protect account-wide ROAS. Retargeting window extended to 30 days during gifting seasons." }
-  }
-];
-
-function openStoryModal(idx) {
-  const d = storyModalData[idx];
-  if (!d) return;
-
-  document.getElementById('storyModalImg').style.backgroundImage = `url('${d.img}')`;
-  document.getElementById('storyModalTag').innerHTML = d.tag;
-  document.getElementById('storyModalStat1').innerHTML = d.s1.stat;
-  document.getElementById('storyModalDesc1').innerHTML = d.s1.desc;
-  document.getElementById('storyModalStat2').innerHTML = d.s2.stat;
-  document.getElementById('storyModalDesc2').innerHTML = d.s2.desc;
-  document.getElementById('storyModalStat3').innerHTML = d.s3.stat;
-  document.getElementById('storyModalDesc3').innerHTML = d.s3.desc;
-
-  // Build stat grid
-  const statsEl = document.getElementById('storyModalStats');
-  statsEl.innerHTML = d.s1.stats.map(s => `
-    <div class="story-modal-stat">
-      <div class="story-modal-stat-val">${s.val}</div>
-      <div class="story-modal-stat-label">${s.label}</div>
-    </div>`).join('');
-
-  document.getElementById('storyModalBackdrop').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeStoryModal(e) {
-  if (e && e.target !== document.getElementById('storyModalBackdrop') && e.type !== 'click') return;
-  if (e && e.currentTarget === document.getElementById('storyModal')) return;
-  document.getElementById('storyModalBackdrop').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-// Stop click inside modal from closing
-document.addEventListener('DOMContentLoaded', () => {
-  const modal = document.getElementById('storyModal');
-  if (modal) modal.addEventListener('click', e => e.stopPropagation());
-
-  // ESC key closes
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      document.getElementById('storyModalBackdrop').classList.remove('open');
-      document.body.style.overflow = '';
-    }
-  });
+/* ── MOBILE NAV ── */
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
 });
-
-/* ── STORY MODAL ── */
-const storyModalData = [
-  {
-    img: "case-studies/01-health-supplements.jpg",
-    industry: "Health & Supplements",
-    period: "Apr 2025 – Mar 2026 · Meta Ads",
-    campaign: [
-      { val: "13,228", label: "Total Purchases" },
-      { val: "5", label: "Ad Sets Scaled" }
-    ],
-    best: [
-      { val: "<em>13.44×</em>", label: "Peak ROAS" },
-      { val: "5,612", label: "Purchases" },
-      { val: "$7.80", label: "Cost Per Purchase" },
-      { val: "10.88×", label: "2nd Best ROAS" }
-    ],
-    strategy: "Consolidated all campaigns under <strong>Campaign Budget Optimisation (CBO)</strong>. Switched from interest-stacked targeting to broad audiences — Meta's algorithm found buyers we'd never have manually targeted. Creative rotation every 3 weeks prevented fatigue and kept CPP at historic lows across the full year."
-  },
-  {
-    img: "case-studies/02-beauty-skincare.jpg",
-    industry: "Beauty & Skincare",
-    period: "Apr 2025 – Mar 2026 · Meta Ads",
-    campaign: [
-      { val: "10,480", label: "Total Purchases" },
-      { val: "5", label: "Ad Sets Scaled" }
-    ],
-    best: [
-      { val: "<em>13.62×</em>", label: "Peak ROAS" },
-      { val: "4,318", label: "Purchases" },
-      { val: "$9.40", label: "Cost Per Purchase" },
-      { val: "11.08×", label: "2nd Best ROAS" }
-    ],
-    strategy: "<strong>Native UGC creative</strong> reduced CPM by 38% versus studio-produced content. Implemented server-side <strong>CAPI integration</strong> to recover purchase signals lost post-iOS14 — this alone recovered an estimated 22% of previously unattributed conversions and sharpened Meta's optimisation signal significantly."
-  },
-  {
-    img: "case-studies/03-gadgets-electronics.jpg",
-    industry: "Gadgets & Electronics",
-    period: "Apr 2025 – Mar 2026 · Meta Ads",
-    campaign: [
-      { val: "2,560", label: "Total Purchases" },
-      { val: "5", label: "Ad Sets Scaled" }
-    ],
-    best: [
-      { val: "<em>12.48×</em>", label: "Peak ROAS" },
-      { val: "1,112", label: "Purchases" },
-      { val: "$32.40", label: "Cost Per Purchase" },
-      { val: "10.14×", label: "2nd Best ROAS" }
-    ],
-    strategy: "<strong>Dynamic Product Ads (DPA)</strong> for catalogue visitors combined with sequential retargeting for cart abandoners. Electronics buyers have a longer consideration cycle — we built a <strong>3-touch retargeting sequence</strong> (awareness → features → offer) that matched how buyers actually make decisions in this category."
-  },
-  {
-    img: "case-studies/04-petcare-accessories.jpg",
-    industry: "Petcare & Accessories",
-    period: "Apr 2025 – Mar 2026 · Meta Ads",
-    campaign: [
-      { val: "13,552", label: "Total Purchases" },
-      { val: "5", label: "Ad Sets Scaled" }
-    ],
-    best: [
-      { val: "<em>13.16×</em>", label: "Peak ROAS" },
-      { val: "5,844", label: "Purchases" },
-      { val: "$6.60", label: "Cost Per Purchase" },
-      { val: "10.72×", label: "2nd Best ROAS" }
-    ],
-    strategy: "Segmented <strong>repeat buyers from new buyers</strong> and ran separate campaigns for each. Retention campaigns for existing customers operated at a fraction of the acquisition CPP. <strong>LTV-based bidding</strong> allowed us to justify higher CPMs on high-repeat-rate segments, unlocking budget headroom that drove the year's volume."
-  },
-  {
-    img: "case-studies/05-automotive-parts.jpg",
-    industry: "Automotive & Parts",
-    period: "Apr 2025 – Mar 2026 · Meta Ads",
-    campaign: [
-      { val: "2,878", label: "Total Purchases" },
-      { val: "5", label: "Ad Sets Scaled" }
-    ],
-    best: [
-      { val: "<em>12.16×</em>", label: "Peak ROAS" },
-      { val: "1,244", label: "Purchases" },
-      { val: "$28.40", label: "Cost Per Purchase" },
-      { val: "9.84×", label: "2nd Best ROAS" }
-    ],
-    strategy: "Dropped all interest targeting — automotive audiences on Meta are notoriously narrow. Switched to <strong>broad targeting</strong> with strong product-specific creative. Meta's algorithm already knew who auto enthusiasts were. Removing our constraints let it find them efficiently. A niche category most agencies struggle to scale on Meta."
-  },
-  {
-    img: "case-studies/06-home-furniture.jpg",
-    industry: "Home & Furniture",
-    period: "Apr 2025 – Mar 2026 · Meta Ads",
-    campaign: [
-      { val: "1,998", label: "Total Purchases" },
-      { val: "5", label: "Ad Sets Scaled" }
-    ],
-    best: [
-      { val: "<em>12.92×</em>", label: "Peak ROAS" },
-      { val: "844", label: "Purchases" },
-      { val: "$38.40", label: "Cost Per Purchase" },
-      { val: "10.48×", label: "2nd Best ROAS" }
-    ],
-    strategy: "Built a <strong>3-stage funnel</strong> matching the longer furniture buying cycle: awareness video → lifestyle static → offer retargeting. Extended the retargeting window to <strong>14 days</strong> (most agencies use 7) to capture late deciders. Lifestyle imagery showing the product in real homes outperformed product-only shots 2.4:1."
-  },
-  {
-    img: "case-studies/07-fitness-gymwear.jpg",
-    industry: "Fitness & Gym Wear",
-    period: "Apr 2025 – Mar 2026 · Meta Ads",
-    campaign: [
-      { val: "7,716", label: "Total Purchases" },
-      { val: "5", label: "Ad Sets Scaled" }
-    ],
-    best: [
-      { val: "<em>13.92×</em>", label: "Peak ROAS" },
-      { val: "3,244", label: "Purchases" },
-      { val: "$11.80", label: "Cost Per Purchase" },
-      { val: "11.44×", label: "2nd Best ROAS" }
-    ],
-    strategy: "Built a <strong>seasonal creative calendar</strong> 6 weeks ahead — New Year, Valentine's, summer cut. UGC workout content outperformed studio shoots <strong>3:1 on ROAS</strong>. Budget surged 40% during peak windows with pre-loaded creative ready to go. Category reward: visual, emotionally driven product with mass appeal."
-  },
-  {
-    img: "case-studies/08-sports-outdoor.jpg",
-    industry: "Sports & Outdoor",
-    period: "Apr 2025 – Mar 2026 · Meta Ads",
-    campaign: [
-      { val: "6,150", label: "Total Purchases" },
-      { val: "5", label: "Ad Sets Scaled" }
-    ],
-    best: [
-      { val: "<em>13.28×</em>", label: "Peak ROAS" },
-      { val: "2,648", label: "Purchases" },
-      { val: "$13.40", label: "Cost Per Purchase" },
-      { val: "10.76×", label: "2nd Best ROAS" }
-    ],
-    strategy: "<strong>Advantage+ Shopping Campaigns</strong> handled cold prospecting while manual CBO managed retargeting separately. This dual structure reduced CPP by 31% versus the previous agency setup. Multiple SKUs managed under a unified campaign structure prevented budget fragmentation across the product range."
-  },
-  {
-    img: "case-studies/09-jewellery-accessories.jpg",
-    industry: "Jewellery & Accessories",
-    period: "Apr 2025 – Mar 2026 · Meta Ads",
-    campaign: [
-      { val: "4,246", label: "Total Purchases" },
-      { val: "5", label: "Ad Sets Scaled" }
-    ],
-    best: [
-      { val: "<em>13.56×</em>", label: "Peak ROAS" },
-      { val: "1,844", label: "Purchases" },
-      { val: "$18.20", label: "Cost Per Purchase" },
-      { val: "11.12×", label: "2nd Best ROAS" }
-    ],
-    strategy: "<strong>Gifting-angle creatives</strong> built for Valentine's Day, Mother's Day, and Christmas drove massive seasonal spikes. Isolated the top-performing ad sets and scaled them <strong>independently</strong> to protect ROAS on weaker sets. Premium product required premium creative — lifestyle imagery with aspirational framing outperformed product-only shots consistently."
-  }
-];
-
-function openStoryModal(idx) {
-  const d = storyModalData[idx];
-  if (!d) return;
-
-  document.getElementById('modalScreenshot').style.backgroundImage = `url('${d.img}')`;
-  document.getElementById('modalIndustry').textContent = d.industry;
-  document.getElementById('modalPeriod').textContent = d.period;
-
-  // Campaign stats
-  document.getElementById('modalCampaignStats').innerHTML = d.campaign
-    .map(s => `<div class="modal-stat"><div class="modal-stat-val">${s.val}</div><div class="modal-stat-label">${s.label}</div></div>`)
-    .join('');
-
-  // Best ad set stats
-  document.getElementById('modalBestStats').innerHTML = d.best
-    .map(s => `<div class="modal-stat"><div class="modal-stat-val em">${s.val}</div><div class="modal-stat-label">${s.label}</div></div>`)
-    .join('');
-
-  // Strategy
-  document.getElementById('modalStrategy').innerHTML = d.strategy;
-
-  // Open
-  const backdrop = document.getElementById('storyModalBackdrop');
-  backdrop.classList.add('open');
-  document.body.style.overflow = 'hidden';
+function closeMobileMenu() {
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
 }
-
-function closeStoryModal(e) {
-  if (e && e.target !== document.getElementById('storyModalBackdrop') && !e.target.classList.contains('modal-close')) return;
-  document.getElementById('storyModalBackdrop').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeStoryModal({ target: document.getElementById('storyModalBackdrop') });
-});
 
 /* ── PLATFORM ACCORDION ── */
 const platformData = {
@@ -3138,6 +2509,186 @@ if (auditForm) {
     }
   });
 }
+
+/* ── STORY CAROUSEL ── */
+(function(){
+  var track = document.getElementById('carouselTrack');
+  var dotsWrap = document.getElementById('carouselDots');
+  var counterEl = document.getElementById('carouselCounter');
+  if(!track) return;
+  var cards = Array.from(track.querySelectorAll('.story-card'));
+  var total = cards.length;
+  var current = 0;
+  var isHovered = false;
+  var autoTimer = null;
+  var storyTimers = {};
+  var FRAME_MS = 2800;
+
+  function getPerView(){ return window.innerWidth<=640?1:window.innerWidth<=1024?2:3; }
+  var perView = getPerView();
+  function maxIdx(){ return Math.max(0, total - perView); }
+
+  function buildDots(){
+    dotsWrap.innerHTML='';
+    for(var i=0;i<=maxIdx();i++){
+      var d=document.createElement('button');
+      d.className='carousel-dot'+(i===current?' active':'');
+      d.dataset.i=i;
+      d.addEventListener('click',function(){ goTo(parseInt(this.dataset.i)); resetAuto(); });
+      dotsWrap.appendChild(d);
+    }
+  }
+
+  function goTo(idx){
+    current=Math.max(0,Math.min(idx,maxIdx()));
+    var vp=track.parentElement;
+    var gap=18;
+    var cw=(vp.offsetWidth-gap*(perView-1))/perView;
+    track.style.transform='translateX(-'+(current*(cw+gap))+'px)';
+    dotsWrap.querySelectorAll('.carousel-dot').forEach(function(d,i){ d.classList.toggle('active',i===current); });
+    if(counterEl) counterEl.textContent=(current+1)+'–'+Math.min(current+perView,total)+' of '+total;
+    startVisibleStories();
+  }
+
+  window.carouselMove = function(dir){ goTo(current+dir); resetAuto(); };
+
+  function showFrame(card, frameIdx){
+    var frames = card.querySelectorAll('.story-frame');
+    var dots = card.querySelectorAll('.story-frame-dot');
+    var pb = card.querySelector('.story-progress-bar');
+    frames.forEach(function(f,i){ f.classList.toggle('active',i===frameIdx); });
+    dots.forEach(function(d,i){ d.classList.toggle('active',i===frameIdx); });
+    if(pb){
+      pb.style.transition='none'; pb.style.width='0%';
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){
+        pb.style.transition='width '+FRAME_MS+'ms linear'; pb.style.width='100%';
+      }); });
+    }
+  }
+
+  function startStory(card){
+    var idx=parseInt(card.dataset.story);
+    if(storyTimers[idx]) return;
+    var frameIdx=0;
+    showFrame(card,0);
+    storyTimers[idx]=setInterval(function(){
+      if(isHovered) return;
+      frameIdx=(frameIdx+1)%3;
+      showFrame(card,frameIdx);
+    }, FRAME_MS);
+  }
+
+  function stopStory(card){
+    var idx=parseInt(card.dataset.story);
+    if(storyTimers[idx]){ clearInterval(storyTimers[idx]); delete storyTimers[idx]; }
+  }
+
+  function startVisibleStories(){
+    cards.forEach(function(card,i){
+      if(i>=current && i<current+perView) startStory(card);
+      else stopStory(card);
+    });
+  }
+
+  function startAuto(){
+    autoTimer=setInterval(function(){
+      if(!isHovered) goTo(current<maxIdx()?current+1:0);
+    }, FRAME_MS*3+600);
+  }
+  function resetAuto(){ clearInterval(autoTimer); startAuto(); }
+
+  var wrap=document.getElementById('proofCarousel');
+  if(wrap){
+    wrap.addEventListener('mouseenter',function(){ isHovered=true; });
+    wrap.addEventListener('mouseleave',function(){ isHovered=false; });
+  }
+
+  var txStart=0;
+  track.addEventListener('touchstart',function(e){ txStart=e.touches[0].clientX; },{passive:true});
+  track.addEventListener('touchend',function(e){
+    var diff=txStart-e.changedTouches[0].clientX;
+    if(Math.abs(diff)>40){ carouselMove(diff>0?1:-1); }
+  });
+
+  window.addEventListener('resize',function(){
+    var pv=getPerView();
+    if(pv!==perView){ perView=pv; current=Math.min(current,maxIdx()); buildDots(); }
+    goTo(current);
+  });
+
+  buildDots(); goTo(0); startAuto();
+})();
+
+/* ── STORY MODAL DATA ── */
+var storyModalData = [
+  { img:"case-studies/01-health-supplements.jpg", industry:"Health & Supplements", period:"Apr 2025 – Mar 2026 · Meta Ads",
+    campaign:[{val:"13,228",label:"Total Purchases"},{val:"5",label:"Ad Sets Scaled"}],
+    best:[{val:"13.44×",label:"Peak ROAS",red:true},{val:"5,612",label:"Top Ad Set Purchases"},{val:"$7.80",label:"Best Cost / Purchase"},{val:"10.88×",label:"2nd Best ROAS"}],
+    strategy:"Consolidated all campaigns under <strong>CBO (Campaign Budget Optimisation)</strong>. Switched from interest-stacked targeting to broad audiences — Meta's algorithm found buyers we'd never have manually targeted. Creative rotation every 3 weeks prevented fatigue and kept CPP at historic lows." },
+  { img:"case-studies/02-beauty-skincare.jpg", industry:"Beauty & Skincare", period:"Apr 2025 – Mar 2026 · Meta Ads",
+    campaign:[{val:"10,480",label:"Total Purchases"},{val:"5",label:"Ad Sets Scaled"}],
+    best:[{val:"13.62×",label:"Peak ROAS",red:true},{val:"4,318",label:"Top Ad Set Purchases"},{val:"$9.40",label:"Best Cost / Purchase"},{val:"11.08×",label:"2nd Best ROAS"}],
+    strategy:"<strong>Native UGC creative</strong> reduced CPM by 38% versus studio content. Server-side <strong>CAPI integration</strong> recovered purchase signals lost post-iOS14 — estimated 22% of unattributed conversions restored, giving Meta significantly cleaner optimisation data." },
+  { img:"case-studies/03-gadgets-electronics.jpg", industry:"Gadgets & Electronics", period:"Apr 2025 – Mar 2026 · Meta Ads",
+    campaign:[{val:"2,560",label:"Total Purchases"},{val:"5",label:"Ad Sets Scaled"}],
+    best:[{val:"12.48×",label:"Peak ROAS",red:true},{val:"1,112",label:"Top Ad Set Purchases"},{val:"$32.40",label:"Best Cost / Purchase"},{val:"10.14×",label:"2nd Best ROAS"}],
+    strategy:"<strong>Dynamic Product Ads (DPA)</strong> for catalogue visitors combined with a 3-touch sequential retargeting sequence. Extended retargeting window to <strong>21 days</strong> to match the longer electronics consideration cycle." },
+  { img:"case-studies/04-petcare-accessories.jpg", industry:"Petcare & Accessories", period:"Apr 2025 – Mar 2026 · Meta Ads",
+    campaign:[{val:"13,552",label:"Total Purchases"},{val:"5",label:"Ad Sets Scaled"}],
+    best:[{val:"13.16×",label:"Peak ROAS",red:true},{val:"5,844",label:"Top Ad Set Purchases"},{val:"$6.60",label:"Best Cost / Purchase"},{val:"10.72×",label:"2nd Best ROAS"}],
+    strategy:"Segmented <strong>repeat buyers from new buyers</strong> into separate campaigns. Retention CPP was lower, freeing acquisition budget. <strong>LTV-based bidding</strong> raised the budget ceiling without hurting efficiency — highest purchase volume of all 9 accounts." },
+  { img:"case-studies/05-automotive-parts.jpg", industry:"Automotive & Parts", period:"Apr 2025 – Mar 2026 · Meta Ads",
+    campaign:[{val:"2,878",label:"Total Purchases"},{val:"5",label:"Ad Sets Scaled"}],
+    best:[{val:"12.16×",label:"Peak ROAS",red:true},{val:"1,244",label:"Top Ad Set Purchases"},{val:"$28.40",label:"Best Cost / Purchase"},{val:"9.84×",label:"2nd Best ROAS"}],
+    strategy:"Dropped all interest targeting. <strong>Broad audiences + product-specific creative</strong> let Meta identify auto enthusiasts through behavioural signals it already tracked. Converted a notoriously difficult Meta category into a fully scalable campaign." },
+  { img:"case-studies/06-home-furniture.jpg", industry:"Home & Furniture", period:"Apr 2025 – Mar 2026 · Meta Ads",
+    campaign:[{val:"1,998",label:"Total Purchases"},{val:"5",label:"Ad Sets Scaled"}],
+    best:[{val:"12.92×",label:"Peak ROAS",red:true},{val:"844",label:"Top Ad Set Purchases"},{val:"$38.40",label:"Best Cost / Purchase"},{val:"10.48×",label:"2nd Best ROAS"}],
+    strategy:"<strong>3-stage funnel</strong>: awareness video → lifestyle static → offer retargeting. Extended retargeting to <strong>14 days</strong> to match longer furniture buying cycle. Lifestyle imagery outperformed product-only shots 2.4× on ROAS." },
+  { img:"case-studies/07-fitness-gymwear.jpg", industry:"Fitness & Gym Wear", period:"Apr 2025 – Mar 2026 · Meta Ads",
+    campaign:[{val:"7,716",label:"Total Purchases"},{val:"5",label:"Ad Sets Scaled"}],
+    best:[{val:"13.92×",label:"Peak ROAS",red:true},{val:"3,244",label:"Top Ad Set Purchases"},{val:"$11.80",label:"Best Cost / Purchase"},{val:"11.44×",label:"2nd Best ROAS"}],
+    strategy:"<strong>Seasonal creative calendar</strong> built 6 weeks ahead of each peak period. UGC workout content outperformed studio shoots <strong>3:1 on ROAS</strong>. Budget surged 40% during peak windows with no efficiency loss." },
+  { img:"case-studies/08-sports-outdoor.jpg", industry:"Sports & Outdoor", period:"Apr 2025 – Mar 2026 · Meta Ads",
+    campaign:[{val:"6,150",label:"Total Purchases"},{val:"5",label:"Ad Sets Scaled"}],
+    best:[{val:"13.28×",label:"Peak ROAS",red:true},{val:"2,648",label:"Top Ad Set Purchases"},{val:"$13.40",label:"Best Cost / Purchase"},{val:"10.76×",label:"2nd Best ROAS"}],
+    strategy:"<strong>Advantage+ Shopping Campaigns</strong> for cold prospecting + manual CBO for retargeting. Dual-structure reduced CPP by 31% vs previous agency. Multiple SKUs unified under one structure prevented budget fragmentation." },
+  { img:"case-studies/09-jewellery-accessories.jpg", industry:"Jewellery & Accessories", period:"Apr 2025 – Mar 2026 · Meta Ads",
+    campaign:[{val:"4,246",label:"Total Purchases"},{val:"5",label:"Ad Sets Scaled"}],
+    best:[{val:"13.56×",label:"Peak ROAS",red:true},{val:"1,844",label:"Top Ad Set Purchases"},{val:"$18.20",label:"Best Cost / Purchase"},{val:"11.12×",label:"2nd Best ROAS"}],
+    strategy:"<strong>Gifting-angle creatives</strong> activated 6 weeks before Valentine's, Mother's Day and Christmas. Top ad sets isolated and <strong>scaled independently</strong> to protect overall ROAS. Retargeting extended to 30 days during gifting seasons." }
+];
+
+function openStoryModal(idx){
+  var d=storyModalData[idx];
+  if(!d) return;
+  document.getElementById('modalScreenshot').style.backgroundImage="url('"+d.img+"')";
+  document.getElementById('modalIndustry').textContent=d.industry;
+  document.getElementById('modalPeriod').textContent=d.period;
+  document.getElementById('modalCampaignStats').innerHTML=d.campaign.map(function(s){
+    return '<div class="modal-stat"><div class="modal-stat-val">'+s.val+'</div><div class="modal-stat-label">'+s.label+'</div></div>';
+  }).join('');
+  document.getElementById('modalBestStats').innerHTML=d.best.map(function(s){
+    return '<div class="modal-stat"><div class="modal-stat-val'+(s.red?' red':'')+'">'+s.val+'</div><div class="modal-stat-label">'+s.label+'</div></div>';
+  }).join('');
+  document.getElementById('modalStrategy').innerHTML=d.strategy;
+  document.getElementById('storyModalBackdrop').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeStoryModal(){
+  document.getElementById('storyModalBackdrop').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+document.getElementById('storyModalBackdrop').addEventListener('click',function(e){
+  if(e.target===this) closeStoryModal();
+});
+document.getElementById('storyModal').addEventListener('click',function(e){ e.stopPropagation(); });
+document.getElementById('modalCloseBtn').addEventListener('click', closeStoryModal);
+document.getElementById('modalCta').addEventListener('click', closeStoryModal);
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeStoryModal(); });
+
 </script>
 <!-- WHATSAPP FLOATING BUTTON -->
 <a class="wa-btn" href="https://wa.me/9596864140?text=Hi%20VelmontX%2C%20I%27d%20like%20to%20discuss%20Meta%20Ads%20for%20my%20business." target="_blank" aria-label="Contact on WhatsApp">
@@ -3147,39 +2698,30 @@ if (auditForm) {
     <span class="wa-btn-sub">Typically replies in minutes</span>
   </div>
 </a>
-</a><!-- STORY MODAL -->
-<div class="story-modal-backdrop" id="storyModalBackdrop" onclick="closeStoryModal(event)">
+</a>
+<!-- STORY MODAL -->
+<div class="story-modal-backdrop" id="storyModalBackdrop">
   <div class="story-modal" id="storyModal">
-    <button class="modal-close" onclick="closeStoryModal()">×</button>
-    <div class="modal-screenshot" id="modalScreenshot">
-      <div class="modal-screenshot-overlay"></div>
-    </div>
+    <button class="modal-close" id="modalCloseBtn">×</button>
+    <div class="modal-screenshot" id="modalScreenshot"></div>
     <div class="modal-body">
       <div class="modal-industry" id="modalIndustry"></div>
       <div class="modal-period" id="modalPeriod"></div>
-
-      <!-- Block 1: The Campaign -->
       <div class="modal-block">
         <div class="modal-block-label">The Campaign</div>
         <div class="modal-stats" id="modalCampaignStats"></div>
       </div>
-
-      <!-- Block 2: Best Performing Ad Set -->
       <div class="modal-block">
         <div class="modal-block-label">Best Performing Ad Set</div>
         <div class="modal-stats" id="modalBestStats"></div>
       </div>
-
-      <!-- Block 3: The Strategy -->
       <div class="modal-block">
         <div class="modal-block-label">How We Did It</div>
         <div class="modal-strategy" id="modalStrategy"></div>
       </div>
-
-      <a href="#contact" class="modal-cta" onclick="closeStoryModal()">Get This for Your Brand →</a>
+      <a href="#contact" class="modal-cta" id="modalCta">Get This for Your Brand →</a>
     </div>
   </div>
 </div>
-
 </body>
 </html>
