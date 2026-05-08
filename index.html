@@ -1049,7 +1049,46 @@
   }
   .modal-cta:hover { background: #aa0000; }
 
-  /* ── STORY CARDS ── */
+  /* ── INDUSTRY INDEX BAR ── */
+  .industry-index {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    padding: 0 64px;
+    margin-bottom: 36px;
+  }
+  .industry-pill {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .industry-pill:hover {
+    border-color: var(--red);
+    background: var(--cream2);
+  }
+  .industry-pill-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 600;
+    color: var(--red); min-width: 20px;
+    letter-spacing: 0.05em;
+  }
+  .industry-pill-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--dark);
+    font-weight: 400;
+  }
+  @media(max-width:1024px) {
+    .industry-index { padding: 0 28px; grid-template-columns: repeat(3,1fr); }
+  }
+  @media(max-width:640px) {
+    .industry-index { padding: 0 20px; grid-template-columns: repeat(2,1fr); gap: 4px; }
+    .industry-pill { padding: 9px 12px; }
+    .industry-pill-name { font-size: 9px; }
+  }
   .story-card {
     flex: 0 0 calc(33.333% - 12px); min-width: 0;
     position: relative; aspect-ratio: 16/9;
@@ -1271,6 +1310,18 @@
     <div class="section-label">Proof of Performance</div>
     <h2 class="section-title">Real Dashboards.<br><em>Real Results.</em></h2>
     <p class="showcase-sub">Every number below is from a live client account. Click any card for the full story.</p>
+  </div>
+
+  <div class="industry-index">
+    <div class="industry-pill" onclick="openStoryModal(0)"><span class="industry-pill-num">01</span><span class="industry-pill-name">Health &amp; Supplements</span></div>
+    <div class="industry-pill" onclick="openStoryModal(1)"><span class="industry-pill-num">02</span><span class="industry-pill-name">Beauty &amp; Skincare</span></div>
+    <div class="industry-pill" onclick="openStoryModal(2)"><span class="industry-pill-num">03</span><span class="industry-pill-name">Gadgets &amp; Electronics</span></div>
+    <div class="industry-pill" onclick="openStoryModal(3)"><span class="industry-pill-num">04</span><span class="industry-pill-name">Petcare &amp; Accessories</span></div>
+    <div class="industry-pill" onclick="openStoryModal(4)"><span class="industry-pill-num">05</span><span class="industry-pill-name">Automotive &amp; Parts</span></div>
+    <div class="industry-pill" onclick="openStoryModal(5)"><span class="industry-pill-num">06</span><span class="industry-pill-name">Home &amp; Furniture</span></div>
+    <div class="industry-pill" onclick="openStoryModal(6)"><span class="industry-pill-num">07</span><span class="industry-pill-name">Fitness &amp; Gym Wear</span></div>
+    <div class="industry-pill" onclick="openStoryModal(7)"><span class="industry-pill-num">08</span><span class="industry-pill-name">Sports &amp; Outdoor</span></div>
+    <div class="industry-pill" onclick="openStoryModal(8)"><span class="industry-pill-num">09</span><span class="industry-pill-name">Jewellery &amp; Accessories</span></div>
   </div>
 
   <div class="carousel-wrap" id="proofCarousel">
