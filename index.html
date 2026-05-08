@@ -1072,7 +1072,7 @@
   .story-card:hover .story-bg { opacity: 0.45; }
   .story-overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.90) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.82) 100%);
   }
   .story-frames { position: absolute; inset: 0; z-index: 2; }
   .story-frame {
@@ -1081,12 +1081,14 @@
     padding: 16px 18px; opacity: 0; transition: opacity 0.7s ease;
   }
   .story-frame.active { opacity: 1; }
-  .story-tag {
-    position: absolute; top: 12px; left: 14px;
+  /* persistent industry tag — always visible on card */
+  .story-industry-tag {
+    position: absolute; top: 12px; left: 14px; z-index: 4;
     font-family: 'JetBrains Mono', monospace; font-size: 9px;
     letter-spacing: 0.15em; text-transform: uppercase;
-    color: #fff; background: rgba(0,0,0,0.6);
+    color: #fff; background: rgba(0,0,0,0.65);
     padding: 4px 10px; border-left: 2px solid #cc0000;
+    pointer-events: none;
   }
   .story-frame-dots {
     position: absolute; top: 12px; right: 12px; display: flex; gap: 4px; z-index: 3;
@@ -1285,7 +1287,7 @@
     <div class="carousel-viewport">
       <div class="carousel-track" id="carouselTrack">
 
-        <div class="story-card" data-story="0" onclick="openStoryModal(0)">
+        <div class="story-card" data-story="0" data-industry="Health & Supplements" onclick="openStoryModal(0)">
           <div class="story-bg" style="background-image:url('case-studies/01-health-supplements.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1293,21 +1295,19 @@
             <div class="story-frame-dot"></div>
             <div class="story-frame-dot"></div>
           </div>
+          <div class="story-industry-tag" id="storyTag"></div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Health & Supplements</div>
               <div class="story-frame-label">The Campaign</div>
               <div class="story-stat"><em>13,228</em></div>
               <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Best Ad Set</div>
               <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>13.44×</em> ROAS</div>
               <div class="story-desc">$7.80 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
               <div class="story-desc" style="font-size:12px;line-height:1.65;">CBO + Broad targeting. Meta found buyers through behavioural signals, not interest stacks.</div>
             </div>
@@ -1316,7 +1316,7 @@
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <div class="story-card" data-story="1" onclick="openStoryModal(1)">
+        <div class="story-card" data-story="1" data-industry="Beauty & Skincare" onclick="openStoryModal(1)">
           <div class="story-bg" style="background-image:url('case-studies/02-beauty-skincare.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1324,21 +1324,19 @@
             <div class="story-frame-dot"></div>
             <div class="story-frame-dot"></div>
           </div>
+          <div class="story-industry-tag" id="storyTag"></div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Beauty & Skincare</div>
               <div class="story-frame-label">The Campaign</div>
               <div class="story-stat"><em>10,480</em></div>
               <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Best Ad Set</div>
               <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>13.62×</em> ROAS</div>
               <div class="story-desc">$9.40 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
               <div class="story-desc" style="font-size:12px;line-height:1.65;">UGC creative + server-side CAPI. Recovered 22% of lost purchase signals post-iOS14.</div>
             </div>
@@ -1347,7 +1345,7 @@
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <div class="story-card" data-story="2" onclick="openStoryModal(2)">
+        <div class="story-card" data-story="2" data-industry="Gadgets & Electronics" onclick="openStoryModal(2)">
           <div class="story-bg" style="background-image:url('case-studies/03-gadgets-electronics.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1355,21 +1353,19 @@
             <div class="story-frame-dot"></div>
             <div class="story-frame-dot"></div>
           </div>
+          <div class="story-industry-tag" id="storyTag"></div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Gadgets & Electronics</div>
               <div class="story-frame-label">The Campaign</div>
               <div class="story-stat"><em>2,560</em></div>
               <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Best Ad Set</div>
               <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>12.48×</em> ROAS</div>
               <div class="story-desc">$32.40 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
               <div class="story-desc" style="font-size:12px;line-height:1.65;">Dynamic Product Ads + 3-touch retargeting sequence. Extended window for longer buyer cycle.</div>
             </div>
@@ -1378,7 +1374,7 @@
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <div class="story-card" data-story="3" onclick="openStoryModal(3)">
+        <div class="story-card" data-story="3" data-industry="Petcare & Accessories" onclick="openStoryModal(3)">
           <div class="story-bg" style="background-image:url('case-studies/04-petcare-accessories.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1386,21 +1382,19 @@
             <div class="story-frame-dot"></div>
             <div class="story-frame-dot"></div>
           </div>
+          <div class="story-industry-tag" id="storyTag"></div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Petcare & Accessories</div>
               <div class="story-frame-label">The Campaign</div>
               <div class="story-stat"><em>13,552</em></div>
               <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Best Ad Set</div>
               <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>13.16×</em> ROAS</div>
               <div class="story-desc">$6.60 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
               <div class="story-desc" style="font-size:12px;line-height:1.65;">Segmented repeat vs new buyers. LTV-based bidding. Highest volume of all 9 accounts.</div>
             </div>
@@ -1409,7 +1403,7 @@
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <div class="story-card" data-story="4" onclick="openStoryModal(4)">
+        <div class="story-card" data-story="4" data-industry="Automotive & Parts" onclick="openStoryModal(4)">
           <div class="story-bg" style="background-image:url('case-studies/05-automotive-parts.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1417,21 +1411,19 @@
             <div class="story-frame-dot"></div>
             <div class="story-frame-dot"></div>
           </div>
+          <div class="story-industry-tag" id="storyTag"></div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Automotive & Parts</div>
               <div class="story-frame-label">The Campaign</div>
               <div class="story-stat"><em>2,878</em></div>
               <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Best Ad Set</div>
               <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>12.16×</em> ROAS</div>
               <div class="story-desc">$28.40 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
               <div class="story-desc" style="font-size:12px;line-height:1.65;">Dropped interest targeting. Broad + product-specific creative scaled a notoriously hard category.</div>
             </div>
@@ -1440,7 +1432,7 @@
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <div class="story-card" data-story="5" onclick="openStoryModal(5)">
+        <div class="story-card" data-story="5" data-industry="Home & Furniture" onclick="openStoryModal(5)">
           <div class="story-bg" style="background-image:url('case-studies/06-home-furniture.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1448,21 +1440,19 @@
             <div class="story-frame-dot"></div>
             <div class="story-frame-dot"></div>
           </div>
+          <div class="story-industry-tag" id="storyTag"></div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Home & Furniture</div>
               <div class="story-frame-label">The Campaign</div>
               <div class="story-stat"><em>1,998</em></div>
               <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Best Ad Set</div>
               <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>12.92×</em> ROAS</div>
               <div class="story-desc">$38.40 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
               <div class="story-desc" style="font-size:12px;line-height:1.65;">3-stage funnel with 14-day retargeting window. Lifestyle imagery 2.4× better than product shots.</div>
             </div>
@@ -1471,7 +1461,7 @@
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <div class="story-card" data-story="6" onclick="openStoryModal(6)">
+        <div class="story-card" data-story="6" data-industry="Fitness & Gym Wear" onclick="openStoryModal(6)">
           <div class="story-bg" style="background-image:url('case-studies/07-fitness-gymwear.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1479,21 +1469,19 @@
             <div class="story-frame-dot"></div>
             <div class="story-frame-dot"></div>
           </div>
+          <div class="story-industry-tag" id="storyTag"></div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Fitness & Gym Wear</div>
               <div class="story-frame-label">The Campaign</div>
               <div class="story-stat"><em>7,716</em></div>
               <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Best Ad Set</div>
               <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>13.92×</em> ROAS</div>
               <div class="story-desc">$11.80 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
               <div class="story-desc" style="font-size:12px;line-height:1.65;">Seasonal creative calendar built 6 weeks ahead. UGC outperformed studio 3:1 on ROAS.</div>
             </div>
@@ -1502,7 +1490,7 @@
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <div class="story-card" data-story="7" onclick="openStoryModal(7)">
+        <div class="story-card" data-story="7" data-industry="Sports & Outdoor" onclick="openStoryModal(7)">
           <div class="story-bg" style="background-image:url('case-studies/08-sports-outdoor.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1510,21 +1498,19 @@
             <div class="story-frame-dot"></div>
             <div class="story-frame-dot"></div>
           </div>
+          <div class="story-industry-tag" id="storyTag"></div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Sports & Outdoor</div>
               <div class="story-frame-label">The Campaign</div>
               <div class="story-stat"><em>6,150</em></div>
               <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Best Ad Set</div>
               <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>13.28×</em> ROAS</div>
               <div class="story-desc">$13.40 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
               <div class="story-desc" style="font-size:12px;line-height:1.65;">Advantage+ Shopping for prospecting + manual CBO for retargeting. CPP down 31%.</div>
             </div>
@@ -1533,7 +1519,7 @@
           <div class="story-progress"><div class="story-progress-bar"></div></div>
         </div>
 
-        <div class="story-card" data-story="8" onclick="openStoryModal(8)">
+        <div class="story-card" data-story="8" data-industry="Jewellery & Accessories" onclick="openStoryModal(8)">
           <div class="story-bg" style="background-image:url('case-studies/09-jewellery-accessories.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -1541,21 +1527,19 @@
             <div class="story-frame-dot"></div>
             <div class="story-frame-dot"></div>
           </div>
+          <div class="story-industry-tag" id="storyTag"></div>
           <div class="story-frames">
             <div class="story-frame active">
-              <div class="story-tag">Jewellery & Accessories</div>
               <div class="story-frame-label">The Campaign</div>
               <div class="story-stat"><em>4,246</em></div>
               <div class="story-desc">Total Purchases · Apr 2025 – Mar 2026 · Meta Ads</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">Best Ad Set</div>
               <div class="story-frame-label">Peak Performance</div>
               <div class="story-stat"><em>13.56×</em> ROAS</div>
               <div class="story-desc">$18.20 Cost / Purchase</div>
             </div>
             <div class="story-frame">
-              <div class="story-tag">The Strategy</div>
               <div class="story-frame-label">How We Did It</div>
               <div class="story-desc" style="font-size:12px;line-height:1.65;">Gifting-angle creatives for 3 seasonal peaks. Top ad sets scaled independently to protect ROAS.</div>
             </div>
@@ -2376,10 +2360,16 @@ document.getElementById('storyModalBackdrop').addEventListener('click',function(
   if(e.target===this) closeStoryModal();
 });
 document.getElementById('storyModal').addEventListener('click',function(e){ e.stopPropagation(); });
-document.getElementById('modalCloseBtn').addEventListener('click', closeStoryModal);
-document.getElementById('modalCta').addEventListener('click', closeStoryModal);
+// close handled by inline onclick
+// cta handled by inline onclick
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeStoryModal(); });
 
+
+/* ── POPULATE INDUSTRY TAGS ── */
+document.querySelectorAll('.story-card[data-industry]').forEach(function(card) {
+  var tag = card.querySelector('.story-industry-tag');
+  if (tag) tag.textContent = card.dataset.industry;
+});
 </script>
 <!-- WHATSAPP FLOATING BUTTON -->
 <a class="wa-btn" href="https://wa.me/9596864140?text=Hi%20VelmontX%2C%20I%27d%20like%20to%20discuss%20Meta%20Ads%20for%20my%20business." target="_blank" aria-label="Contact on WhatsApp">
@@ -2393,7 +2383,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeStory
 <!-- STORY MODAL -->
 <div class="story-modal-backdrop" id="storyModalBackdrop">
   <div class="story-modal" id="storyModal">
-    <button class="modal-close" id="modalCloseBtn">×</button>
+    <button class="modal-close" onclick="closeStoryModal()">×</button>
     <div class="modal-screenshot" id="modalScreenshot"></div>
     <div class="modal-body">
       <div class="modal-industry" id="modalIndustry"></div>
@@ -2410,7 +2400,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeStory
         <div class="modal-block-label">How We Did It</div>
         <div class="modal-strategy" id="modalStrategy"></div>
       </div>
-      <a href="#contact" class="modal-cta" id="modalCta">Get This for Your Brand →</a>
+      <a href="#contact" class="modal-cta" onclick="closeStoryModal()">Get This for Your Brand →</a>
     </div>
   </div>
 </div>
