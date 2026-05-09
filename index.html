@@ -281,6 +281,20 @@
     position: relative; text-align: center;
     max-width: 1000px; padding: 0 48px; z-index: 2;
   }
+.hero-ai-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--mid); background: var(--cream2);
+  border: 1px solid var(--border);
+  padding: 6px 14px; margin-bottom: 16px;
+  opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+}
+.hero-ai-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--red); flex-shrink: 0;
+  animation: pulse 2s ease-in-out infinite;
+}
   .hero-eyebrow {
     font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 400;
     letter-spacing: 0.35em; text-transform: uppercase; color: var(--red);
@@ -972,6 +986,78 @@
   }
   .photo-break-quote em { color: var(--red3); font-style: normal; }
 
+
+  /* ───── AI-Optimised Section ───── */
+  .ai-section {
+    background: #080808;
+    padding: 120px 40px;
+    border-top: 1px solid #1a1a1a;
+    border-bottom: 1px solid #1a1a1a;
+    overflow: hidden;
+    position: relative;
+  }
+  .ai-section::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(196,28,28,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .ai-section-inner { max-width: 1200px; margin: 0 auto; }
+  .ai-section-sub {
+    font-size: 16px; color: var(--mid); line-height: 1.8;
+    max-width: 640px; margin: 16px 0 56px;
+    font-weight: 300;
+  }
+  .ai-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-bottom: 40px;
+  }
+  .ai-card {
+    background: #0e0e0e;
+    border: 1px solid #1c1c1c;
+    padding: 36px 28px;
+    transition: border-color 0.3s, background 0.3s;
+    position: relative;
+  }
+  .ai-card:hover { background: #111; border-color: rgba(196,28,28,0.3); }
+  .ai-card-icon {
+    font-size: 22px; color: var(--red);
+    margin-bottom: 20px; display: block;
+    opacity: 0.8;
+  }
+  .ai-card-title {
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: #fff; margin-bottom: 14px;
+  }
+  .ai-card-desc {
+    font-size: 13px; line-height: 1.8;
+    color: var(--mid); font-weight: 300;
+  }
+  .ai-signal-strip {
+    display: flex; flex-wrap: wrap; gap: 0;
+    align-items: center;
+    border: 1px solid #1c1c1c;
+    background: #0a0a0a;
+    padding: 16px 24px;
+  }
+  .ai-signal-strip span {
+    font-size: 10px; font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: #555; padding: 4px 12px;
+  }
+  .ai-signal-strip .ai-strip-dot { color: var(--red); padding: 4px 2px; }
+  @media (max-width: 900px) {
+    .ai-cards-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 540px) {
+    .ai-cards-grid { grid-template-columns: 1fr; }
+    .ai-section { padding: 80px 24px; }
+  }
   /* ───── FAQ ───── */
   .faq-section { background: var(--cream2); }
   .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 44px; }
@@ -1341,10 +1427,11 @@
   <div class="hero-photo-bg"></div>
   <div class="hero-grid"></div>
   <div class="hero-content">
+    <div class="hero-ai-badge"><span class="hero-ai-dot"></span><span>AI-Optimised · Meta Andromeda · CAPI Signal Stack</span></div>
     <p class="hero-eyebrow">Global Performance Marketing Agency</p>
     <h1 class="hero-title">The Engine<br>Behind <em>Brand</em><br><span class="stroke">Growth</span></h1>
     <div class="hero-divider"></div>
-    <p class="hero-sub">Precision-engineered Meta advertising campaigns for brands worldwide. We turn ad spend into predictable, compounding revenue — wherever your market is.</p>
+    <p class="hero-sub">Precision-engineered Meta advertising campaigns powered by AI-first campaign architecture. We turn ad spend into predictable, compounding revenue — wherever your market is.</p>
     <div class="hero-actions">
       <a href="#contact" class="btn-primary">Request Audit →</a>
       <a href="#results" class="btn-ghost">See Proof First</a>
@@ -1776,9 +1863,9 @@
   <h2 class="section-title reveal">Not Just Another<br><em>Ads Agency</em></h2>
   <div class="why-grid">
     <div class="why-card reveal">
-      <div class="why-icon">01 · ALGO-FIRST</div>
-      <div class="why-title">We Work With the Algorithm, Not Against It</div>
-      <p class="why-desc">Most agencies fight Meta's AI with over-targeting. We feed the algorithm what it needs — clean data, strong creative, and proper pixel signals — and let it find your best buyers at scale.</p>
+      <div class="why-icon">01 · AI-FIRST</div>
+      <div class="why-title">Engineered for Meta's AI, Not Against It</div>
+      <p class="why-desc">Most agencies fight the algorithm with over-targeting. We engineer for it — CAPI signal stacks, broad audience inputs, and creative built as algorithmic distribution signals. Meta's AI finds your buyers. We make sure it has everything it needs to do it at scale.</p>
     </div>
     <div class="why-card reveal reveal-delay-1">
       <div class="why-icon">02 · CREATIVE ENGINE</div>
@@ -2168,78 +2255,48 @@
   </div><!-- /blog-list -->
 </section>
 
-<!-- FAQ -->
-<section class="faq-section">
-  <div class="section-label reveal">Got Questions</div>
-  <h2 class="section-title reveal">Everything You<br><em>Need to Know</em></h2>
-  <div class="faq-grid">
 
-    <div class="faq-item reveal">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        <span class="faq-q-text">Do you guarantee results?</span>
-        <span class="faq-toggle">+</span>
+<!-- AI-Optimised Advertising Section -->
+<section class="ai-section">
+  <div class="ai-section-inner">
+    <div class="section-label reveal" style="color:var(--red);">AI-Optimised Advertising</div>
+    <h2 class="section-title reveal" style="color:#fff;">Built for the Era of<br><em>Meta's AI</em></h2>
+    <p class="ai-section-sub reveal">Every campaign we run is architected around Meta's machine learning stack — not working around it, but engineering with it. Here's what that looks like in practice.</p>
+    <div class="ai-cards-grid">
+      <div class="ai-card reveal">
+        <div class="ai-card-icon">⬡</div>
+        <div class="ai-card-title">Andromeda Architecture</div>
+        <p class="ai-card-desc">Meta's Andromeda retrieval system ranks creative for relevance before auction. We build creative specifically to score high on Andromeda's signal model — visual diversity, relevance depth, and audience match.</p>
       </div>
-      <div class="faq-a"><p>We don't guarantee specific ROAS numbers — any agency that does is lying to you. What we do guarantee is a rigorous, data-driven process, full transparency, and a team that treats your budget like it's their own. Our track record speaks: 96% client retention and an average 6.8× ROAS across accounts.</p></div>
-    </div>
-
-    <div class="faq-item reveal reveal-delay-1">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        <span class="faq-q-text">How long before I see results?</span>
-        <span class="faq-toggle">+</span>
+      <div class="ai-card reveal reveal-delay-1">
+        <div class="ai-card-icon">◈</div>
+        <div class="ai-card-title">CAPI Signal Stack</div>
+        <p class="ai-card-desc">Conversions API layered with pixel data, event deduplication, and server-side purchase signals. Clean, high-fidelity data in = lower CPMs, better optimisation, and campaigns that actually exit the learning phase.</p>
       </div>
-      <div class="faq-a"><p>Meta's algorithm typically needs 2–4 weeks of data to exit the learning phase and optimise efficiently. Most clients see meaningful improvement in ROAS and CPL within the first 30–45 days. Full-scale compounding results typically emerge by month 2–3 as we build on winning creatives and audiences.</p></div>
-    </div>
-
-    <div class="faq-item reveal">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        <span class="faq-q-text">What's the minimum budget I need?</span>
-        <span class="faq-toggle">+</span>
+      <div class="ai-card reveal reveal-delay-2">
+        <div class="ai-card-icon">◎</div>
+        <div class="ai-card-title">Advantage+ Intelligence</div>
+        <p class="ai-card-desc">We use Advantage+ placements, Advantage+ audiences, and CBO structures designed to give Meta's bidding AI maximum room to find efficiency — while keeping cost controls that protect your CPL and ROAS floors.</p>
       </div>
-      <div class="faq-a"><p>We work with brands spending as little as $10/day on ads. To give Meta's algorithm enough data to optimise properly, a budget of $500–$1,500/month is where you'll start seeing consistent, scalable results across any market. We're transparent about this in our onboarding so you know exactly what to expect at your budget level.</p></div>
-    </div>
-
-    <div class="faq-item reveal reveal-delay-1">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        <span class="faq-q-text">Do I need to have run Meta Ads before?</span>
-        <span class="faq-toggle">+</span>
+      <div class="ai-card reveal reveal-delay-1">
+        <div class="ai-card-icon">◉</div>
+        <div class="ai-card-title">Creative as AI Signal</div>
+        <p class="ai-card-desc">Your creative isn't just advertising — it's the primary signal Meta's AI uses to find lookalike buyers. We engineer each asset with distinct audience signals so the algorithm distributes to different buyer segments simultaneously.</p>
       </div>
-      <div class="faq-a"><p>Not at all. We work with both businesses starting from scratch and those with existing campaigns that aren't performing. If you're new, we handle full setup — pixel installation, CAPI, account structure, and creative strategy. If you're already running ads, we audit and rebuild what's broken.</p></div>
     </div>
-
-    <div class="faq-item reveal">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        <span class="faq-q-text">What does the retainer include?</span>
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-a"><p>Every retainer includes campaign strategy and management, audience architecture, creative strategy and performance reviews, weekly reporting, pixel and tracking management, and a dedicated strategist. Creative production (actual ad design/video) is either handled by your team or can be added as a service.</p></div>
+    <div class="ai-signal-strip reveal">
+      <span>Meta Andromeda</span><span class="ai-strip-dot">·</span>
+      <span>Conversions API</span><span class="ai-strip-dot">·</span>
+      <span>Advantage+ AI</span><span class="ai-strip-dot">·</span>
+      <span>CBO Intelligence</span><span class="ai-strip-dot">·</span>
+      <span>Broad Audience Inputs</span><span class="ai-strip-dot">·</span>
+      <span>Event Deduplication</span><span class="ai-strip-dot">·</span>
+      <span>Server-Side Signals</span><span class="ai-strip-dot">·</span>
+      <span>Creative Signal Engineering</span>
     </div>
-
-    <div class="faq-item reveal reveal-delay-1">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        <span class="faq-q-text">Do you work with international clients?</span>
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-a"><p>Yes — we work with clients globally. Our retainers are priced in USD and we're experienced running campaigns targeting audiences in the US, UK, UAE, Australia, and across South and Southeast Asia. Timezone is rarely an issue; we operate async-first with clear weekly communication rhythms.</p></div>
-    </div>
-
-    <div class="faq-item reveal">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        <span class="faq-q-text">How is VelmontX different from a freelancer?</span>
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-a"><p>A freelancer is one person juggling many clients. VelmontX is a focused team with a dedicated strategist per account, structured creative review processes, and a system built for scale. You get the accountability and reliability of an agency with the personal attention of someone who knows your business deeply.</p></div>
-    </div>
-
-    <div class="faq-item reveal reveal-delay-1">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        <span class="faq-q-text">Can I cancel anytime?</span>
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-a"><p>We work on monthly retainers with a 30-day notice period. No long-term lock-ins. We believe that if we're delivering real, measurable ROAS — you won't want to leave. Our 96% retention rate backs that up.</p></div>
-    </div>
-
   </div>
 </section>
+
 
 <!-- PHOTO BREAK -->
 <div class="photo-break">
@@ -2386,6 +2443,79 @@
   </div>
 
   <p style="margin-top:20px;font-size:10px;color:rgba(255,255,255,0.15);font-family:'JetBrains Mono',monospace;letter-spacing:0.12em;" class="reveal">· RESULTS IN TWO WEEKS ·</p>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="section-label reveal">Got Questions</div>
+  <h2 class="section-title reveal">Everything You<br><em>Need to Know</em></h2>
+  <div class="faq-grid">
+
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Do you guarantee results?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>We don't guarantee specific ROAS numbers — any agency that does is lying to you. What we do guarantee is a rigorous, data-driven process, full transparency, and a team that treats your budget like it's their own. Our track record speaks: 96% client retention and an average 6.8× ROAS across accounts.</p></div>
+    </div>
+
+    <div class="faq-item reveal reveal-delay-1">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">How long before I see results?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>Meta's algorithm typically needs 2–4 weeks of data to exit the learning phase and optimise efficiently. Most clients see meaningful improvement in ROAS and CPL within the first 30–45 days. Full-scale compounding results typically emerge by month 2–3 as we build on winning creatives and audiences.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">What's the minimum budget I need?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>We work with brands spending as little as $10/day on ads. To give Meta's algorithm enough data to optimise properly, a budget of $500–$1,500/month is where you'll start seeing consistent, scalable results across any market. We're transparent about this in our onboarding so you know exactly what to expect at your budget level.</p></div>
+    </div>
+
+    <div class="faq-item reveal reveal-delay-1">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Do I need to have run Meta Ads before?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>Not at all. We work with both businesses starting from scratch and those with existing campaigns that aren't performing. If you're new, we handle full setup — pixel installation, CAPI, account structure, and creative strategy. If you're already running ads, we audit and rebuild what's broken.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">What does the retainer include?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>Every retainer includes campaign strategy and management, audience architecture, creative strategy and performance reviews, weekly reporting, pixel and tracking management, and a dedicated strategist. Creative production (actual ad design/video) is either handled by your team or can be added as a service.</p></div>
+    </div>
+
+    <div class="faq-item reveal reveal-delay-1">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Do you work with international clients?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>Yes — we work with clients globally. Our retainers are priced in USD and we're experienced running campaigns targeting audiences in the US, UK, UAE, Australia, and across South and Southeast Asia. Timezone is rarely an issue; we operate async-first with clear weekly communication rhythms.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">How is VelmontX different from a freelancer?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>A freelancer is one person juggling many clients. VelmontX is a focused team with a dedicated strategist per account, structured creative review processes, and a system built for scale. You get the accountability and reliability of an agency with the personal attention of someone who knows your business deeply.</p></div>
+    </div>
+
+    <div class="faq-item reveal reveal-delay-1">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Can I cancel anytime?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a"><p>We work on monthly retainers with a 30-day notice period. No long-term lock-ins. We believe that if we're delivering real, measurable ROAS — you won't want to leave. Our 96% retention rate backs that up.</p></div>
+    </div>
+
+  </div>
 </section>
 
 <!-- FOOTER -->
