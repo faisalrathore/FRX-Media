@@ -1411,6 +1411,10 @@
   /* ── MOBILE 480px ── */
   @media(max-width:480px) {
 
+    /* Hero: push content below fixed nav */
+    .hero { padding-top: 80px !important; min-height: 100svh; }
+    .hero-content { padding: 0 20px; }
+
     /* Global section padding */
     section { padding: 56px 20px !important; }
     .why-section { padding: 56px 20px !important; }
@@ -2016,6 +2020,47 @@
   </div>
 </section>
 
+<!-- AI-Optimised Advertising Section -->
+<section class="ai-section">
+  <div class="ai-section-inner">
+    <div class="section-label reveal" style="color:var(--red);">AI-Optimised Advertising</div>
+    <h2 class="section-title reveal" style="color:#fff;">Built for the Era of<br><em>Meta's AI</em></h2>
+    <p class="ai-section-sub reveal">Every campaign we run is architected around Meta's machine learning stack — not working around it, but engineering with it. Here's what that looks like in practice.</p>
+    <div class="ai-cards-grid">
+      <div class="ai-card reveal">
+        <div class="ai-card-icon">⬡</div>
+        <div class="ai-card-title">Andromeda Architecture</div>
+        <p class="ai-card-desc">Meta's Andromeda retrieval system ranks creative for relevance before auction. We build creative specifically to score high on Andromeda's signal model — visual diversity, relevance depth, and audience match.</p>
+      </div>
+      <div class="ai-card reveal reveal-delay-1">
+        <div class="ai-card-icon">◈</div>
+        <div class="ai-card-title">CAPI Signal Stack</div>
+        <p class="ai-card-desc">Conversions API layered with pixel data, event deduplication, and server-side purchase signals. Clean, high-fidelity data in = lower CPMs, better optimisation, and campaigns that actually exit the learning phase.</p>
+      </div>
+      <div class="ai-card reveal reveal-delay-2">
+        <div class="ai-card-icon">◎</div>
+        <div class="ai-card-title">Advantage+ Intelligence</div>
+        <p class="ai-card-desc">We use Advantage+ placements, Advantage+ audiences, and CBO structures designed to give Meta's bidding AI maximum room to find efficiency — while keeping cost controls that protect your CPL and ROAS floors.</p>
+      </div>
+      <div class="ai-card reveal reveal-delay-1">
+        <div class="ai-card-icon">◉</div>
+        <div class="ai-card-title">Creative as AI Signal</div>
+        <p class="ai-card-desc">Your creative isn't just advertising — it's the primary signal Meta's AI uses to find lookalike buyers. We engineer each asset with distinct audience signals so the algorithm distributes to different buyer segments simultaneously.</p>
+      </div>
+    </div>
+    <div class="ai-signal-strip reveal">
+      <span>Meta Andromeda</span><span class="ai-strip-dot">·</span>
+      <span>Conversions API</span><span class="ai-strip-dot">·</span>
+      <span>Advantage+ AI</span><span class="ai-strip-dot">·</span>
+      <span>CBO Intelligence</span><span class="ai-strip-dot">·</span>
+      <span>Broad Audience Inputs</span><span class="ai-strip-dot">·</span>
+      <span>Event Deduplication</span><span class="ai-strip-dot">·</span>
+      <span>Server-Side Signals</span><span class="ai-strip-dot">·</span>
+      <span>Creative Signal Engineering</span>
+    </div>
+  </div>
+</section>
+
 <!-- INSIGHTS -->
 <section class="insights" id="insights">
   <div class="insights-header reveal">
@@ -2338,46 +2383,6 @@
 </section>
 
 
-<!-- AI-Optimised Advertising Section -->
-<section class="ai-section">
-  <div class="ai-section-inner">
-    <div class="section-label reveal" style="color:var(--red);">AI-Optimised Advertising</div>
-    <h2 class="section-title reveal" style="color:#fff;">Built for the Era of<br><em>Meta's AI</em></h2>
-    <p class="ai-section-sub reveal">Every campaign we run is architected around Meta's machine learning stack — not working around it, but engineering with it. Here's what that looks like in practice.</p>
-    <div class="ai-cards-grid">
-      <div class="ai-card reveal">
-        <div class="ai-card-icon">⬡</div>
-        <div class="ai-card-title">Andromeda Architecture</div>
-        <p class="ai-card-desc">Meta's Andromeda retrieval system ranks creative for relevance before auction. We build creative specifically to score high on Andromeda's signal model — visual diversity, relevance depth, and audience match.</p>
-      </div>
-      <div class="ai-card reveal reveal-delay-1">
-        <div class="ai-card-icon">◈</div>
-        <div class="ai-card-title">CAPI Signal Stack</div>
-        <p class="ai-card-desc">Conversions API layered with pixel data, event deduplication, and server-side purchase signals. Clean, high-fidelity data in = lower CPMs, better optimisation, and campaigns that actually exit the learning phase.</p>
-      </div>
-      <div class="ai-card reveal reveal-delay-2">
-        <div class="ai-card-icon">◎</div>
-        <div class="ai-card-title">Advantage+ Intelligence</div>
-        <p class="ai-card-desc">We use Advantage+ placements, Advantage+ audiences, and CBO structures designed to give Meta's bidding AI maximum room to find efficiency — while keeping cost controls that protect your CPL and ROAS floors.</p>
-      </div>
-      <div class="ai-card reveal reveal-delay-1">
-        <div class="ai-card-icon">◉</div>
-        <div class="ai-card-title">Creative as AI Signal</div>
-        <p class="ai-card-desc">Your creative isn't just advertising — it's the primary signal Meta's AI uses to find lookalike buyers. We engineer each asset with distinct audience signals so the algorithm distributes to different buyer segments simultaneously.</p>
-      </div>
-    </div>
-    <div class="ai-signal-strip reveal">
-      <span>Meta Andromeda</span><span class="ai-strip-dot">·</span>
-      <span>Conversions API</span><span class="ai-strip-dot">·</span>
-      <span>Advantage+ AI</span><span class="ai-strip-dot">·</span>
-      <span>CBO Intelligence</span><span class="ai-strip-dot">·</span>
-      <span>Broad Audience Inputs</span><span class="ai-strip-dot">·</span>
-      <span>Event Deduplication</span><span class="ai-strip-dot">·</span>
-      <span>Server-Side Signals</span><span class="ai-strip-dot">·</span>
-      <span>Creative Signal Engineering</span>
-    </div>
-  </div>
-</section>
 
 
 <!-- PHOTO BREAK -->
