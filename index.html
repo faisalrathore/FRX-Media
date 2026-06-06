@@ -1481,6 +1481,7 @@
     .market-dot { display: none; }
   }
 </style>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
@@ -2515,6 +2516,7 @@
     </div>
 
     <!-- Submit row -->
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAABDfr_JNPykHglEdH" data-theme="dark" style="margin-bottom:16px;"></div>
     <div class="form-submit-row">
       <p class="form-note">No commitment · We respond within 24 hours</p>
       <button type="submit" class="form-submit-btn" id="submitBtn">Request a Callback →</button>
@@ -2958,6 +2960,14 @@ if (auditForm) {
   auditForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const submitBtn = document.getElementById('submitBtn');
+
+    // Turnstile token check
+    const tokenInput = auditForm.querySelector('[name="cf-turnstile-response"]');
+    if (!tokenInput || !tokenInput.value) {
+      alert('Please wait for the security check to complete.');
+      return;
+    }
+
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending...';
     try {
@@ -2972,11 +2982,14 @@ if (auditForm) {
       } else {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Request a Callback →';
+        // Reset Turnstile on failure
+        if (window.turnstile) turnstile.reset();
         alert('Something went wrong. Please try again or email us directly.');
       }
     } catch(err) {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Request a Callback →';
+      if (window.turnstile) turnstile.reset();
       alert('Network error. Please check your connection and try again.');
     }
   });
