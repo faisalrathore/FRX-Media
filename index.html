@@ -241,11 +241,11 @@
 
   /* ───── HERO ───── */
   .hero {
-    min-height: 100vh; position: relative;
+    min-height: 80vh; position: relative;
     display: flex; align-items: center; justify-content: center;
     overflow: hidden;
     background: var(--parchment);
-    padding-top: 96px;
+    padding-top: 80px;
   }
   .hero-photo-bg {
     position: absolute; inset: 0; z-index: 0;
@@ -308,7 +308,7 @@
   }
   .hero-title {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(58px, 16vw, 130px);
+    font-size: clamp(48px, 10vw, 96px);
     font-weight: 800; line-height: 0.88; letter-spacing: -0.01em;
     text-transform: uppercase;
     color: var(--dark); margin-bottom: 12px;
@@ -481,13 +481,13 @@
   .stat-item:last-child { border-right: none; }
   .stat-num {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(38px, 10vw, 64px); font-weight: 800;
+    font-size: clamp(32px, 6vw, 48px); font-weight: 800;
     color: #fff; line-height: 0.95; margin-bottom: 10px;
     display: flex; align-items: baseline; gap: 2px;
     text-transform: uppercase; letter-spacing: -0.01em;
   }
   .stat-num .counter { display: inline-block; }
-  .stat-num .suffix { color: var(--red3); font-size: 42px; }
+  .stat-num .suffix { color: var(--red3); font-size: 32px; }
   .stat-label {
     font-family: 'JetBrains Mono', monospace; font-size: 10px;
     letter-spacing: 0.22em; text-transform: uppercase;
@@ -495,7 +495,7 @@
   }
 
   /* ───── SECTION BASE ───── */
-  section { padding: 80px 64px; }
+  section { padding: 56px 64px; }
   .section-label {
     font-family: 'JetBrains Mono', monospace; font-size: 10px;
     letter-spacing: 0.3em; text-transform: uppercase; color: var(--red);
@@ -504,7 +504,7 @@
   .section-label::before { content: ''; width: 28px; height: 1px; background: var(--red); }
   .section-title {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(32px, 8vw, 68px);
+    font-size: clamp(28px, 5vw, 52px);
     font-weight: 800; line-height: 1.0; letter-spacing: -0.01em;
     text-transform: uppercase;
     margin-bottom: 20px; color: var(--dark);
@@ -592,7 +592,7 @@
   .brand-logo-item.active img { filter: brightness(0) invert(1) opacity(0.9); }
   .brand-logo-item.active .brand-logo-placeholder { color: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.15); }
   .brand-logo-item.active .brand-logo-placeholder span { color: rgba(255,255,255,0.5); }
-  .showcase { background: var(--cream3); overflow: hidden; padding: 80px 0; }
+  .showcase { background: var(--cream3); overflow: hidden; padding: 56px 0; }
   .showcase-header { padding: 0 64px; max-width: 680px; margin-bottom: 44px; }
   .showcase-sub { font-size: 15px; color: var(--mid); line-height: 1.85; margin-top: 18px; font-weight: 300; }
 
@@ -740,7 +740,7 @@
   /* ───── TESTIMONIALS ───── */
 
   /* ───── WHY VELMONTX ───── */
-  .why-section { background: var(--dark); padding: 80px 64px; position: relative; overflow: hidden; }
+  .why-section { background: var(--dark); padding: 56px 64px; position: relative; overflow: hidden; }
   .why-photo-bg {
     position: absolute; inset: 0; z-index: 0;
     background: url('photos/why-bg.jpeg') center center / cover no-repeat;
@@ -874,7 +874,7 @@
     .form-row { grid-template-columns: 1fr; }
     .form-submit-row { flex-direction: column; align-items: stretch; }
     .form-submit-btn { text-align: center; }
-    .cta-section { padding: 80px 24px; }
+    .cta-section { padding: 56px 24px; }
   }
   .insights { background: var(--parchment); }
   @media(max-width:640px) { .insights { padding-left: 20px !important; padding-right: 20px !important; } }
@@ -1004,7 +1004,7 @@
   /* ───── AI-Optimised Section ───── */
   .ai-section {
     background: #080808;
-    padding: 120px 40px;
+    padding: 72px 40px;
     border-top: 1px solid #1a1a1a;
     border-bottom: 1px solid #1a1a1a;
     overflow: hidden;
@@ -1024,45 +1024,70 @@
     max-width: 640px; margin: 16px 0 56px;
     font-weight: 300;
   }
-  .ai-cards-grid {
+    .ai-cards-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 2px;
     margin-bottom: 40px;
   }
   .ai-card {
-    background: #0e0e0e;
+    background: #0a0a0a;
     border: 1px solid #1c1c1c;
-    padding: 36px 28px;
-    transition: border-color 0.3s, background 0.3s;
-    position: relative;
+    padding: 32px 26px;
+    display: flex; flex-direction: column; gap: 16px;
+    transition: border-color 0.4s, background 0.4s, box-shadow 0.4s;
+    position: relative; overflow: hidden;
   }
-  .ai-card:hover { background: #111; border-color: rgba(196,28,28,0.3); }
-  .ai-card-icon {
-    font-size: 22px; color: var(--red);
-    margin-bottom: 20px; display: block;
-    opacity: 0.8;
+  .ai-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196,28,28,0.6), transparent);
+    opacity: 0; transition: opacity 0.4s;
   }
+  .ai-card:hover { background: #0d0d0d; border-color: rgba(196,28,28,0.4); box-shadow: 0 0 40px rgba(196,28,28,0.06); }
+  .ai-card:hover::before { opacity: 1; }
+  .ai-card-header { display: flex; align-items: center; justify-content: space-between; }
+  .ai-card-icon-wrap { display: flex; align-items: center; }
+  .ai-card-icon { font-size: 20px; color: var(--red); opacity: 0.9; }
+  .ai-card-status {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: #444;
+  }
+  .ai-card-dot {
+    width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
+  }
+  .ai-card-dot.green { background: #00cc66; box-shadow: 0 0 5px rgba(0,204,102,0.7); animation: dotPulse 2s ease-in-out infinite; }
+  .ai-card-dot.red { background: #cc0000; box-shadow: 0 0 5px rgba(204,0,0,0.7); animation: blink 1.1s step-start infinite; }
+  .ai-card-dot.amber { background: #cc8800; box-shadow: 0 0 5px rgba(204,136,0,0.7); animation: dotPulse 3s ease-in-out infinite; }
   .ai-card-title {
-    font-size: 13px; font-weight: 700;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    color: #fff; margin-bottom: 14px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; color: #fff;
   }
-  .ai-card-desc {
-    font-size: 13px; line-height: 1.8;
-    color: var(--mid); font-weight: 300;
+  .ai-card-desc { font-size: 13px; line-height: 1.8; color: #555; font-weight: 300; flex: 1; }
+  .ai-card-metric {
+    display: flex; gap: 20px;
+    border-top: 1px solid #1a1a1a; padding-top: 16px; margin-top: auto;
+  }
+  .ai-card-metric-item { display: flex; flex-direction: column; gap: 3px; }
+  .ai-card-metric-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px; font-weight: 600; color: #00cc66; display: block;
+  }
+  .ai-card-metric-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7px; letter-spacing: 0.1em; text-transform: uppercase; color: #333; display: block;
   }
   .ai-signal-strip {
     display: flex; flex-wrap: wrap; gap: 0;
     align-items: center;
     border: 1px solid #1c1c1c;
-    background: #0a0a0a;
+    background: #060606;
     padding: 16px 24px;
   }
   .ai-signal-strip span {
     font-size: 10px; font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    color: #555; padding: 4px 12px;
+    letter-spacing: 0.12em; text-transform: uppercase; color: #444; padding: 4px 12px;
   }
   .ai-signal-strip .ai-strip-dot { color: var(--red); padding: 4px 2px; }
   @media (max-width: 900px) {
@@ -1070,7 +1095,7 @@
   }
   @media (max-width: 540px) {
     .ai-cards-grid { grid-template-columns: 1fr; }
-    .ai-section { padding: 64px 20px; }
+    .ai-section { padding: 48px 20px; }
   }
   /* ───── FAQ ───── */
   .faq-section { background: var(--cream2); }
@@ -1413,15 +1438,15 @@
   @media(max-width:480px) {
 
     /* Hero: push content below fixed nav */
-    .hero { padding-top: 96px !important; min-height: 100svh; }
+    .hero { padding-top: 80px !important; min-height: 80vh; }
     .hero-content { padding: 0 20px; }
 
     /* Global section padding */
-    section { padding: 56px 20px !important; }
-    .why-section { padding: 56px 20px !important; }
-    .process { padding: 64px 20px !important; }
-    .cta-section { padding: 60px 20px !important; }
-    .faq-section { padding: 60px 20px !important; }
+    section { padding: 40px 20px !important; }
+    .why-section { padding: 40px 20px !important; }
+    .process { padding: 48px 20px !important; }
+    .cta-section { padding: 48px 20px !important; }
+    .faq-section { padding: 48px 20px !important; }
 
     /* Hero buttons — full width stacked */
     .btn-primary, .btn-ghost {
@@ -1485,22 +1510,23 @@
   /* ── AI STATUS BAR ── */
   .ai-status-bar {
     position: fixed; top: 64px; left: 0; right: 0; z-index: 999;
-    background: #040404;
-    border-bottom: 1px solid #1c1c1c;
-    padding: 7px 40px;
+    background: #0a0a0a;
+    border-bottom: 1px solid #cc0000;
+    padding: 8px 40px;
     display: flex; align-items: center;
     overflow: hidden;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
   }
   .ai-status-bar::before {
-    content: 'SYSTEM';
-    color: #2a2a2a; font-size: 8px; font-weight: 700;
-    letter-spacing: 0.2em; margin-right: 20px; flex-shrink: 0;
+    content: 'LIVE';
+    color: #cc0000; font-size: 8px; font-weight: 700;
+    letter-spacing: 0.25em; margin-right: 20px; flex-shrink: 0;
+    border: 1px solid #cc0000; padding: 2px 7px;
   }
   .ai-status-items {
     display: flex; align-items: center;
-    animation: statusScroll 28s linear infinite;
+    animation: statusScroll 32s linear infinite;
     white-space: nowrap;
   }
   @keyframes statusScroll {
@@ -1508,51 +1534,32 @@
     100% { transform: translateX(-50%); }
   }
   .ai-status-item {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 0 24px; color: #555;
-    border-right: 1px solid #1a1a1a;
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 0 28px; color: #888;
+    border-right: 1px solid #1e1e1e;
   }
   .ai-status-dot {
-    width: 4px; height: 4px; border-radius: 50%;
-    flex-shrink: 0;
+    width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
   }
   .ai-status-dot.green {
-    background: #1a8a44;
-    box-shadow: 0 0 5px rgba(26,138,68,0.7);
+    background: #00ff88;
+    box-shadow: 0 0 6px rgba(0,255,136,0.8);
     animation: dotPulse 2.5s ease-in-out infinite;
   }
   .ai-status-dot.red {
-    background: #cc0000;
-    box-shadow: 0 0 5px rgba(196,28,28,0.7);
+    background: #ff3333;
+    box-shadow: 0 0 6px rgba(255,51,51,0.8);
     animation: blink 1.1s step-start infinite;
   }
   .ai-status-dot.amber {
-    background: #b87800;
-    box-shadow: 0 0 5px rgba(184,120,0,0.6);
+    background: #ffaa00;
+    box-shadow: 0 0 6px rgba(255,170,0,0.8);
     animation: dotPulse 3s ease-in-out infinite;
   }
   @keyframes dotPulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.25; }
+    50% { opacity: 0.2; }
   }
-
-  /* ── HERO TERMINAL ── */
-  .hero-terminal {
-    margin-top: 28px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; letter-spacing: 0.06em;
-    display: inline-flex; align-items: center; gap: 8px;
-    min-height: 20px;
-  }
-  .hero-terminal-prompt { color: #cc0000; font-weight: 700; flex-shrink: 0; }
-  .hero-terminal-text { color: #1a8a44; }
-  .hero-terminal-cursor {
-    display: inline-block; width: 7px; height: 13px;
-    background: #cc0000; margin-left: 1px;
-    animation: blink 1s step-start infinite;
-    vertical-align: middle; flex-shrink: 0;
-  }
-
   /* ── STAT PROCESSING LABEL ── */
   .stat-processing {
     font-family: 'JetBrains Mono', monospace;
@@ -1643,11 +1650,6 @@
       <a href="#results" class="btn-ghost">See Proof First</a>
     </div>
     <div class="hero-ai-badge"><span class="hero-ai-dot"></span><span>AI-Optimised · Meta Andromeda · CAPI Signal Stack</span></div>
-    <div class="hero-terminal">
-      <span class="hero-terminal-prompt">▶</span>
-      <span class="hero-terminal-text" id="terminalText"></span>
-      <span class="hero-terminal-cursor"></span>
-    </div>
 
   </div>
 </section>
@@ -2156,29 +2158,62 @@
     <div class="section-label reveal" style="color:var(--red);">AI-Optimised Advertising</div>
     <h2 class="section-title reveal" style="color:#fff;">Built for the Era of<br><em>Meta's AI</em></h2>
     <p class="ai-section-sub reveal">Every campaign we run is architected around Meta's machine learning stack — not working around it, but engineering with it. Here's what that looks like in practice.</p>
-    <div class="ai-cards-grid">
+        <div class="ai-cards-grid">
+
       <div class="ai-card reveal">
-        <div class="ai-card-icon">⬡</div>
+        <div class="ai-card-header">
+          <div class="ai-card-icon-wrap"><span class="ai-card-icon">⬡</span></div>
+          <div class="ai-card-status"><span class="ai-card-dot red"></span>Processing</div>
+        </div>
         <div class="ai-card-title">Andromeda Architecture</div>
-        <p class="ai-card-desc">Meta's Andromeda retrieval system ranks creative for relevance before auction. We build creative specifically to score high on Andromeda's signal model — visual diversity, relevance depth, and audience match.</p>
+        <p class="ai-card-desc">Meta's Andromeda retrieval system ranks creative for relevance before auction. We engineer every asset to score high on Andromeda's signal model — visual diversity, relevance depth, and audience match.</p>
+        <div class="ai-card-metric">
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="43" data-suffix="%">0%</span><span class="ai-card-metric-lbl">CTR Lift</span></div>
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="2.8" data-decimal="1" data-suffix="×">0×</span><span class="ai-card-metric-lbl">Relevance Score</span></div>
+        </div>
       </div>
+
       <div class="ai-card reveal reveal-delay-1">
-        <div class="ai-card-icon">◈</div>
+        <div class="ai-card-header">
+          <div class="ai-card-icon-wrap"><span class="ai-card-icon">◈</span></div>
+          <div class="ai-card-status"><span class="ai-card-dot green"></span>Active</div>
+        </div>
         <div class="ai-card-title">CAPI Signal Stack</div>
-        <p class="ai-card-desc">Conversions API layered with pixel data, event deduplication, and server-side purchase signals. Clean, high-fidelity data in = lower CPMs, better optimisation, and campaigns that actually exit the learning phase.</p>
+        <p class="ai-card-desc">Conversions API layered with pixel data, event deduplication, and server-side purchase signals. Clean, high-fidelity data in = lower CPMs, better optimisation, campaigns that exit learning phase fast.</p>
+        <div class="ai-card-metric">
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="38" data-suffix="%">0%</span><span class="ai-card-metric-lbl">CPM Reduction</span></div>
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="99.4" data-decimal="1" data-suffix="%">0%</span><span class="ai-card-metric-lbl">Signal Accuracy</span></div>
+        </div>
       </div>
+
       <div class="ai-card reveal reveal-delay-2">
-        <div class="ai-card-icon">◎</div>
+        <div class="ai-card-header">
+          <div class="ai-card-icon-wrap"><span class="ai-card-icon">◎</span></div>
+          <div class="ai-card-status"><span class="ai-card-dot green"></span>Optimising</div>
+        </div>
         <div class="ai-card-title">Advantage+ Intelligence</div>
-        <p class="ai-card-desc">We use Advantage+ placements, Advantage+ audiences, and CBO structures designed to give Meta's bidding AI maximum room to find efficiency — while keeping cost controls that protect your CPL and ROAS floors.</p>
+        <p class="ai-card-desc">Advantage+ placements, audiences, and CBO structures designed to give Meta's bidding AI maximum room to find efficiency — with cost controls that protect your CPL and ROAS floors at all times.</p>
+        <div class="ai-card-metric">
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="6.8" data-decimal="1" data-suffix="×">0×</span><span class="ai-card-metric-lbl">Avg. ROAS</span></div>
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="51" data-suffix="%">0%</span><span class="ai-card-metric-lbl">CPA Reduction</span></div>
+        </div>
       </div>
+
       <div class="ai-card reveal reveal-delay-1">
-        <div class="ai-card-icon">◉</div>
+        <div class="ai-card-header">
+          <div class="ai-card-icon-wrap"><span class="ai-card-icon">◉</span></div>
+          <div class="ai-card-status"><span class="ai-card-dot amber"></span>Deploying</div>
+        </div>
         <div class="ai-card-title">Creative as AI Signal</div>
-        <p class="ai-card-desc">Your creative isn't just advertising — it's the primary signal Meta's AI uses to find lookalike buyers. We engineer each asset with distinct audience signals so the algorithm distributes to different buyer segments simultaneously.</p>
+        <p class="ai-card-desc">Your creative isn't just advertising — it's the primary signal Meta's AI uses to find lookalike buyers. We engineer each asset with distinct audience signals so the algorithm distributes across buyer segments simultaneously.</p>
+        <div class="ai-card-metric">
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="4" data-suffix="×">0×</span><span class="ai-card-metric-lbl">Audience Reach</span></div>
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="67" data-suffix="%">0%</span><span class="ai-card-metric-lbl">Lower Frequency</span></div>
+        </div>
       </div>
+
     </div>
-    <div class="ai-signal-strip reveal">
+<div class="ai-signal-strip reveal">
       <span>Meta Andromeda</span><span class="ai-strip-dot">·</span>
       <span>Conversions API</span><span class="ai-strip-dot">·</span>
       <span>Advantage+ AI</span><span class="ai-strip-dot">·</span>
@@ -3130,44 +3165,7 @@ document.querySelectorAll('.story-card[data-industry]').forEach(function(card) {
   if (tag) tag.textContent = card.dataset.industry;
 });
 
-/* ── HERO TERMINAL TYPEWRITER ── */
-(function() {
-  const lines = [
-    'Initialising CAPI signal stack...',
-    'Andromeda creative scoring: active',
-    'Broad audience inputs loaded',
-    'CBO intelligence: optimising bids',
-    'Event deduplication: verified',
-    'Advantage+ AI: distributing creatives',
-    'Server-side signals: healthy',
-    'Lookalike seed quality: high',
-    'Creative signal engine: processing',
-    'Campaign architecture: deployed',
-  ];
-  const el = document.getElementById('terminalText');
-  if (!el) return;
-  let lineIdx = 0, charIdx = 0, deleting = false, pauseTimer = null;
 
-  function type() {
-    const line = lines[lineIdx];
-    if (!deleting) {
-      el.textContent = line.slice(0, ++charIdx);
-      if (charIdx === line.length) {
-        deleting = true;
-        pauseTimer = setTimeout(type, 2200);
-        return;
-      }
-    } else {
-      el.textContent = line.slice(0, --charIdx);
-      if (charIdx === 0) {
-        deleting = false;
-        lineIdx = (lineIdx + 1) % lines.length;
-      }
-    }
-    setTimeout(type, deleting ? 22 : 48);
-  }
-  setTimeout(type, 1800);
-})();
 
 /* ── STAT PROCESSING ANIMATION ── */
 (function() {
@@ -3208,6 +3206,44 @@ document.querySelectorAll('.story-card[data-industry]').forEach(function(card) {
     });
   }, { threshold: 0.3 });
   procObs.observe(strip);
+})();
+
+
+/* ── AI CARD METRIC COUNTERS ── */
+(function() {
+  const aiCards = document.querySelector('.ai-cards-grid');
+  if (!aiCards) return;
+  let fired = false;
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !fired) {
+        fired = true;
+        document.querySelectorAll('.ai-card-metric-val').forEach((el, i) => {
+          const target = parseFloat(el.dataset.target);
+          const decimal = parseInt(el.dataset.decimal || 0);
+          const suffix = el.dataset.suffix || '';
+          const prefix = el.dataset.prefix || '';
+          const duration = 1800;
+          const steps = 50;
+          let step = 0;
+          setTimeout(() => {
+            const interval = setInterval(() => {
+              step++;
+              const progress = step / steps;
+              const ease = 1 - Math.pow(1 - progress, 3);
+              const val = target * ease;
+              el.textContent = prefix + (decimal ? val.toFixed(decimal) : Math.round(val)) + suffix;
+              if (step >= steps) {
+                clearInterval(interval);
+                el.textContent = prefix + (decimal ? target.toFixed(decimal) : target) + suffix;
+              }
+            }, duration / steps);
+          }, i * 120);
+        });
+      }
+    });
+  }, { threshold: 0.2 });
+  obs.observe(aiCards);
 })();
 
 </script>
