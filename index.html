@@ -1003,10 +1003,10 @@
 
   /* ───── AI-Optimised Section ───── */
   .ai-section {
-    background: #080808;
+    background: #0f0f0f;
     padding: 72px 40px;
-    border-top: 1px solid #1a1a1a;
-    border-bottom: 1px solid #1a1a1a;
+    border-top: 1px solid #2a2a2a;
+    border-bottom: 1px solid #2a2a2a;
     overflow: hidden;
     position: relative;
   }
@@ -1020,8 +1020,8 @@
   }
   .ai-section-inner { max-width: 1200px; margin: 0 auto; }
   .ai-section-sub {
-    font-size: 16px; color: var(--mid); line-height: 1.8;
-    max-width: 640px; margin: 16px 0 56px;
+    font-size: 15px; color: #aaa; line-height: 1.8;
+    max-width: 640px; margin: 16px 0 40px;
     font-weight: 300;
   }
     .ai-cards-grid {
@@ -1031,8 +1031,8 @@
     margin-bottom: 40px;
   }
   .ai-card {
-    background: #0a0a0a;
-    border: 1px solid #1c1c1c;
+    background: #141414;
+    border: 1px solid #2a2a2a;
     padding: 32px 26px;
     display: flex; flex-direction: column; gap: 16px;
     transition: border-color 0.4s, background 0.4s, box-shadow 0.4s;
@@ -1044,7 +1044,7 @@
     background: linear-gradient(90deg, transparent, rgba(196,28,28,0.6), transparent);
     opacity: 0; transition: opacity 0.4s;
   }
-  .ai-card:hover { background: #0d0d0d; border-color: rgba(196,28,28,0.4); box-shadow: 0 0 40px rgba(196,28,28,0.06); }
+  .ai-card:hover { background: #1a1a1a; border-color: rgba(196,28,28,0.5); box-shadow: 0 0 40px rgba(196,28,28,0.06); }
   .ai-card:hover::before { opacity: 1; }
   .ai-card-header { display: flex; align-items: center; justify-content: space-between; }
   .ai-card-icon-wrap { display: flex; align-items: center; }
@@ -1064,7 +1064,7 @@
     font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
     text-transform: uppercase; color: #fff;
   }
-  .ai-card-desc { font-size: 13px; line-height: 1.8; color: #555; font-weight: 300; flex: 1; }
+  .ai-card-desc { font-size: 13px; line-height: 1.8; color: #999; font-weight: 300; flex: 1; }
   .ai-card-metric {
     display: flex; gap: 20px;
     border-top: 1px solid #1a1a1a; padding-top: 16px; margin-top: auto;
@@ -1076,18 +1076,19 @@
   }
   .ai-card-metric-lbl {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 7px; letter-spacing: 0.1em; text-transform: uppercase; color: #333; display: block;
+    font-size: 7px; letter-spacing: 0.1em; text-transform: uppercase; color: #555; display: block;
   }
   .ai-signal-strip {
     display: flex; flex-wrap: wrap; gap: 0;
     align-items: center;
     border: 1px solid #1c1c1c;
-    background: #060606;
+    background: #111;
+    border: 1px solid #2a2a2a;
     padding: 16px 24px;
   }
   .ai-signal-strip span {
     font-size: 10px; font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.12em; text-transform: uppercase; color: #444; padding: 4px 12px;
+    letter-spacing: 0.12em; text-transform: uppercase; color: #666; padding: 4px 12px;
   }
   .ai-signal-strip .ai-strip-dot { color: var(--red); padding: 4px 2px; }
   @media (max-width: 900px) {
@@ -1519,10 +1520,9 @@
     font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
   }
   .ai-status-bar::before {
-    content: 'LIVE';
-    color: #cc0000; font-size: 8px; font-weight: 700;
+    content: 'SYSTEM';
+    color: #444; font-size: 8px; font-weight: 600;
     letter-spacing: 0.25em; margin-right: 20px; flex-shrink: 0;
-    border: 1px solid #cc0000; padding: 2px 7px;
   }
   .ai-status-items {
     display: flex; align-items: center;
@@ -2168,8 +2168,8 @@
         <div class="ai-card-title">Andromeda Architecture</div>
         <p class="ai-card-desc">Meta's Andromeda retrieval system ranks creative for relevance before auction. We engineer every asset to score high on Andromeda's signal model — visual diversity, relevance depth, and audience match.</p>
         <div class="ai-card-metric">
-          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="43" data-suffix="%">0%</span><span class="ai-card-metric-lbl">CTR Lift</span></div>
-          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="2.8" data-decimal="1" data-suffix="×">0×</span><span class="ai-card-metric-lbl">Relevance Score</span></div>
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="43" data-suffix="%">43%</span><span class="ai-card-metric-lbl">CTR Lift</span></div>
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="2.8" data-decimal="1" data-suffix="×">2.8×</span><span class="ai-card-metric-lbl">Relevance Score</span></div>
         </div>
       </div>
 
@@ -2181,8 +2181,8 @@
         <div class="ai-card-title">CAPI Signal Stack</div>
         <p class="ai-card-desc">Conversions API layered with pixel data, event deduplication, and server-side purchase signals. Clean, high-fidelity data in = lower CPMs, better optimisation, campaigns that exit learning phase fast.</p>
         <div class="ai-card-metric">
-          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="38" data-suffix="%">0%</span><span class="ai-card-metric-lbl">CPM Reduction</span></div>
-          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="99.4" data-decimal="1" data-suffix="%">0%</span><span class="ai-card-metric-lbl">Signal Accuracy</span></div>
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="38" data-suffix="%">38%</span><span class="ai-card-metric-lbl">CPM Reduction</span></div>
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="99.4" data-decimal="1" data-suffix="%">99.4%</span><span class="ai-card-metric-lbl">Signal Accuracy</span></div>
         </div>
       </div>
 
@@ -2194,8 +2194,8 @@
         <div class="ai-card-title">Advantage+ Intelligence</div>
         <p class="ai-card-desc">Advantage+ placements, audiences, and CBO structures designed to give Meta's bidding AI maximum room to find efficiency — with cost controls that protect your CPL and ROAS floors at all times.</p>
         <div class="ai-card-metric">
-          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="6.8" data-decimal="1" data-suffix="×">0×</span><span class="ai-card-metric-lbl">Avg. ROAS</span></div>
-          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="51" data-suffix="%">0%</span><span class="ai-card-metric-lbl">CPA Reduction</span></div>
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="6.8" data-decimal="1" data-suffix="×">6.8×</span><span class="ai-card-metric-lbl">Avg. ROAS</span></div>
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="51" data-suffix="%">51%</span><span class="ai-card-metric-lbl">CPA Reduction</span></div>
         </div>
       </div>
 
@@ -2207,8 +2207,8 @@
         <div class="ai-card-title">Creative as AI Signal</div>
         <p class="ai-card-desc">Your creative isn't just advertising — it's the primary signal Meta's AI uses to find lookalike buyers. We engineer each asset with distinct audience signals so the algorithm distributes across buyer segments simultaneously.</p>
         <div class="ai-card-metric">
-          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="4" data-suffix="×">0×</span><span class="ai-card-metric-lbl">Audience Reach</span></div>
-          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="67" data-suffix="%">0%</span><span class="ai-card-metric-lbl">Lower Frequency</span></div>
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="4" data-suffix="×">4×</span><span class="ai-card-metric-lbl">Audience Reach</span></div>
+          <div class="ai-card-metric-item"><span class="ai-card-metric-val" data-target="67" data-suffix="%">67%</span><span class="ai-card-metric-lbl">Lower Frequency</span></div>
         </div>
       </div>
 
@@ -3211,39 +3211,43 @@ document.querySelectorAll('.story-card[data-industry]').forEach(function(card) {
 
 /* ── AI CARD METRIC COUNTERS ── */
 (function() {
-  const aiCards = document.querySelector('.ai-cards-grid');
-  if (!aiCards) return;
+  function animateAICounters() {
+    document.querySelectorAll('.ai-card-metric-val').forEach((el, i) => {
+      const target = parseFloat(el.dataset.target);
+      const decimal = parseInt(el.dataset.decimal || 0);
+      const suffix = el.dataset.suffix || '';
+      const prefix = el.dataset.prefix || '';
+      const duration = 1600;
+      const steps = 60;
+      let step = 0;
+      setTimeout(() => {
+        const interval = setInterval(() => {
+          step++;
+          const ease = 1 - Math.pow(1 - step / steps, 3);
+          const val = target * ease;
+          el.textContent = prefix + (decimal ? val.toFixed(decimal) : Math.round(val)) + suffix;
+          if (step >= steps) {
+            clearInterval(interval);
+            el.textContent = prefix + (decimal ? target.toFixed(decimal) : target) + suffix;
+          }
+        }, duration / steps);
+      }, i * 100);
+    });
+  }
+
+  const aiSection = document.querySelector('.ai-section');
+  if (!aiSection) return;
   let fired = false;
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting && !fired) {
         fired = true;
-        document.querySelectorAll('.ai-card-metric-val').forEach((el, i) => {
-          const target = parseFloat(el.dataset.target);
-          const decimal = parseInt(el.dataset.decimal || 0);
-          const suffix = el.dataset.suffix || '';
-          const prefix = el.dataset.prefix || '';
-          const duration = 1800;
-          const steps = 50;
-          let step = 0;
-          setTimeout(() => {
-            const interval = setInterval(() => {
-              step++;
-              const progress = step / steps;
-              const ease = 1 - Math.pow(1 - progress, 3);
-              const val = target * ease;
-              el.textContent = prefix + (decimal ? val.toFixed(decimal) : Math.round(val)) + suffix;
-              if (step >= steps) {
-                clearInterval(interval);
-                el.textContent = prefix + (decimal ? target.toFixed(decimal) : target) + suffix;
-              }
-            }, duration / steps);
-          }, i * 120);
-        });
+        animateAICounters();
+        obs.disconnect();
       }
     });
-  }, { threshold: 0.2 });
-  obs.observe(aiCards);
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  obs.observe(aiSection);
 })();
 
 </script>
