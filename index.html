@@ -241,10 +241,11 @@
 
   /* ───── HERO ───── */
   .hero {
-    min-height: 32vh; position: relative;
+    min-height: 100vh; position: relative;
     display: flex; align-items: center; justify-content: center;
     overflow: hidden;
     background: var(--parchment);
+    padding-top: 96px;
   }
   .hero-photo-bg {
     position: absolute; inset: 0; z-index: 0;
@@ -1412,7 +1413,7 @@
   @media(max-width:480px) {
 
     /* Hero: push content below fixed nav */
-    .hero { padding-top: 80px !important; min-height: 100svh; }
+    .hero { padding-top: 96px !important; min-height: 100svh; }
     .hero-content { padding: 0 20px; }
 
     /* Global section padding */
