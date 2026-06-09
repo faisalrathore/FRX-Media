@@ -1509,6 +1509,34 @@
   <a href="#contact" class="mobile-cta" onclick="closeMobileMenu()">Request Audit →</a>
 </div>
 
+
+<!-- AI STATUS BAR -->
+<div class="ai-status-bar">
+  <div class="ai-status-items" id="aiStatusItems">
+    <span class="ai-status-item active"><span class="ai-status-dot green"></span>CAPI Signal Stack — Online</span>
+    <span class="ai-status-item active"><span class="ai-status-dot green"></span>Andromeda Creative Scoring — Active</span>
+    <span class="ai-status-item active"><span class="ai-status-dot red"></span>Advantage+ AI — Running</span>
+    <span class="ai-status-item active"><span class="ai-status-dot green"></span>Broad Audience Engine — Optimising</span>
+    <span class="ai-status-item active"><span class="ai-status-dot amber"></span>Event Deduplication — Monitoring</span>
+    <span class="ai-status-item active"><span class="ai-status-dot green"></span>CBO Intelligence — Live</span>
+    <span class="ai-status-item active"><span class="ai-status-dot green"></span>Server-Side Signals — Verified</span>
+    <span class="ai-status-item active"><span class="ai-status-dot red"></span>Creative Signal Engine — Processing</span>
+    <span class="ai-status-item active"><span class="ai-status-dot green"></span>Lookalike Seed Quality — High</span>
+    <span class="ai-status-item active"><span class="ai-status-dot amber"></span>Frequency Control — Managed</span>
+    <!-- Duplicate for seamless loop -->
+    <span class="ai-status-item active"><span class="ai-status-dot green"></span>CAPI Signal Stack — Online</span>
+    <span class="ai-status-item active"><span class="ai-status-dot green"></span>Andromeda Creative Scoring — Active</span>
+    <span class="ai-status-item active"><span class="ai-status-dot red"></span>Advantage+ AI — Running</span>
+    <span class="ai-status-item active"><span class="ai-status-dot green"></span>Broad Audience Engine — Optimising</span>
+    <span class="ai-status-item active"><span class="ai-status-dot amber"></span>Event Deduplication — Monitoring</span>
+    <span class="ai-status-item active"><span class="ai-status-dot green"></span>CBO Intelligence — Live</span>
+    <span class="ai-status-item active"><span class="ai-status-dot green"></span>Server-Side Signals — Verified</span>
+    <span class="ai-status-item active"><span class="ai-status-dot red"></span>Creative Signal Engine — Processing</span>
+    <span class="ai-status-item active"><span class="ai-status-dot green"></span>Lookalike Seed Quality — High</span>
+    <span class="ai-status-item active"><span class="ai-status-dot amber"></span>Frequency Control — Managed</span>
+  </div>
+</div>
+
 <!-- HERO -->
 <section class="hero">
   <div class="hero-photo-bg"></div>
@@ -1523,6 +1551,11 @@
       <a href="#results" class="btn-ghost">See Proof First</a>
     </div>
     <div class="hero-ai-badge"><span class="hero-ai-dot"></span><span>AI-Optimised · Meta Andromeda · CAPI Signal Stack</span></div>
+    <div class="hero-terminal">
+      <span class="hero-terminal-prompt">▶</span>
+      <span class="hero-terminal-text" id="terminalText"></span>
+      <span class="hero-terminal-cursor"></span>
+    </div>
 
   </div>
 </section>
@@ -1530,18 +1563,22 @@
 <!-- STATS — animated counters -->
 <div class="stats-strip" id="statsStrip">
   <div class="stat-item">
+    <div class="stat-processing" data-index="0">Processing...</div>
     <div class="stat-num"><span class="counter" data-target="36" data-prefix="$" data-suffix="M+" data-decimal="1">$0</span></div>
     <div class="stat-label">Ad Spend Managed</div>
   </div>
   <div class="stat-item">
+    <div class="stat-processing" data-index="1">Processing...</div>
     <div class="stat-num"><span class="counter" data-target="6.8" data-suffix="×" data-decimal="1">0</span></div>
     <div class="stat-label">Average ROAS</div>
   </div>
   <div class="stat-item">
+    <div class="stat-processing" data-index="2">Processing...</div>
     <div class="stat-num"><span class="counter" data-target="26" data-suffix="+">0</span></div>
     <div class="stat-label">Brands Scaled</div>
   </div>
   <div class="stat-item">
+    <div class="stat-processing" data-index="3">Processing...</div>
     <div class="stat-num"><span class="counter" data-target="96" data-suffix="%">0</span></div>
     <div class="stat-label">Client Retention</div>
   </div>
@@ -3000,6 +3037,87 @@ document.querySelectorAll('.story-card[data-industry]').forEach(function(card) {
   var tag = card.querySelector('.story-industry-tag');
   if (tag) tag.textContent = card.dataset.industry;
 });
+
+/* ── HERO TERMINAL TYPEWRITER ── */
+(function() {
+  const lines = [
+    'Initialising CAPI signal stack...',
+    'Andromeda creative scoring: active',
+    'Broad audience inputs loaded',
+    'CBO intelligence: optimising bids',
+    'Event deduplication: verified',
+    'Advantage+ AI: distributing creatives',
+    'Server-side signals: healthy',
+    'Lookalike seed quality: high',
+    'Creative signal engine: processing',
+    'Campaign architecture: deployed',
+  ];
+  const el = document.getElementById('terminalText');
+  if (!el) return;
+  let lineIdx = 0, charIdx = 0, deleting = false, pauseTimer = null;
+
+  function type() {
+    const line = lines[lineIdx];
+    if (!deleting) {
+      el.textContent = line.slice(0, ++charIdx);
+      if (charIdx === line.length) {
+        deleting = true;
+        pauseTimer = setTimeout(type, 2200);
+        return;
+      }
+    } else {
+      el.textContent = line.slice(0, --charIdx);
+      if (charIdx === 0) {
+        deleting = false;
+        lineIdx = (lineIdx + 1) % lines.length;
+      }
+    }
+    setTimeout(type, deleting ? 22 : 48);
+  }
+  setTimeout(type, 1800);
+})();
+
+/* ── STAT PROCESSING ANIMATION ── */
+(function() {
+  const origStatsObs = window._statsObsCallback;
+  const processingEls = document.querySelectorAll('.stat-processing');
+
+  // Hook into the existing counter trigger
+  const origCountersTriggered = window.countersTriggered;
+  const strip = document.getElementById('statsStrip');
+  if (!strip) return;
+
+  const procObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        processingEls.forEach((el, i) => {
+          // Show processing label
+          setTimeout(() => {
+            el.classList.add('visible');
+            el.textContent = 'Computing...';
+            // Flash a few times then resolve
+            let flashes = 0;
+            const flashInterval = setInterval(() => {
+              el.textContent = flashes % 2 === 0 ? 'Calculating...' : 'Processing...';
+              flashes++;
+              if (flashes >= 4) {
+                clearInterval(flashInterval);
+                el.textContent = 'Verified ✓';
+                el.style.color = '#1a6e3a';
+                setTimeout(() => {
+                  el.style.opacity = '0';
+                }, 1200);
+              }
+            }, 180);
+          }, i * 150);
+        });
+        procObs.unobserve(strip);
+      }
+    });
+  }, { threshold: 0.3 });
+  procObs.observe(strip);
+})();
+
 </script>
 <!-- WHATSAPP FLOATING BUTTON -->
 <a class="wa-btn" href="https://wa.me/919596864140?text=Hi%20VelmontX%2C%20I%27d%20like%20to%20discuss%20Meta%20Ads%20for%20my%20business." target="_blank" aria-label="Contact on WhatsApp">
