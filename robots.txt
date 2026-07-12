@@ -13,4 +13,4 @@ Allow: /
 User-agent: WhatsApp
 Allow: /
 
-Sitemap: https://www.velmontx.com/sitemap.xml
+Sitemap: https://www.frxmedia.com/sitemap.xml
