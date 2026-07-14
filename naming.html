@@ -27,7 +27,7 @@
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--cream);
+    background: var(--parchment);
     color: var(--dark);
     font-family: 'Inter', sans-serif;
     font-weight: 400;
@@ -72,11 +72,26 @@
 
   /* ── PAGE HERO BANNER ── */
   .tool-hero {
-    padding-top: 100px;
+    padding-top: 110px;
     background: var(--dark);
     border-bottom: 2px solid var(--red);
-    padding-bottom: 40px;
+    padding-bottom: 52px;
     padding-left: 64px; padding-right: 64px;
+    position: relative; overflow: hidden;
+  }
+  .tool-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px);
+    pointer-events: none;
+  }
+  .tool-hero::after {
+    content: '';
+    position: absolute; top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(196,28,28,0.08) 0%, transparent 70%);
+    pointer-events: none;
   }
   .tool-hero-inner { max-width: 1100px; margin: 0 auto; }
   .tool-eyebrow {
@@ -91,7 +106,7 @@
   }
   .tool-hero h1 {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(36px, 6vw, 64px);
+    font-size: clamp(40px, 7vw, 80px);
     font-weight: 900; text-transform: uppercase;
     letter-spacing: 0.02em; color: #fff;
     line-height: 1.0; margin-bottom: 12px;
@@ -107,7 +122,7 @@
   /* ── MAIN ── */
   main {
     max-width: 1160px; margin: 0 auto;
-    padding: 40px 32px 80px;
+    padding: 48px 48px 100px;
   }
   @media(max-width:768px) { main { padding: 32px 20px 60px; } }
 
@@ -127,7 +142,7 @@
     transition: background 0.2s, color 0.2s, border-color 0.2s;
   }
   .tab:hover { background: var(--cream2); color: var(--dark); }
-  .tab.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+  .tab.active { background: var(--dark); color: #fff; border-color: var(--dark); border-bottom: 2px solid var(--red); }
 
   /* ── GRID ── */
   .grid {
@@ -141,7 +156,8 @@
   .form-card {
     background: #fff;
     border: 1px solid var(--border-strong);
-    padding: 32px;
+    padding: 36px 40px;
+    box-shadow: 0 8px 40px rgba(26,20,16,0.07);
   }
   .form-head {
     margin-bottom: 24px;
@@ -161,7 +177,7 @@
   }
   .form-title {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 28px; font-weight: 800;
+    font-size: 34px; font-weight: 900;
     text-transform: uppercase; letter-spacing: 0.02em;
     color: var(--dark);
   }
@@ -177,7 +193,7 @@
   }
 
   /* ── FIELDS ── */
-  .field { margin-bottom: 18px; }
+  .field { margin-bottom: 22px; }
   .field label {
     display: block;
     font-size: 11px; font-weight: 600;
@@ -190,7 +206,7 @@
     margin-bottom: 6px; line-height: 1.5;
   }
   select, input[type=text], input[type=month] {
-    width: 100%; padding: 10px 12px;
+    width: 100%; padding: 12px 14px;
     font-size: 13px; font-family: 'Inter', sans-serif;
     background: var(--parchment);
     color: var(--dark);
@@ -208,6 +224,8 @@
   .result-panel {
     background: var(--dark);
     position: sticky; top: 84px;
+    box-shadow: 0 8px 40px rgba(26,20,16,0.18);
+    border-top: 2px solid var(--red);
   }
   .result-header {
     padding: 18px 24px;
@@ -234,13 +252,13 @@
   .name-output {
     padding: 24px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 14px; font-weight: 500;
-    color: var(--cream);
+    font-size: 15px; font-weight: 500;
+    color: #f5f0e8;
     line-height: 1.7; word-break: break-all;
-    min-height: 72px;
-    background: #0f0d0b;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    letter-spacing: 0.04em;
+    min-height: 80px;
+    background: #080604;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    letter-spacing: 0.05em;
   }
   .name-output.placeholder {
     color: rgba(245,240,232,0.2);
@@ -309,10 +327,12 @@
 
   /* ── EXAMPLES ── */
   .examples {
-    margin-top: 28px;
+    margin-top: 32px;
     background: var(--dark);
     border: 1px solid var(--border-strong);
-    padding: 28px 32px;
+    padding: 36px 40px;
+    box-shadow: 0 8px 40px rgba(26,20,16,0.12);
+    border-top: 2px solid var(--red);
   }
   .examples-eyebrow {
     font-family: 'JetBrains Mono', monospace;
@@ -403,6 +423,7 @@
     <div class="tool-hero-sub">Meta · Google Ads · Microsoft Ads — Campaign to UTM</div>
   </div>
 </div>
+<div style="height:1px;background:linear-gradient(90deg,var(--red),transparent);opacity:0.4;"></div>
 
 <main>
   <div class="tabs">
@@ -596,7 +617,7 @@
     <a href="https://frxmedia.com/#services">Services</a>
     <a href="https://frxmedia.com/#results">Results</a>
     <a href="https://frxmedia.com/#process">Process</a>
-    <a href="mailto:hello@frxmedia.com">hello@frxmedia.com</a>
+    <a href="mailto:info@frxmedia.com">info@frxmedia.com</a>
   </div>
   <div class="footer-copy">© 2026 FRX Media · Global Performance Marketing</div>
 </footer>
