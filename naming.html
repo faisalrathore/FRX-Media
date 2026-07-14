@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRX Media | Naming Convention Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;0,900;1,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:    #f5f0e8;
+    --cream2:   #ede8de;
+    --cream3:   #e5dfd3;
+    --parchment:#f9f6f0;
+    --dark:     #1a1410;
+    --dark2:    #0f0d0b;
+    --mid:      #5a4e44;
+    --muted:    #8a7e74;
+    --red:      #c41c1c;
+    --red2:     #d92222;
+    --border:   rgba(26,20,16,0.10);
+    --border-strong: rgba(26,20,16,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--dark);
+    border-bottom: 2px solid var(--red);
+    padding: 20px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; flex-wrap: wrap;
+  }
+  .header-brand {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .header-brand-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: #fff;
+  }
+  .header-brand-name span { color: var(--red); }
+  .header-divider {
+    width: 1px; height: 28px; background: #333;
+  }
+  .header-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: #666;
+  }
+  .header-sub {
+    font-size: 12px; color: #555;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 1160px; margin: 0 auto;
+    padding: 36px 32px 80px;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; gap: 2px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--border-strong);
+    padding-bottom: 0;
+  }
+  .tab {
+    padding: 10px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .tab:hover { color: var(--dark); }
+  .tab.active { color: var(--red); border-bottom-color: var(--red); }
+
+  /* ── GRID ── */
+  .grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 24px;
+    align-items: start;
+  }
+  @media(max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    padding: 32px;
+  }
+  .form-head {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 6px;
+  }
+  .form-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.02em;
+    color: var(--dark);
+  }
+  .form-schema {
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 0.06em;
+    background: var(--cream2);
+    padding: 6px 10px;
+    display: inline-block;
+  }
+
+  /* ── FIELDS ── */
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--mid); margin-bottom: 6px;
+  }
+  .field .desc {
+    font-size: 11px; color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 6px; line-height: 1.5;
+  }
+  select, input[type=text], input[type=month] {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    background: var(--parchment);
+    color: var(--dark);
+    border: 1px solid var(--border-strong);
+    border-radius: 0;
+    appearance: none;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  select:focus, input:focus {
+    border-color: var(--red);
+    background: #fff;
+  }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a4e44'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+  /* ── RESULT PANEL ── */
+  .result-panel {
+    background: var(--dark);
+    position: sticky; top: 24px;
+  }
+  .result-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #2a2420;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: #666;
+  }
+  .result-status {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: #3a8a52; letter-spacing: 0.1em;
+  }
+  .result-status-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #3a8a52;
+    animation: statusPulse 2s ease-in-out infinite;
+  }
+  @keyframes statusPulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+  .name-output {
+    padding: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; font-weight: 500;
+    color: #f5f0e8;
+    line-height: 1.6; word-break: break-all;
+    min-height: 64px;
+    background: #0f0d0b;
+    border-bottom: 1px solid #2a2420;
+    letter-spacing: 0.04em;
+  }
+  .name-output.placeholder { color: #3a3530; font-style: italic; font-size: 12px; }
+
+  .copy-btn {
+    display: block; width: calc(100% - 48px);
+    margin: 20px 24px 0;
+    padding: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    transition: background 0.2s;
+  }
+  .copy-btn:hover { background: var(--red2); }
+  .copy-btn.copied { background: #2a6e3a; }
+
+  /* ── UTM BLOCK ── */
+  .utm-block {
+    margin: 20px 24px;
+    padding: 16px;
+    background: #110f0d;
+    border: 1px solid #2a2420;
+  }
+  .utm-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: #555;
+    margin-bottom: 12px;
+  }
+  .utm-row {
+    display: flex; gap: 8px; margin-bottom: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    align-items: baseline;
+  }
+  .utm-key { color: #666; flex-shrink: 0; }
+  .utm-val { color: #c8bfb0; word-break: break-all; }
+
+  /* ── RULES ── */
+  .rules-block {
+    margin: 0 24px 24px;
+    padding: 14px;
+    border-top: 1px solid #2a2420;
+  }
+  .rules-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: #444;
+    margin-bottom: 8px;
+  }
+  .rules-list {
+    list-style: none; padding: 0;
+  }
+  .rules-list li {
+    font-size: 11px; color: #4a4540;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.7; padding-left: 12px; position: relative;
+  }
+  .rules-list li::before {
+    content: '→'; position: absolute; left: 0;
+    color: var(--red); font-size: 10px;
+  }
+
+  /* ── EXAMPLES ── */
+  .examples {
+    margin-top: 28px;
+    background: var(--dark2);
+    border: 1px solid var(--border-strong);
+    padding: 24px;
+  }
+  .examples-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--cream2); margin-bottom: 16px;
+  }
+  .examples-grid {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 12px;
+  }
+  @media(max-width:700px) { .examples-grid { grid-template-columns: 1fr; } }
+  .example-item {
+    background: #0f0d0b;
+    border: 1px solid #2a2420;
+    padding: 12px 14px;
+  }
+  .example-level {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 8px;
+  }
+  .example-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--cream2);
+    word-break: break-all; line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 32px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  footer span { color: var(--red); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-brand">
+    <div class="header-brand-name">FRX<span>media</span></div>
+    <div class="header-divider"></div>
+    <div class="header-title">Naming Convention Generator</div>
+  </div>
+  <div class="header-sub">Meta · Google Ads · Microsoft Ads — Campaign to UTM</div>
+</header>
+
+<main>
+  <div class="tabs">
+    <div class="tab active" data-tab="campaign">01 · Campaign</div>
+    <div class="tab" data-tab="adset">02 · Ad Set / Group</div>
+    <div class="tab" data-tab="ad">03 · Ad</div>
+  </div>
+
+  <div class="grid">
+    <div class="form-card">
+
+      <!-- CAMPAIGN -->
+      <div id="form-campaign">
+        <div class="form-head">
+          <div class="form-eyebrow">Level 01</div>
+          <div class="form-title">Campaign</div>
+          <div class="form-schema">CLIENT_PLATFORM_OBJECTIVE_FUNNEL_GEO_STRUCTURE_DATE</div>
+        </div>
+        <div class="field">
+          <label>Client Name / Code</label>
+          <input type="text" id="c-client" placeholder="e.g. NIKE, ADIDAS, FRX" style="text-transform:uppercase">
+        </div>
+        <div class="field">
+          <label>Platform</label>
+          <select id="c-platform">
+            <option value="META">Meta</option>
+            <option value="GADS">Google Ads</option>
+            <option value="MSADS">Microsoft Ads</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Objective</label>
+          <select id="c-objective">
+            <option>SALES</option><option>LEADS</option><option>TRAFFIC</option><option>AWARE</option><option>APP</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Funnel Stage</label>
+          <select id="c-funnel">
+            <option>TOF</option><option>MOF</option><option>BOF</option><option>RT</option><option>TEST</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Geo</label>
+          <input type="text" id="c-geo" placeholder="e.g. US, UK, WW" style="text-transform:uppercase">
+        </div>
+        <div class="field">
+          <label>Structure / Buying Type</label>
+          <select id="c-structure">
+            <option>ASC</option><option>CBO</option><option>ABO</option><option>PMAX</option><option>SEARCH</option><option>SHOP</option><option>DSA</option><option>CAT</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Launch Month</label>
+          <input type="month" id="c-date">
+        </div>
+      </div>
+
+      <!-- ADSET -->
+      <div id="form-adset" style="display:none;">
+        <div class="form-head">
+          <div class="form-eyebrow">Level 02</div>
+          <div class="form-title">Ad Set / Ad Group</div>
+          <div class="form-schema">AUDIENCE-TYPE_detail_PLACEMENT_OPT</div>
+        </div>
+        <div class="field">
+          <label>Audience Type</label>
+          <select id="a-audtype">
+            <option value="BROAD">Broad</option>
+            <option value="INT">Interest</option>
+            <option value="LAL">Lookalike</option>
+            <option value="CA">Custom Audience</option>
+            <option value="KW">Keywords</option>
+            <option value="RT">Retargeting</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Audience Detail</label>
+          <div class="desc">lowercase · hyphens between words</div>
+          <input type="text" id="a-auddetail" placeholder="e.g. all, atc-14d, lal3-purchasers">
+        </div>
+        <div class="field">
+          <label>Placement</label>
+          <select id="a-placement">
+            <option>AUTO</option><option>FEED</option><option>REELS</option><option>SEARCH</option><option>PMAX-ALL</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Optimisation Event</label>
+          <select id="a-opt">
+            <option value="PUR">Purchase</option>
+            <option value="ATC">Add to Cart</option>
+            <option value="LEAD">Lead</option>
+            <option value="IC">Initiate Checkout</option>
+            <option value="CONV">Conversion</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- AD -->
+      <div id="form-ad" style="display:none;">
+        <div class="form-head">
+          <div class="form-eyebrow">Level 03</div>
+          <div class="form-title">Ad</div>
+          <div class="form-schema">product_FORMAT_angle_hook-variant_version</div>
+        </div>
+        <div class="field">
+          <label>Product / Line Code</label>
+          <input type="text" id="d-product" placeholder="e.g. ff, rb, tc, mb" style="text-transform:lowercase">
+        </div>
+        <div class="field">
+          <label>Format</label>
+          <select id="d-format">
+            <option>ST</option><option>VID</option><option>CAR</option><option>CAT</option><option>UGC</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Angle</label>
+          <select id="d-angle">
+            <option>price</option><option>usecase</option><option>socialproof</option><option>urgency</option><option>quality</option><option>turnaround</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Hook / Variant</label>
+          <div class="desc">e.g. 3795-hook, grand-opening, 60sec-setup</div>
+          <input type="text" id="d-hook" placeholder="e.g. grand-opening" style="text-transform:lowercase">
+        </div>
+        <div class="field">
+          <label>Version</label>
+          <select id="d-version">
+            <option>v1</option><option>v2</option><option>v3</option><option>v4</option><option>v5</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RESULT -->
+    <div class="result-panel">
+      <div class="result-header">
+        <div class="result-label">Generated Name</div>
+        <div class="result-status"><span class="result-status-dot"></span>Live</div>
+      </div>
+      <div class="name-output placeholder" id="output">Fill in the fields →</div>
+      <button class="copy-btn" id="copyBtn">Copy Name →</button>
+
+      <div class="utm-block" id="utmBlock" style="display:none;">
+        <div class="utm-title">UTM Parameters</div>
+        <div class="utm-row"><span class="utm-key">utm_source</span><span class="utm-val" id="utmSource"></span></div>
+        <div class="utm-row"><span class="utm-key">utm_medium</span><span class="utm-val" id="utmMedium"></span></div>
+        <div class="utm-row"><span class="utm-key">utm_campaign</span><span class="utm-val" id="utmCampaign"></span></div>
+      </div>
+
+      <div class="rules-block">
+        <div class="rules-title">Convention Rules</div>
+        <ul class="rules-list">
+          <li>CAPS at campaign level, lowercase at ad level</li>
+          <li>Underscores between components</li>
+          <li>Hyphens within a component</li>
+          <li>No spaces or special characters</li>
+          <li>Date = launch month, not today</li>
+          <li>Never rename after launch — version it</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="examples">
+    <div class="examples-title">Reference Examples</div>
+    <div class="examples-grid">
+      <div class="example-item">
+        <div class="example-level">Campaign</div>
+        <div class="example-code">NIKE_META_SALES_TOF_US_ASC_202607</div>
+      </div>
+      <div class="example-item">
+        <div class="example-level">Ad Set</div>
+        <div class="example-code">BROAD_all_AUTO_PUR</div>
+      </div>
+      <div class="example-item">
+        <div class="example-level">Ad</div>
+        <div class="example-code">ff_ST_price_3795-hook_v1</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>FRX Media</span> · Universal Paid Media Naming Convention Tool
+</footer>
+
+<script>
+function slugify(v){ return (v||'').trim().toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,''); }
+function upslug(v){ return (v||'').trim().toUpperCase().replace(/\s+/g,'').replace(/[^A-Z0-9]/g,''); }
+
+const tabs = document.querySelectorAll('.tab');
+const forms = {
+  campaign: document.getElementById('form-campaign'),
+  adset:    document.getElementById('form-adset'),
+  ad:       document.getElementById('form-ad')
+};
+let current = 'campaign';
+
+tabs.forEach(t => t.addEventListener('click', () => {
+  tabs.forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  current = t.dataset.tab;
+  Object.keys(forms).forEach(k => forms[k].style.display = (k === current ? 'block' : 'none'));
+  document.getElementById('utmBlock').style.display = (current === 'campaign') ? 'block' : 'none';
+  update();
+}));
+
+document.getElementById('c-date').value = new Date().toISOString().slice(0,7);
+
+function buildCampaign(){
+  const client    = upslug(document.getElementById('c-client').value) || 'CLIENT';
+  const platform  = document.getElementById('c-platform').value;
+  const objective = document.getElementById('c-objective').value;
+  const funnel    = document.getElementById('c-funnel').value;
+  const geo       = upslug(document.getElementById('c-geo').value) || 'GEO';
+  const structure = document.getElementById('c-structure').value;
+  const dateVal   = document.getElementById('c-date').value;
+  const date      = dateVal ? dateVal.replace('-','') : new Date().toISOString().slice(0,7).replace('-','');
+  return [client,platform,objective,funnel,geo,structure,date].join('_');
+}
+function buildAdset(){
+  const type    = document.getElementById('a-audtype').value;
+  const detail  = slugify(document.getElementById('a-auddetail').value) || 'detail';
+  const place   = document.getElementById('a-placement').value;
+  const opt     = document.getElementById('a-opt').value;
+  return [type,detail,place,opt].join('_');
+}
+function buildAd(){
+  const product = slugify(document.getElementById('d-product').value) || 'product';
+  const format  = document.getElementById('d-format').value;
+  const angle   = document.getElementById('d-angle').value;
+  const hook    = slugify(document.getElementById('d-hook').value) || 'hook';
+  const version = document.getElementById('d-version').value;
+  return [product,format,angle,hook,version].join('_');
+}
+
+function update(){
+  let name = '';
+  if(current === 'campaign') name = buildCampaign();
+  if(current === 'adset')    name = buildAdset();
+  if(current === 'ad')       name = buildAd();
+
+  const out = document.getElementById('output');
+  out.textContent = name;
+  out.classList.remove('placeholder');
+
+  if(current === 'campaign'){
+    const platform = document.getElementById('c-platform').value;
+    const srcMap = { META:'meta', GADS:'google', MSADS:'bing' };
+    const medMap = { META:'paid-social', GADS:'cpc', MSADS:'cpc' };
+    document.getElementById('utmSource').textContent   = srcMap[platform];
+    document.getElementById('utmMedium').textContent   = medMap[platform];
+    document.getElementById('utmCampaign').textContent = name;
+  }
+}
+
+document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', update));
+
+document.getElementById('copyBtn').addEventListener('click', () => {
+  const text = document.getElementById('output').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy Name →'; btn.classList.remove('copied'); }, 1400);
+  });
+});
+
+update();
+</script>
+</body>
+</html>
