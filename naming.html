@@ -70,23 +70,22 @@
 
   /* ── TABS ── */
   .tabs {
-    display: flex; gap: 2px;
+    display: flex; gap: 8px;
     margin-bottom: 28px;
-    border-bottom: 1px solid var(--border-strong);
-    padding-bottom: 0;
+    flex-wrap: wrap;
   }
   .tab {
-    padding: 10px 24px;
+    padding: 11px 22px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px; font-weight: 600;
     letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--muted); cursor: pointer;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: color 0.2s, border-color 0.2s;
+    color: var(--mid); cursor: pointer;
+    border: 1px solid var(--border-strong);
+    background: #fff;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
   }
-  .tab:hover { color: var(--dark); }
-  .tab.active { color: var(--red); border-bottom-color: var(--red); }
+  .tab:hover { background: var(--cream2); color: var(--dark); border-color: var(--dark); }
+  .tab.active { background: var(--dark); color: #fff; border-color: var(--dark); }
 
   /* ── GRID ── */
   .grid {
