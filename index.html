@@ -229,6 +229,12 @@
     border-bottom: 1px solid var(--border);
     -webkit-user-select: none; user-select: none;
   }
+  .logo {
+    height: 46px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
   .logo img {
     height: 35px;
     width: auto;
@@ -236,30 +242,35 @@
     transform-origin: left center;
   }
   @media(max-width:1024px) {
+    .logo { height: 34px; }
     .logo img {
       transform: scale(2.8);
     }
   }
   @media(max-width:480px) {
+    .logo { height: 28px; }
     .logo img {
       transform: scale(2.2);
     }
   }
-  .nav-links { display: flex; gap: 44px; list-style: none; }
+  .nav-links { display: flex; align-items: center; gap: 44px; list-style: none; }
+  .nav-links li { display: flex; align-items: center; }
   .nav-links a {
     font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
     letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--mid); text-decoration: none; transition: color 0.25s;
+    line-height: 1;
   }
   .nav-links a:hover { color: var(--red); }
-  .nav-dropdown { position: relative; }
+  .nav-dropdown { position: relative; display: flex; align-items: center; }
   .nav-dropdown-toggle {
+    font: inherit;
     font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
     letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--mid); cursor: pointer; transition: color 0.25s;
     display: flex; align-items: center; gap: 5px;
     background: none; border: none; padding: 0; margin: 0;
-    font-size: 14px;
+    line-height: 1;
   }
   .nav-dropdown-toggle::after {
     content: '▾'; font-size: 10px; transition: transform 0.25s;
@@ -289,6 +300,7 @@
     letter-spacing: 0.1em; color: #fff; background: var(--red);
     padding: 11px 26px; text-decoration: none; transition: all 0.25s;
     border: 1px solid var(--red);
+    display: flex; align-items: center; line-height: 1;
   }
   .nav-cta:hover { background: var(--red2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(196,28,28,0.3); }
 
@@ -1685,6 +1697,24 @@
   window.addEventListener('scroll', function() {
     dropdown.classList.remove('open');
   }, { passive: true });
+})();
+
+/* ── KEEP AI STATUS BAR PINNED DIRECTLY BELOW NAV (no overlap, no gap) ── */
+(function() {
+  function sync() {
+    var navEl = document.querySelector('nav');
+    var statusBar = document.querySelector('.ai-status-bar');
+    if (!navEl || !statusBar) return;
+    statusBar.style.top = navEl.getBoundingClientRect().height + 'px';
+  }
+  document.addEventListener('DOMContentLoaded', sync);
+  window.addEventListener('load', sync);
+  window.addEventListener('resize', sync);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(sync);
+  }
+  // Also try immediately in case the status bar is already in the DOM at this point.
+  sync();
 })();
 
 /* ── MANUAL SCROLL FOR NAV ANCHOR LINKS (guaranteed to work even if native anchor jump fails) ── */
@@ -3224,22 +3254,6 @@ if (hamburger) {
     hamburger.classList.toggle('open');
   });
 }
-
-/* ── KEEP AI STATUS BAR PINNED DIRECTLY BELOW NAV (no overlap, no gap) ── */
-(function() {
-  const navEl = document.querySelector('nav');
-  const statusBar = document.querySelector('.ai-status-bar');
-  if (!navEl || !statusBar) return;
-  function syncStatusBarPosition() {
-    statusBar.style.top = navEl.getBoundingClientRect().height + 'px';
-  }
-  syncStatusBarPosition();
-  window.addEventListener('resize', syncStatusBarPosition);
-  window.addEventListener('load', syncStatusBarPosition);
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(syncStatusBarPosition);
-  }
-})();
 
 /* ── AUDIT FORM SUBMISSION ── */
 const auditForm = document.getElementById('auditForm');
