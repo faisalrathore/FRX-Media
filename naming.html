@@ -205,7 +205,7 @@
     font-family: 'JetBrains Mono', monospace;
     margin-bottom: 6px; line-height: 1.5;
   }
-  select, input[type=text], input[type=month] {
+  select, input[type=text], input[type=month], input[type=date] {
     width: 100%; padding: 12px 14px;
     font-size: 13px; font-family: 'Inter', sans-serif;
     background: var(--parchment);
@@ -433,8 +433,13 @@
     </div>
     <div class="field" style="margin-top:18px; margin-bottom:0;">
       <label>Agency Name / Code</label>
-      <div class="desc">optional — prepended to campaign, ad set, and ad names. leave blank to keep it out entirely</div>
+      <div class="desc">optional — prepended to campaign, ad set, and ad names. leave blank to keep it out entirely. e.g. FRX, ACME-MEDIA, GROWTHCO</div>
       <input type="text" id="g-agency" placeholder="e.g. FRX, ACME-MEDIA" style="text-transform:uppercase">
+      <div class="form-schema" style="margin-top:12px; display:block;">
+        Full example — Campaign: FRX|NIKE|META|SALES|TOF|US|ASC|15/07/26<br>
+        Full example — Ad Set: FRX|BROAD|ALL|AUTO|PUR|15/07/26<br>
+        Full example — Ad: FRX|FF|ST|PRICE|3795-HOOK|V1|15/07/26
+      </div>
     </div>
   </div>
 
@@ -522,9 +527,14 @@
           <input type="text" id="c-structure-custom" placeholder="e.g. RETENTION" style="text-transform:uppercase; margin-top:8px; display:none;">
         </div>
         <div class="field">
-          <label>Launch Month</label>
-          <div class="desc">clear the field to omit from name</div>
-          <input type="month" id="c-date">
+          <label>Date</label>
+          <div class="desc">type your own date, or leave blank to omit — pick a format for guidance</div>
+          <select id="c-date-format">
+            <option value="DDMMYY">DD/MM/YY — e.g. 15/07/26</option>
+            <option value="DDMM">DD/MM — e.g. 15/07</option>
+            <option value="MMYY">MM/YY — e.g. 07/26</option>
+          </select>
+          <input type="text" id="c-date" placeholder="e.g. 15/07/26" style="margin-top:8px;">
         </div>
       </div>
 
@@ -533,7 +543,7 @@
         <div class="form-head">
           <div class="form-eyebrow">Level 02</div>
           <div class="form-title">Ad Set / Ad Group</div>
-          <div class="form-schema">[AGENCY]|AUDIENCETYPE|detail|PLACEMENT|OPT</div>
+          <div class="form-schema">[AGENCY]|AUDIENCETYPE|detail|PLACEMENT|OPT|DATE</div>
         </div>
         <div class="field">
           <label>Audience Type</label>
@@ -612,6 +622,16 @@
           </select>
           <input type="text" id="a-opt-custom" placeholder="e.g. SUBSCRIBE" style="text-transform:uppercase; margin-top:8px; display:none;">
         </div>
+        <div class="field">
+          <label>Date</label>
+          <div class="desc">type your own date, or leave blank to omit — pick a format for guidance</div>
+          <select id="a-date-format">
+            <option value="DDMMYY">DD/MM/YY — e.g. 15/07/26</option>
+            <option value="DDMM">DD/MM — e.g. 15/07</option>
+            <option value="MMYY">MM/YY — e.g. 07/26</option>
+          </select>
+          <input type="text" id="a-date" placeholder="e.g. 15/07/26" style="margin-top:8px;">
+        </div>
       </div>
 
       <!-- AD -->
@@ -619,23 +639,31 @@
         <div class="form-head">
           <div class="form-eyebrow">Level 03</div>
           <div class="form-title">Ad</div>
-          <div class="form-schema">[AGENCY]|product|FORMAT|angle|hook-variant|version</div>
+          <div class="form-schema">[AGENCY]|product|FORMAT|angle|hook-variant|version|DATE</div>
         </div>
         <div class="field">
           <label>Product / Line Code</label>
-          <div class="desc">pick a suggestion, type your own, or leave blank to omit</div>
-          <input type="text" id="d-product" list="product-list" placeholder="e.g. ff, rb, tc, mb, hero-product">
+          <div class="desc">this is a free-text field — pick a suggestion below, type absolutely anything of your own, or leave it blank to omit from the name</div>
+          <input type="text" id="d-product" list="product-list" placeholder="type your own, or pick a suggestion — e.g. hero-product, ff, rb">
           <datalist id="product-list">
             <option value="hero-product">
+            <option value="core-products">
+            <option value="best-sellers">
+            <option value="top-sellers">
             <option value="bestseller">
+            <option value="evergreen">
             <option value="new-arrival">
+            <option value="new-collection">
             <option value="flagship">
             <option value="bundle">
+            <option value="gift-sets">
             <option value="sale-item">
             <option value="seasonal">
             <option value="accessory">
             <option value="limited-edition">
             <option value="clearance">
+            <option value="trending">
+            <option value="private-label">
             <option value="ff">
             <option value="rb">
             <option value="tc">
@@ -724,6 +752,16 @@
           </select>
           <input type="text" id="d-version-custom" placeholder="e.g. v1b, retest2" style="text-transform:lowercase; margin-top:8px; display:none;">
         </div>
+        <div class="field">
+          <label>Date</label>
+          <div class="desc">type your own date, or leave blank to omit — pick a format for guidance</div>
+          <select id="d-date-format">
+            <option value="DDMMYY">DD/MM/YY — e.g. 15/07/26</option>
+            <option value="DDMM">DD/MM — e.g. 15/07</option>
+            <option value="MMYY">MM/YY — e.g. 07/26</option>
+          </select>
+          <input type="text" id="d-date" placeholder="e.g. 15/07/26" style="margin-top:8px;">
+        </div>
       </div>
 
     </div>
@@ -742,6 +780,7 @@
         <div class="utm-row"><span class="utm-key">utm_source</span><span class="utm-val" id="utmSource"></span></div>
         <div class="utm-row"><span class="utm-key">utm_medium</span><span class="utm-val" id="utmMedium"></span></div>
         <div class="utm-row"><span class="utm-key">utm_campaign</span><span class="utm-val" id="utmCampaign"></span></div>
+        <div style="font-size:8px; color:rgba(245,240,232,0.2); font-family:'JetBrains Mono',monospace; margin-top:4px; letter-spacing:0.06em;">utm_campaign is URL-safe — | and / are converted to -</div>
       </div>
 
       <div class="rules-block">
@@ -751,7 +790,8 @@
           <li>Pipe ( | ) between components</li>
           <li>Hyphens within a component</li>
           <li>No spaces or special characters</li>
-          <li>Date = launch month, not today</li>
+          <li>Date is optional, typed by you — DD/MM/YY, DD/MM, or MM/YY</li>
+          <li>Date field appears at the end of every level</li>
           <li>Never rename after launch — version it</li>
           <li>"None" or a blank field omits that component entirely</li>
           <li>"Custom" lets you type your own value for any field</li>
@@ -767,15 +807,15 @@
     <div class="examples-grid">
       <div class="example-item">
         <div class="example-level">01 · Campaign</div>
-        <div class="example-code">FRX|NIKE|META|SALES|TOF|US|ASC|202607</div>
+        <div class="example-code">FRX|NIKE|META|SALES|TOF|US|ASC|15/07/26</div>
       </div>
       <div class="example-item">
         <div class="example-level">02 · Ad Set</div>
-        <div class="example-code">FRX|BROAD|ALL|AUTO|PUR</div>
+        <div class="example-code">FRX|BROAD|ALL|AUTO|PUR|15/07/26</div>
       </div>
       <div class="example-item">
         <div class="example-level">03 · Ad</div>
-        <div class="example-code">FRX|FF|ST|PRICE|3795-HOOK|V1</div>
+        <div class="example-code">FRX|FF|ST|PRICE|3795-HOOK|V1|15/07/26</div>
       </div>
     </div>
   </div>
@@ -815,7 +855,61 @@ tabs.forEach(t => t.addEventListener('click', () => {
   update();
 }));
 
-document.getElementById('c-date').value = new Date().toISOString().slice(0,7);
+// date fields are free text — user types their own date in whichever format they picked
+function dateValue(inputId){ return document.getElementById(inputId).value.trim(); }
+
+// makes the generated name safe to drop straight into a URL's utm_campaign param:
+// replaces | and / with -, collapses repeats, lowercases (UTM convention)
+function sanitizeForUrl(v){
+  return (v || '')
+    .replace(/[|/]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .toLowerCase();
+}
+
+const datePlaceholders = { DDMMYY:'e.g. 15/07/26', DDMM:'e.g. 15/07', MMYY:'e.g. 07/26' };
+const dateMaxDigits    = { DDMMYY:6, DDMM:4, MMYY:4 };
+const dateSegmentRoles = { DDMMYY:['DD','MM','YY'], DDMM:['DD','MM'], MMYY:['MM','YY'] };
+
+// clamps a completed 2-digit segment: DD to 01-31, MM to 01-12, YY is unrestricted
+function clampDateSegment(role, part){
+  if(role === 'YY' || part.length < 2) return part;
+  let n = parseInt(part, 10);
+  if(isNaN(n)) return part;
+  const max = (role === 'DD') ? 31 : 12;
+  if(n > max) n = max;
+  if(n < 1) n = 1;
+  return String(n).padStart(2,'0');
+}
+
+// auto-inserts "/" as digits are typed, grouped 2-2-2 or 2-2 depending on the chosen format,
+// and clamps day to 31 / month to 12 as soon as a 2-digit segment is complete
+function autoSlashDate(value, fmt){
+  const max = dateMaxDigits[fmt] || 6;
+  const digits = (value || '').replace(/\D/g,'').slice(0, max);
+  const parts = digits.match(/.{1,2}/g) || [];
+  const roles = dateSegmentRoles[fmt] || [];
+  const clamped = parts.map((p,i) => clampDateSegment(roles[i], p));
+  return clamped.join('/');
+}
+
+function wireDateFormat(fmtId, inputId){
+  const fmt = document.getElementById(fmtId);
+  const inp = document.getElementById(inputId);
+  fmt.addEventListener('change', () => {
+    inp.placeholder = datePlaceholders[fmt.value] || '';
+    inp.value = autoSlashDate(inp.value, fmt.value);
+    update();
+  });
+  inp.addEventListener('input', () => {
+    inp.value = autoSlashDate(inp.value, fmt.value);
+    update();
+  });
+}
+wireDateFormat('c-date-format','c-date');
+wireDateFormat('a-date-format','a-date');
+wireDateFormat('d-date-format','d-date');
 
 // generic helper for "select with custom + none" combo fields
 // returns '' when None is picked, the typed value when Custom is picked, otherwise the preset short code
@@ -843,8 +937,7 @@ function buildCampaign(){
   const funnel    = comboValue('c-funnel-select','c-funnel-custom');
   const geo       = upslug(document.getElementById('c-geo').value);
   const structure = comboValue('c-structure-select','c-structure-custom');
-  const dateVal   = document.getElementById('c-date').value;
-  const date      = dateVal ? dateVal.replace('-','') : '';
+  const date      = dateValue('c-date');
   return [agency,client,platform,objective,funnel,geo,structure,date].filter(Boolean).join('|').toUpperCase();
 }
 function buildAdset(){
@@ -853,7 +946,8 @@ function buildAdset(){
   const detail = freeText(document.getElementById('a-auddetail').value);
   const place  = comboValue('a-placement-select','a-placement-custom');
   const opt    = comboValue('a-opt-select','a-opt-custom');
-  return [agency,type,detail,place,opt].filter(Boolean).join('|').toUpperCase();
+  const date   = dateValue('a-date');
+  return [agency,type,detail,place,opt,date].filter(Boolean).join('|').toUpperCase();
 }
 function buildAd(){
   const agency  = agencyPrefix();
@@ -862,7 +956,8 @@ function buildAd(){
   const angle   = comboValueSlug('d-angle-select','d-angle-custom');
   const hook    = comboValueSlug('d-hook-select','d-hook-custom');
   const version = comboValueSlug('d-version-select','d-version-custom');
-  return [agency,product,format,angle,hook,version].filter(Boolean).join('|').toUpperCase();
+  const date    = dateValue('d-date');
+  return [agency,product,format,angle,hook,version,date].filter(Boolean).join('|').toUpperCase();
 }
 
 // toggle custom text input visibility for combo fields
@@ -910,7 +1005,7 @@ function update(){
     const medMap = { META:'paid-social', GADS:'cpc', MSADS:'cpc' };
     document.getElementById('utmSource').textContent   = srcMap[platform] || slugify(platform) || '—';
     document.getElementById('utmMedium').textContent   = medMap[platform] || 'cpc';
-    document.getElementById('utmCampaign').textContent = name || '—';
+    document.getElementById('utmCampaign').textContent = name ? sanitizeForUrl(name) : '—';
     document.getElementById('utmBlock').style.display  = 'block';
   }
 }
