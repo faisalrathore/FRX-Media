@@ -212,24 +212,6 @@
   }
   @keyframes barSlide { 0%{transform:translateX(-100%);} 100%{transform:translateX(400%);} }
 
-  .removebg-btn {
-    display: block; width: 100%;
-    padding: 12px 16px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; font-weight: 600;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    cursor: pointer;
-    background: var(--dark); color: #fff;
-    border: 1px solid var(--dark);
-    transition: all 0.2s;
-    margin-bottom: 6px;
-  }
-  .removebg-btn:hover:not(:disabled) { background: var(--red); border-color: var(--red); }
-  .removebg-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-  .removebg-btn.working { background: var(--red2); border-color: var(--red2); }
-  .undo-btn { background: transparent; color: var(--mid); border: 1px solid var(--border-strong); }
-  .undo-btn:hover:not(:disabled) { background: var(--cream2); color: var(--dark); border-color: var(--dark); }
-  .hidden-btn { display: none; }
   .removebg-hint {
     font-size: 10.5px; color: var(--muted); line-height: 1.5;
     margin-bottom: 22px; font-family: 'JetBrains Mono', monospace;
@@ -340,23 +322,61 @@
     cursor: grab; touch-action: none;
   }
   .drag-pan:active { cursor: grabbing; }
+  /* Small and mostly-transparent by default so they don't sit on top of and
+     obscure the text/badge they control — they light up on hover so they're
+     still easy to find, but stay out of the way otherwise. A ring rather
+     than a filled dot keeps even the small size easy to grab precisely. */
   .handle {
-    position: absolute; z-index: 2;
-    width: 24px; height: 24px;
+    position: absolute; z-index: 3;
+    width: 12px; height: 12px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: rgba(196,28,28,0.88);
-    border: 2px solid #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    background: rgba(196,28,28,0.35);
+    border: 1.5px solid rgba(255,255,255,0.75);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
     cursor: grab; touch-action: none;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; color: #fff; line-height: 1;
     user-select: none;
-    transition: transform 0.12s, background 0.15s;
+    transition: all 0.15s;
   }
-  .handle:hover { background: var(--red2); transform: translate(-50%, -50%) scale(1.2); }
-  .handle:active, .handle.dragging { cursor: grabbing; background: #fff; color: var(--red); }
+  .handle::before {
+    content: ''; position: absolute; inset: -9px; /* larger invisible hit area than the visible dot */
+  }
+  .handle:hover {
+    width: 16px; height: 16px;
+    background: var(--red2); border-color: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.55);
+  }
+  .handle:active, .handle.dragging {
+    cursor: grabbing; width: 16px; height: 16px;
+    background: #fff; border-color: var(--red);
+  }
   .handle.hidden-handle { display: none; }
+
+  /* ── PHOTO TOOLBAR (background removal + undo, next to the preview) ── */
+  .photo-toolbar {
+    display: flex; align-items: center; gap: 8px;
+    margin: 0 24px 10px;
+    flex-wrap: wrap;
+  }
+  .toolbar-btn {
+    padding: 10px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer;
+    background: rgba(255,255,255,0.06); color: #fff;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: all 0.2s;
+  }
+  .toolbar-btn:hover:not(:disabled) { background: var(--red); border-color: var(--red); }
+  .toolbar-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .toolbar-btn.working { background: var(--red2); border-color: var(--red2); }
+  .toolbar-btn.undo-btn {
+    background: transparent; color: rgba(245,240,232,0.6);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .toolbar-btn.undo-btn:hover { color: #fff; border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.06); }
+  .hidden-btn { display: none; }
 
   /* ── ZOOM BAR (next to the preview, not the form) ── */
   .zoom-bar {
@@ -516,10 +536,7 @@
           <div class="bar"><div class="bar-fill"></div></div>
         </div>
       </div>
-
-      <button type="button" class="removebg-btn" id="removeBgBtn" disabled>Remove Background (AI)</button>
-      <button type="button" class="removebg-btn undo-btn hidden-btn" id="undoBgBtn">↺ Undo — Use Original Photo</button>
-      <div class="removebg-hint" id="removeBgHint">Upload a photo first, then run this to cut the product out — runs locally in your browser, nothing is uploaded.</div>
+      <div class="removebg-hint" id="removeBgHint">Background removal, undo, and zoom now live in the photo toolbar right above the preview — scroll or look to the right →</div>
 
       <div class="form-head">
         <div class="form-eyebrow">Step 02</div>
@@ -658,16 +675,21 @@
           <canvas id="adCanvas" width="1080" height="1080"></canvas>
           <div class="edit-layer" id="editLayer">
             <div class="drag-pan" id="dragPan" title="Drag to reposition the photo"></div>
-            <div class="handle" data-key="headline" title="Drag: headline text">⠿</div>
-            <div class="handle" data-key="brand" title="Drag: brand name">⠿</div>
-            <div class="handle" data-key="discount" title="Drag: discount badge">⠿</div>
-            <div class="handle" data-key="rating" title="Drag: rating badge">⠿</div>
-            <div class="handle" data-key="customtag" title="Drag: custom text tile">⠿</div>
-            <div class="handle" data-key="coupon" title="Drag: coupon chip">⠿</div>
-            <div class="handle" data-key="info" title="Drag: product name / price block">⠿</div>
-            <div class="handle" data-key="cta" title="Drag: CTA button">⠿</div>
+            <div class="handle" data-key="headline" title="Drag: headline text"></div>
+            <div class="handle" data-key="brand" title="Drag: brand name"></div>
+            <div class="handle" data-key="discount" title="Drag: discount badge"></div>
+            <div class="handle" data-key="rating" title="Drag: rating badge"></div>
+            <div class="handle" data-key="customtag" title="Drag: custom text tile"></div>
+            <div class="handle" data-key="coupon" title="Drag: coupon chip"></div>
+            <div class="handle" data-key="info" title="Drag: product name / price block"></div>
+            <div class="handle" data-key="cta" title="Drag: CTA button"></div>
           </div>
         </div>
+      </div>
+
+      <div class="photo-toolbar">
+        <button type="button" class="toolbar-btn" id="removeBgBtn" disabled>Remove Background (AI)</button>
+        <button type="button" class="toolbar-btn undo-btn hidden-btn" id="undoBgBtn">↺ Undo</button>
       </div>
 
       <div class="zoom-bar">
