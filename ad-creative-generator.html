@@ -227,6 +227,9 @@
   .removebg-btn:hover:not(:disabled) { background: var(--red); border-color: var(--red); }
   .removebg-btn:disabled { opacity: 0.35; cursor: not-allowed; }
   .removebg-btn.working { background: var(--red2); border-color: var(--red2); }
+  .undo-btn { background: transparent; color: var(--mid); border: 1px solid var(--border-strong); }
+  .undo-btn:hover:not(:disabled) { background: var(--cream2); color: var(--dark); border-color: var(--dark); }
+  .hidden-btn { display: none; }
   .removebg-hint {
     font-size: 10.5px; color: var(--muted); line-height: 1.5;
     margin-bottom: 22px; font-family: 'JetBrains Mono', monospace;
@@ -515,6 +518,7 @@
       </div>
 
       <button type="button" class="removebg-btn" id="removeBgBtn" disabled>Remove Background (AI)</button>
+      <button type="button" class="removebg-btn undo-btn hidden-btn" id="undoBgBtn">↺ Undo — Use Original Photo</button>
       <div class="removebg-hint" id="removeBgHint">Upload a photo first, then run this to cut the product out — runs locally in your browser, nothing is uploaded.</div>
 
       <div class="form-head">
@@ -719,6 +723,7 @@ const fileInput = document.getElementById('fileInput');
 const uploadStatus = document.getElementById('uploadStatus');
 const downloadBtn = document.getElementById('downloadBtn');
 const removeBgBtn = document.getElementById('removeBgBtn');
+const undoBgBtn = document.getElementById('undoBgBtn');
 const removeBgHint = document.getElementById('removeBgHint');
 const editLayer = document.getElementById('editLayer');
 const dragPan = document.getElementById('dragPan');
@@ -727,6 +732,8 @@ const zoomVal = document.getElementById('zoomVal');
 
 let productImg = null;   // HTMLImageElement currently drawn on the canvas
 let rawFile = null;      // the last uploaded File, kept so "Remove Background" can be run/re-run on it
+let plainImg = null;     // the original uploaded photo, untouched — what "Undo" restores
+let cutoutImg = null;    // cached background-removed result, so toggling back doesn't re-run the AI model
 let W = 1080, H = 1080;
 
 // ── LAYOUT (drag-to-position state) ──
@@ -852,7 +859,13 @@ function updateHandleVisibility() {
   });
 }
 
-function makeDraggable(el, onMove, clampMin, clampMax) {
+// Delta-based dragging: nothing moves on the initial click — the element
+// only shifts by however far the pointer actually travels from where it was
+// grabbed. getPos() snapshots the element's position at drag-start; every
+// subsequent pointermove adds the pointer's movement (as a fraction of the
+// canvas box) on top of that snapshot, rather than snapping to the pointer's
+// absolute position.
+function makeDraggable(el, getPos, onMove, clampMin, clampMax) {
   clampMin = clampMin === undefined ? 0 : clampMin;
   clampMax = clampMax === undefined ? 1 : clampMax;
   el.addEventListener('pointerdown', (e) => {
@@ -860,13 +873,16 @@ function makeDraggable(el, onMove, clampMin, clampMax) {
     el.setPointerCapture(e.pointerId);
     el.classList.add('dragging');
     const rect = editLayer.getBoundingClientRect();
+    const start = getPos();
+    const startClientX = e.clientX, startClientY = e.clientY;
     const move = (ev) => {
-      const fx = Math.max(clampMin, Math.min(clampMax, (ev.clientX - rect.left) / rect.width));
-      const fy = Math.max(clampMin, Math.min(clampMax, (ev.clientY - rect.top) / rect.height));
+      const dxFrac = (ev.clientX - startClientX) / rect.width;
+      const dyFrac = (ev.clientY - startClientY) / rect.height;
+      const fx = Math.max(clampMin, Math.min(clampMax, start.x + dxFrac));
+      const fy = Math.max(clampMin, Math.min(clampMax, start.y + dyFrac));
       onMove(fx, fy);
     };
-    move(e);
-    const up = (ev) => {
+    const up = () => {
       el.releasePointerCapture(e.pointerId);
       el.classList.remove('dragging');
       el.removeEventListener('pointermove', move);
@@ -878,24 +894,33 @@ function makeDraggable(el, onMove, clampMin, clampMax) {
 }
 
 document.querySelectorAll('.handle').forEach(h => {
-  makeDraggable(h, (fx, fy) => {
-    const key = h.dataset.key;
-    getLayout()[key].x = fx;
-    getLayout()[key].y = fy;
-    h.style.left = (fx * 100) + '%';
-    h.style.top = (fy * 100) + '%';
-    render();
-  });
+  makeDraggable(
+    h,
+    () => ({ x: getLayout()[h.dataset.key].x, y: getLayout()[h.dataset.key].y }),
+    (fx, fy) => {
+      const key = h.dataset.key;
+      getLayout()[key].x = fx;
+      getLayout()[key].y = fy;
+      h.style.left = (fx * 100) + '%';
+      h.style.top = (fy * 100) + '%';
+      render();
+    }
+  );
 });
 
 // Dragging the photo itself pans it (image.x/y are the image's own center
 // point, not clamped to 0–1, so the photo can be pushed partly off-canvas
 // on purpose — full manual control rather than us guessing what fits).
-makeDraggable(dragPan, (fx, fy) => {
-  getLayout().image.x = fx;
-  getLayout().image.y = fy;
-  render();
-}, -0.4, 1.4);
+makeDraggable(
+  dragPan,
+  () => ({ x: getLayout().image.x, y: getLayout().image.y }),
+  (fx, fy) => {
+    getLayout().image.x = fx;
+    getLayout().image.y = fy;
+    render();
+  },
+  -0.4, 1.4
+);
 
 // ── UPLOAD HANDLING ──
 uploadZone.addEventListener('click', () => fileInput.click());
@@ -934,10 +959,13 @@ function loadImageFromFile(file, onDone) {
 // control of when the heavier AI processing runs.
 function handleFile(file) {
   rawFile = file;
+  cutoutImg = null; // a new photo invalidates any previously cached cutout
   uploadStatus.classList.remove('show');
   downloadBtn.disabled = true;
   removeBgBtn.disabled = true;
+  undoBgBtn.classList.add('hidden-btn');
   loadImageFromFile(file, (img) => {
+    plainImg = img;
     productImg = img;
     uploadStatus.classList.remove('show');
     downloadBtn.disabled = false;
@@ -949,8 +977,33 @@ function handleFile(file) {
   });
 }
 
+// Undo just swaps back to the original photo — instant, no reprocessing.
+// The cutout stays cached, so hitting "Remove Background" again doesn't
+// re-run the AI model, it just swaps back to the cached result.
+undoBgBtn.addEventListener('click', () => {
+  if (!plainImg) return;
+  productImg = plainImg;
+  undoBgBtn.classList.add('hidden-btn');
+  removeBgBtn.disabled = false;
+  removeBgBtn.classList.remove('working');
+  removeBgBtn.textContent = cutoutImg ? 'Redo Remove Background' : 'Remove Background (AI)';
+  setStatus('Reverted to your original photo.', false);
+  render();
+});
+
 removeBgBtn.addEventListener('click', async () => {
   if (!rawFile) return;
+
+  // Already computed this session — just reapply it, no need to reprocess.
+  if (cutoutImg) {
+    productImg = cutoutImg;
+    removeBgBtn.textContent = '✓ Background Removed';
+    undoBgBtn.classList.remove('hidden-btn');
+    uploadStatus.classList.remove('show');
+    render();
+    return;
+  }
+
   removeBgBtn.disabled = true;
   removeBgBtn.classList.add('working');
   removeBgBtn.textContent = 'Removing background…';
@@ -990,7 +1043,9 @@ removeBgBtn.addEventListener('click', async () => {
     const url = URL.createObjectURL(blob);
     const img = new Image();
     img.onload = () => {
+      cutoutImg = img;
       productImg = img;
+      undoBgBtn.classList.remove('hidden-btn');
       uploadStatus.classList.remove('show');
       removeBgBtn.classList.remove('working');
       removeBgBtn.textContent = '✓ Background Removed';
