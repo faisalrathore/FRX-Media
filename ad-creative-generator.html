@@ -646,6 +646,24 @@
       </div>
       <div class="removebg-hint" id="removeBgHint">Background removal, undo, and zoom now live in the photo toolbar right above the preview — scroll or look to the right →</div>
 
+      <div class="field toggle-field" style="margin-bottom:22px;">
+        <label>Brand Logo (optional)</label>
+        <div class="upload-zone" id="logoUploadZone" style="padding:18px 14px; margin-bottom:0;">
+          <input type="file" id="logoFileInput" accept="image/*">
+          <div class="upload-icon" style="font-size:20px; margin-bottom:4px;">⇧</div>
+          <div class="upload-label">Click or drop logo image</div>
+          <div class="upload-sub">PNG with transparency recommended — drag it into place on the preview</div>
+        </div>
+        <div id="logoActions" style="display:none; margin-top:10px; gap:8px;">
+          <button type="button" class="toolbar-btn undo-btn" id="removeLogoBtn" style="flex:1; color: var(--mid); background: var(--parchment); border-color: var(--border-strong);">Remove Logo</button>
+        </div>
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-logo" min="20" max="300" value="100">
+          <span class="size-val" id="szv-logo">100%</span>
+        </div>
+      </div>
+
       <div class="form-head">
         <div class="form-eyebrow">Step 02</div>
         <div class="form-title">Creative Details</div>
@@ -840,6 +858,7 @@
             <div class="handle" data-key="coupon" title="Drag: coupon chip"></div>
             <div class="handle" data-key="info" title="Drag: product name / price block"></div>
             <div class="handle" data-key="cta" title="Drag: CTA button"></div>
+            <div class="handle hidden-handle" data-key="logo" title="Drag: logo"></div>
           </div>
         </div>
       </div>
@@ -913,6 +932,7 @@ let productImg = null;   // HTMLImageElement currently drawn on the canvas
 let rawFile = null;      // the last uploaded File, kept so "Remove Background" can be run/re-run on it
 let plainImg = null;     // the original uploaded photo, untouched — what "Undo" restores
 let cutoutImg = null;    // cached background-removed result, so toggling back doesn't re-run the AI model
+let logoImg = null;      // HTMLImageElement for the uploaded brand logo, drawn + draggable independently of the photo
 let W = 1080, H = 1080;
 
 // ── LAYOUT (drag-to-position state) ──
@@ -934,7 +954,8 @@ function defaultLayoutFor(w, h) {
     coupon:    { x: 0.945, y: 0.783,  scale: 1.0 },
     info:      { x: 0.055, y: 0.910,  scale: 1.0 },
     cta:       { x: 0.895, y: 0.9225, scale: 1.0 },
-    image:     { x: 0.5,   y: 0.5,    scale: 1.0 }
+    image:     { x: 0.5,   y: 0.5,    scale: 1.0 },
+    logo:      { x: 0.9,   y: 0.08,   scale: 1.0 }
   };
 }
 
@@ -1036,7 +1057,7 @@ document.getElementById('resetLayoutBtn').addEventListener('click', () => {
 // Explicit, precise alternative to scroll-to-resize on the canvas — same
 // underlying layout[key].scale, so both controls always agree with each
 // other no matter which one was used last.
-const SIZE_SLIDER_KEYS = ['headline', 'brand', 'discount', 'rating', 'customtag', 'coupon', 'info', 'cta'];
+const SIZE_SLIDER_KEYS = ['headline', 'brand', 'discount', 'rating', 'customtag', 'coupon', 'info', 'cta', 'logo'];
 
 function syncSizeSliders() {
   const layout = getLayout();
@@ -1085,7 +1106,8 @@ function updateHandleVisibility() {
     customtag: document.getElementById('t-customtag').checked,
     coupon: document.getElementById('t-coupon').checked,
     info: true,
-    cta: document.getElementById('t-cta').checked
+    cta: document.getElementById('t-cta').checked,
+    logo: !!logoImg
   };
   document.querySelectorAll('.handle').forEach(h => {
     h.classList.toggle('hidden-handle', !vis[h.dataset.key]);
@@ -1146,7 +1168,7 @@ const scaleReadout = document.getElementById('scaleReadout');
 const HANDLE_SIZE_LABEL = {
   headline: 'Headline Size', brand: 'Brand Text Size', discount: 'Badge Size',
   rating: 'Rating Badge Size', customtag: 'Tag Size', coupon: 'Coupon Size',
-  info: 'Price Block Size', cta: 'Button Size'
+  info: 'Price Block Size', cta: 'Button Size', logo: 'Logo Size'
 };
 let scaleReadoutTimer = null;
 function flashScaleReadout(handleEl, key, pct) {
@@ -1186,6 +1208,42 @@ makeDraggable(
   },
   -0.4, 1.4
 );
+
+// ── LOGO UPLOAD (separate, draggable layer independent of the product photo) ──
+const logoUploadZone = document.getElementById('logoUploadZone');
+const logoFileInput = document.getElementById('logoFileInput');
+const logoActions = document.getElementById('logoActions');
+const removeLogoBtn = document.getElementById('removeLogoBtn');
+const logoHandle = document.querySelector('.handle[data-key="logo"]');
+
+function handleLogoFile(file) {
+  loadImageFromFile(file, (img) => {
+    logoImg = img;
+    logoActions.style.display = 'flex';
+    updateHandleVisibility();
+    positionHandles();
+    render();
+  });
+}
+
+logoUploadZone.addEventListener('click', () => logoFileInput.click());
+logoUploadZone.addEventListener('dragover', (e) => { e.preventDefault(); logoUploadZone.classList.add('dragover'); });
+logoUploadZone.addEventListener('dragleave', () => logoUploadZone.classList.remove('dragover'));
+logoUploadZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  logoUploadZone.classList.remove('dragover');
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) handleLogoFile(e.dataTransfer.files[0]);
+});
+logoFileInput.addEventListener('change', (e) => {
+  if (e.target.files && e.target.files[0]) handleLogoFile(e.target.files[0]);
+});
+removeLogoBtn.addEventListener('click', () => {
+  logoImg = null;
+  logoFileInput.value = '';
+  logoActions.style.display = 'none';
+  updateHandleVisibility();
+  render();
+});
 
 // ── UPLOAD HANDLING ──
 uploadZone.addEventListener('click', () => fileInput.click());
@@ -1607,6 +1665,23 @@ function render() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(cta + ' →', ctaCenterX, ctaCenterY + 1);
+    ctx.restore();
+  }
+
+  // Brand logo — drawn last so it sits on top of everything else, anchor is
+  // its own center, position/scale come from layout.logo (drag + scroll-resize).
+  if (logoImg) {
+    ctx.save();
+    const logoScale = sc('logo');
+    const maxLogoDim = Math.min(W, H) * 0.16 * logoScale;
+    const logoRatio = Math.min(maxLogoDim / logoImg.width, maxLogoDim / logoImg.height);
+    const logoW = logoImg.width * logoRatio;
+    const logoH = logoImg.height * logoRatio;
+    const logoCenterX = layout.logo.x * W;
+    const logoCenterY = layout.logo.y * H;
+    ctx.shadowColor = 'rgba(0,0,0,0.35)';
+    ctx.shadowBlur = W * 0.015;
+    ctx.drawImage(logoImg, logoCenterX - logoW / 2, logoCenterY - logoH / 2, logoW, logoH);
     ctx.restore();
   }
 }
