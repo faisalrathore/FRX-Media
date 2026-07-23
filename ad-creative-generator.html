@@ -727,7 +727,20 @@ removeBgBtn.addEventListener('click', async () => {
     // uploaded photo untouched, instead of breaking the rest of the tool.
     const mod = await import("https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/index.mjs");
     const imglyRemoveBackground = mod.default;
-    const blob = await imglyRemoveBackground(rawFile, { output: { format: 'image/png' } });
+    const blob = await imglyRemoveBackground(rawFile, {
+      // 'cpu' avoids relying on WebGPU, which is inconsistently supported
+      // across Safari versions and is a common silent-failure point.
+      device: 'cpu',
+      // smallest model — faster first-run download, less likely to stall
+      model: 'isnet_quint8',
+      output: { format: 'image/png' },
+      progress: (key, current, total) => {
+        if (total) {
+          const pct = Math.round((current / total) * 100);
+          setStatus(`Removing background — downloading model (${pct}%)…`, true);
+        }
+      }
+    });
     const url = URL.createObjectURL(blob);
     const img = new Image();
     img.onload = () => {
@@ -737,11 +750,15 @@ removeBgBtn.addEventListener('click', async () => {
       removeBgBtn.textContent = '✓ Background Removed';
       render();
     };
-    img.onerror = () => { throw new Error('cutout image failed to load'); };
+    img.onerror = () => { throw new Error('Cutout image failed to decode after processing.'); };
     img.src = url;
   } catch (err) {
     console.error('Background removal failed:', err);
-    setStatus('Background removal unavailable right now — your original photo is still in use.', false);
+    // Surface the real error instead of a generic message — this is what
+    // to screenshot/copy if it keeps failing, so the actual cause (network,
+    // CORS, unsupported browser feature, etc.) is visible instead of hidden.
+    const reason = (err && (err.message || err.toString())) || 'unknown error';
+    setStatus('Background removal failed: ' + reason + ' — your original photo is still in use.', false);
     removeBgBtn.classList.remove('working');
     removeBgBtn.textContent = 'Retry Remove Background';
   } finally {
@@ -845,15 +862,17 @@ function render() {
   ctx.fillText((val('f-brand') || 'BRAND').toUpperCase(), W*0.055, H*0.08);
   ctx.restore();
 
-  // Product image — confined to a fixed "safe area" between the headline and
-  // the bottom bar so it can never bleed past the edges of the canvas, no
-  // matter the aspect ratio picked or how far the scale slider is pushed.
+  // Product image — sized to nearly fill the canvas edge-to-edge, matching
+  // the reference (product is the dominant element; the bottom bar's dark
+  // overlay sits semi-transparently ON TOP of it rather than the image
+  // shrinking to avoid it). Still hard-clamped so it can never actually
+  // draw outside the canvas, no matter the aspect ratio or scale slider.
   if (productImg) {
     const scalePct = parseInt(val('f-scale'), 10) / 100;
-    const safeTop = H * 0.24;
-    const safeBottom = H - barH;
-    const safeLeft = W * 0.06;
-    const safeRight = W * 0.94;
+    const safeTop = H * 0.06;
+    const safeBottom = H * 0.98;
+    const safeLeft = W * 0.03;
+    const safeRight = W * 0.97;
     const safeW = safeRight - safeLeft;
     const safeH = safeBottom - safeTop;
 
