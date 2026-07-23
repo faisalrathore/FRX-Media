@@ -198,6 +198,26 @@
   }
   @keyframes barSlide { 0%{transform:translateX(-100%);} 100%{transform:translateX(400%);} }
 
+  .removebg-btn {
+    display: block; width: 100%;
+    padding: 12px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer;
+    background: var(--dark); color: #fff;
+    border: 1px solid var(--dark);
+    transition: all 0.2s;
+    margin-bottom: 6px;
+  }
+  .removebg-btn:hover:not(:disabled) { background: var(--red); border-color: var(--red); }
+  .removebg-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .removebg-btn.working { background: var(--red2); border-color: var(--red2); }
+  .removebg-hint {
+    font-size: 10.5px; color: var(--muted); line-height: 1.5;
+    margin-bottom: 22px; font-family: 'JetBrains Mono', monospace;
+  }
+
   /* ── FIELDS ── */
   .field { margin-bottom: 18px; }
   .field label {
@@ -397,12 +417,15 @@
         <input type="file" id="fileInput" accept="image/*">
         <div class="upload-icon">⇧</div>
         <div class="upload-label">Click or drop product image</div>
-        <div class="upload-sub">JPG / PNG — background is removed automatically</div>
+        <div class="upload-sub">JPG / PNG — placed onto the creative as-is</div>
         <div class="upload-status" id="uploadStatus">
           Removing background…
           <div class="bar"><div class="bar-fill"></div></div>
         </div>
       </div>
+
+      <button type="button" class="removebg-btn" id="removeBgBtn" disabled>Remove Background (AI)</button>
+      <div class="removebg-hint" id="removeBgHint">Upload a photo first, then run this to cut the product out — runs locally in your browser, nothing is uploaded.</div>
 
       <div class="form-head">
         <div class="form-eyebrow">Step 02</div>
@@ -547,8 +570,11 @@ const uploadZone = document.getElementById('uploadZone');
 const fileInput = document.getElementById('fileInput');
 const uploadStatus = document.getElementById('uploadStatus');
 const downloadBtn = document.getElementById('downloadBtn');
+const removeBgBtn = document.getElementById('removeBgBtn');
+const removeBgHint = document.getElementById('removeBgHint');
 
-let productImg = null;   // HTMLImageElement, background removed
+let productImg = null;   // HTMLImageElement currently drawn on the canvas
+let rawFile = null;      // the last uploaded File, kept so "Remove Background" can be run/re-run on it
 let W = 1080, H = 1080;
 
 // ── SIZE TABS ──
@@ -599,56 +625,80 @@ fileInput.addEventListener('change', (e) => {
   if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
 });
 
-function loadPlainImage(file) {
+function setStatus(text, showBar) {
+  uploadStatus.textContent = text;
+  if (showBar) {
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.innerHTML = '<div class="bar-fill"></div>';
+    uploadStatus.appendChild(bar);
+  }
+  uploadStatus.classList.add('show');
+}
+
+function loadImageFromFile(file, onDone) {
   const url = URL.createObjectURL(file);
   const img = new Image();
-  img.onload = () => {
-    productImg = img;
-    uploadStatus.classList.remove('show');
-    downloadBtn.disabled = false;
-    render();
-  };
-  img.onerror = () => {
-    uploadStatus.textContent = 'Could not read that file — try a JPG or PNG.';
-  };
+  img.onload = () => onDone(img);
+  img.onerror = () => setStatus('Could not read that file — try a JPG or PNG.', false);
   img.src = url;
 }
 
-async function handleFile(file) {
+// Upload just places the photo on the canvas as-is. Background removal is a
+// separate, explicit step (see removeBgBtn below) so the user is always in
+// control of when the heavier AI processing runs.
+function handleFile(file) {
+  rawFile = file;
   uploadStatus.classList.remove('show');
-  uploadStatus.textContent = 'Removing background…';
-  // rebuild the loading bar (textContent above wiped it out)
-  const bar = document.createElement('div');
-  bar.className = 'bar';
-  bar.innerHTML = '<div class="bar-fill"></div>';
-  uploadStatus.appendChild(bar);
-  uploadStatus.classList.add('show');
   downloadBtn.disabled = true;
+  removeBgBtn.disabled = true;
+  loadImageFromFile(file, (img) => {
+    productImg = img;
+    uploadStatus.classList.remove('show');
+    downloadBtn.disabled = false;
+    removeBgBtn.disabled = false;
+    removeBgBtn.classList.remove('working');
+    removeBgBtn.textContent = 'Remove Background (AI)';
+    removeBgHint.textContent = 'Cuts the product out onto a transparent layer — runs locally in your browser, nothing is uploaded.';
+    render();
+  });
+}
+
+removeBgBtn.addEventListener('click', async () => {
+  if (!rawFile) return;
+  removeBgBtn.disabled = true;
+  removeBgBtn.classList.add('working');
+  removeBgBtn.textContent = 'Removing background…';
+  setStatus('Removing background — first run downloads a small AI model, can take a moment…', true);
 
   try {
     // Loaded lazily and defensively — CDN/network issues, ad blockers, or
     // opening this file directly (file://) instead of via a server can all
-    // make this import fail. If it does, we fall straight back to using the
-    // uploaded photo as-is so the rest of the tool keeps working.
+    // make this import fail. If it does, we tell the user and leave their
+    // uploaded photo untouched, instead of breaking the rest of the tool.
     const mod = await import("https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/index.mjs");
     const imglyRemoveBackground = mod.default;
-    const blob = await imglyRemoveBackground(file, { output: { format: 'image/png' } });
+    const blob = await imglyRemoveBackground(rawFile, { output: { format: 'image/png' } });
     const url = URL.createObjectURL(blob);
     const img = new Image();
     img.onload = () => {
       productImg = img;
       uploadStatus.classList.remove('show');
-      downloadBtn.disabled = false;
+      removeBgBtn.classList.remove('working');
+      removeBgBtn.textContent = '✓ Background Removed';
       render();
     };
-    img.onerror = () => loadPlainImage(file);
+    img.onerror = () => { throw new Error('cutout image failed to load'); };
     img.src = url;
   } catch (err) {
-    console.error('Background removal unavailable, using original image:', err);
-    uploadStatus.textContent = 'Background removal unavailable — using original image.';
-    loadPlainImage(file);
+    console.error('Background removal failed:', err);
+    setStatus('Background removal unavailable right now — your original photo is still in use.', false);
+    removeBgBtn.classList.remove('working');
+    removeBgBtn.textContent = 'Retry Remove Background';
+  } finally {
+    removeBgBtn.disabled = false;
   }
-}
+});
 
 // ── RENDER ──
 function val(id) { return document.getElementById(id).value; }
@@ -667,6 +717,7 @@ function render() {
   ctx.clearRect(0, 0, W, H);
 
   const bg1 = val('f-bg1'), bg2 = val('f-bg2'), accent = val('f-accent'), textColor = val('f-text');
+  const barH = H * 0.155; // bottom price/CTA bar height — referenced by both the product-image safe area and the bar itself
 
   // Background gradient
   const grad = ctx.createLinearGradient(0, 0, W, H);
@@ -716,16 +767,32 @@ function render() {
   ctx.fillText((val('f-brand') || 'BRAND').toUpperCase(), W*0.055, H*0.08);
   ctx.restore();
 
-  // Product image
+  // Product image — confined to a fixed "safe area" between the headline and
+  // the bottom bar so it can never bleed past the edges of the canvas, no
+  // matter the aspect ratio picked or how far the scale slider is pushed.
   if (productImg) {
     const scalePct = parseInt(val('f-scale'), 10) / 100;
-    const boxW = W * 0.72 * scalePct;
-    const boxH = H * 0.52 * scalePct;
+    const safeTop = H * 0.24;
+    const safeBottom = H - barH;
+    const safeLeft = W * 0.06;
+    const safeRight = W * 0.94;
+    const safeW = safeRight - safeLeft;
+    const safeH = safeBottom - safeTop;
+
+    // Box the slider is allowed to grow into, hard-capped so it can never
+    // exceed the safe area (which itself never exceeds the canvas).
+    const boxW = Math.min(safeW * scalePct, safeW);
+    const boxH = Math.min(safeH * scalePct, safeH);
+
     const ratio = Math.min(boxW / productImg.width, boxH / productImg.height);
     const drawW = productImg.width * ratio;
     const drawH = productImg.height * ratio;
-    const dx = (W - drawW) / 2;
-    const dy = H * 0.30 + (boxH - drawH) / 2;
+
+    let dx = safeLeft + (safeW - drawW) / 2;
+    let dy = safeTop + (safeH - drawH) / 2;
+    // Belt-and-braces clamp: guarantees the image is always fully on-canvas.
+    dx = Math.max(0, Math.min(dx, W - drawW));
+    dy = Math.max(0, Math.min(dy, H - drawH));
 
     ctx.save();
     ctx.shadowColor = 'rgba(0,0,0,0.45)';
@@ -774,7 +841,6 @@ function render() {
   }
 
   // Bottom bar
-  const barH = H * 0.155;
   ctx.save();
   ctx.fillStyle = 'rgba(0,0,0,0.28)';
   ctx.fillRect(0, H - barH, W, barH);
