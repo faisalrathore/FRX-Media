@@ -315,8 +315,12 @@
     padding: 24px; display: flex; justify-content: center; align-items: center;
     min-height: 320px;
   }
+  .canvas-stage {
+    position: relative; display: inline-block; line-height: 0;
+    max-width: 100%;
+  }
   #adCanvas {
-    max-width: 100%; height: auto;
+    max-width: 100%; height: auto; display: block;
     box-shadow: 0 12px 40px rgba(0,0,0,0.4);
     background: #222;
   }
@@ -325,6 +329,69 @@
     font-size: 11px; color: rgba(245,240,232,0.25);
     text-align: center; padding: 60px 20px; line-height: 1.7;
   }
+
+  /* ── DRAG-TO-EDIT LAYER ── */
+  .edit-layer { position: absolute; inset: 0; }
+  .drag-pan {
+    position: absolute; inset: 0; z-index: 1;
+    cursor: grab; touch-action: none;
+  }
+  .drag-pan:active { cursor: grabbing; }
+  .handle {
+    position: absolute; z-index: 2;
+    width: 24px; height: 24px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: rgba(196,28,28,0.88);
+    border: 2px solid #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    cursor: grab; touch-action: none;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: #fff; line-height: 1;
+    user-select: none;
+    transition: transform 0.12s, background 0.15s;
+  }
+  .handle:hover { background: var(--red2); transform: translate(-50%, -50%) scale(1.2); }
+  .handle:active, .handle.dragging { cursor: grabbing; background: #fff; color: var(--red); }
+  .handle.hidden-handle { display: none; }
+
+  /* ── ZOOM BAR (next to the preview, not the form) ── */
+  .zoom-bar {
+    display: flex; align-items: center; gap: 10px;
+    margin: 0 24px 18px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    flex-wrap: wrap;
+  }
+  .zoom-bar-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(245,240,232,0.45); margin-right: 2px;
+  }
+  .zoom-btn {
+    width: 26px; height: 26px; flex-shrink: 0;
+    background: rgba(255,255,255,0.06); color: #fff;
+    border: 1px solid rgba(255,255,255,0.15);
+    font-size: 15px; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .zoom-btn:hover { background: var(--red); border-color: var(--red); }
+  .zoom-bar input[type=range] { flex: 1; min-width: 60px; }
+  .zoom-val {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: rgba(245,240,232,0.6); width: 38px; flex-shrink: 0;
+  }
+  .zoom-reset {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(245,240,232,0.5); background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 7px 10px; cursor: pointer; flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .zoom-reset:hover { color: #fff; border-color: var(--red); background: rgba(196,28,28,0.15); }
 
   .size-tabs { display: flex; gap: 6px; padding: 0 24px 18px; flex-wrap: wrap; }
   .size-tab {
@@ -560,9 +627,10 @@
         </div>
       </div>
 
-      <div class="field">
-        <label>Product Scale — <span id="scaleVal">100%</span></label>
-        <input type="range" id="f-scale" min="40" max="220" value="100">
+      <div class="field" style="margin-bottom:0;">
+        <div style="font-size:10.5px; color:var(--muted); font-family:'JetBrains Mono',monospace; line-height:1.6; padding:10px 12px; background:var(--parchment); border-left:2px solid var(--red);">
+          Positioning &amp; zoom moved next to the preview — drag any dot on the creative to move it, drag the photo itself to pan, use the zoom bar under the preview to scale.
+        </div>
       </div>
 
     </div>
@@ -582,7 +650,29 @@
       </div>
 
       <div class="canvas-wrap">
-        <canvas id="adCanvas" width="1080" height="1080"></canvas>
+        <div class="canvas-stage" id="canvasStage">
+          <canvas id="adCanvas" width="1080" height="1080"></canvas>
+          <div class="edit-layer" id="editLayer">
+            <div class="drag-pan" id="dragPan" title="Drag to reposition the photo"></div>
+            <div class="handle" data-key="headline" title="Drag: headline text">⠿</div>
+            <div class="handle" data-key="brand" title="Drag: brand name">⠿</div>
+            <div class="handle" data-key="discount" title="Drag: discount badge">⠿</div>
+            <div class="handle" data-key="rating" title="Drag: rating badge">⠿</div>
+            <div class="handle" data-key="customtag" title="Drag: custom text tile">⠿</div>
+            <div class="handle" data-key="coupon" title="Drag: coupon chip">⠿</div>
+            <div class="handle" data-key="info" title="Drag: product name / price block">⠿</div>
+            <div class="handle" data-key="cta" title="Drag: CTA button">⠿</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="zoom-bar">
+        <span class="zoom-bar-label">Photo Zoom</span>
+        <button type="button" class="zoom-btn" id="zoomOutBtn">−</button>
+        <input type="range" id="imgZoom" min="40" max="220" value="100">
+        <button type="button" class="zoom-btn" id="zoomInBtn">+</button>
+        <span class="zoom-val" id="zoomVal">100%</span>
+        <button type="button" class="zoom-reset" id="resetLayoutBtn">Reset Layout</button>
       </div>
 
       <button class="download-btn" id="downloadBtn">Download PNG</button>
@@ -593,6 +683,8 @@
           <li>Upload runs a neural background-removal model locally in your browser tab</li>
           <li>Your image never leaves your device — no server, no upload</li>
           <li>Edit any field and the creative updates instantly</li>
+          <li>Drag any dot to reposition text/badges, drag the photo to pan, use the zoom bar to scale it</li>
+          <li>Each aspect ratio remembers its own layout — switching sizes won't reset your edits</li>
           <li>Toggle rating, coupon, and custom tag overlays on or off per-creative</li>
           <li>Export is full-resolution PNG, ready to upload to Meta / Google Ads</li>
         </ul>
@@ -628,10 +720,45 @@ const uploadStatus = document.getElementById('uploadStatus');
 const downloadBtn = document.getElementById('downloadBtn');
 const removeBgBtn = document.getElementById('removeBgBtn');
 const removeBgHint = document.getElementById('removeBgHint');
+const editLayer = document.getElementById('editLayer');
+const dragPan = document.getElementById('dragPan');
+const imgZoom = document.getElementById('imgZoom');
+const zoomVal = document.getElementById('zoomVal');
 
 let productImg = null;   // HTMLImageElement currently drawn on the canvas
 let rawFile = null;      // the last uploaded File, kept so "Remove Background" can be run/re-run on it
 let W = 1080, H = 1080;
+
+// ── LAYOUT (drag-to-position state) ──
+// Every draggable element is stored as a fraction (0–1) of the canvas's own
+// W/H, using the exact same anchor point render() draws it from — so moving
+// a handle and redrawing never need any unit conversion beyond *W / *H.
+// Kept per aspect-ratio (keyed by "WxH") so switching sizes can't clip or
+// hide anything — each ratio remembers its own arrangement.
+let layoutStore = {};
+
+function defaultLayoutFor(w, h) {
+  const wide = w >= h * 1.3; // landscape-ish ratios get a bit more breathing room
+  return {
+    headline:  { x: 0.055, y: wide ? 0.30 : 0.20 },
+    brand:     { x: 0.055, y: 0.08 },
+    discount:  { x: 0.80,  y: 0.14 },
+    rating:    { x: 0.945, y: 0.255 },
+    customtag: { x: 0.055, y: 0.783 },
+    coupon:    { x: 0.945, y: 0.783 },
+    info:      { x: 0.055, y: 0.910 },
+    cta:       { x: 0.895, y: 0.9225 },
+    image:     { x: 0.5,   y: 0.5, scale: 1.0 }
+  };
+}
+
+function sizeKey() { return W + 'x' + H; }
+
+function getLayout() {
+  const key = sizeKey();
+  if (!layoutStore[key]) layoutStore[key] = defaultLayoutFor(W, H);
+  return layoutStore[key];
+}
 
 // ── SIZE TABS ──
 document.querySelectorAll('.size-tab').forEach(tab => {
@@ -641,6 +768,8 @@ document.querySelectorAll('.size-tab').forEach(tab => {
     W = parseInt(tab.dataset.w, 10);
     H = parseInt(tab.dataset.h, 10);
     canvas.width = W; canvas.height = H;
+    syncZoomUI();
+    updateHandleVisibility();
     render();
   });
 });
@@ -668,12 +797,105 @@ syncColor('f-text','f-text-hex');
   document.getElementById(id).addEventListener('change', render);
 });
 ['t-discount','t-cta','t-oldprice','t-rating','t-coupon','t-customtag'].forEach(id => {
-  document.getElementById(id).addEventListener('change', render);
+  document.getElementById(id).addEventListener('change', () => { updateHandleVisibility(); render(); });
 });
-document.getElementById('f-scale').addEventListener('input', (e) => {
-  document.getElementById('scaleVal').textContent = e.target.value + '%';
+
+// ── ZOOM BAR (lives next to the preview, drives layout.image.scale) ──
+function syncZoomUI() {
+  const pct = Math.round(getLayout().image.scale * 100);
+  imgZoom.value = pct;
+  zoomVal.textContent = pct + '%';
+}
+function setZoom(pct) {
+  pct = Math.max(parseInt(imgZoom.min, 10), Math.min(parseInt(imgZoom.max, 10), pct));
+  getLayout().image.scale = pct / 100;
+  syncZoomUI();
+  render();
+}
+imgZoom.addEventListener('input', () => setZoom(parseInt(imgZoom.value, 10)));
+document.getElementById('zoomOutBtn').addEventListener('click', () => setZoom(parseInt(imgZoom.value, 10) - 10));
+document.getElementById('zoomInBtn').addEventListener('click', () => setZoom(parseInt(imgZoom.value, 10) + 10));
+document.getElementById('resetLayoutBtn').addEventListener('click', () => {
+  layoutStore[sizeKey()] = defaultLayoutFor(W, H);
+  syncZoomUI();
+  positionHandles();
   render();
 });
+
+// ── DRAG-TO-EDIT: text/badge handles ──
+// Each handle's data-key matches a key in the layout object. Dragging moves
+// that element's anchor point by the same fraction render() reads it from.
+function positionHandles() {
+  const layout = getLayout();
+  document.querySelectorAll('.handle').forEach(h => {
+    const key = h.dataset.key;
+    const pos = layout[key];
+    if (!pos) return;
+    h.style.left = (pos.x * 100) + '%';
+    h.style.top = (pos.y * 100) + '%';
+  });
+}
+
+function updateHandleVisibility() {
+  const vis = {
+    headline: true,
+    brand: true,
+    discount: document.getElementById('t-discount').checked,
+    rating: document.getElementById('t-rating').checked,
+    customtag: document.getElementById('t-customtag').checked,
+    coupon: document.getElementById('t-coupon').checked,
+    info: true,
+    cta: document.getElementById('t-cta').checked
+  };
+  document.querySelectorAll('.handle').forEach(h => {
+    h.classList.toggle('hidden-handle', !vis[h.dataset.key]);
+  });
+}
+
+function makeDraggable(el, onMove, clampMin, clampMax) {
+  clampMin = clampMin === undefined ? 0 : clampMin;
+  clampMax = clampMax === undefined ? 1 : clampMax;
+  el.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    el.setPointerCapture(e.pointerId);
+    el.classList.add('dragging');
+    const rect = editLayer.getBoundingClientRect();
+    const move = (ev) => {
+      const fx = Math.max(clampMin, Math.min(clampMax, (ev.clientX - rect.left) / rect.width));
+      const fy = Math.max(clampMin, Math.min(clampMax, (ev.clientY - rect.top) / rect.height));
+      onMove(fx, fy);
+    };
+    move(e);
+    const up = (ev) => {
+      el.releasePointerCapture(e.pointerId);
+      el.classList.remove('dragging');
+      el.removeEventListener('pointermove', move);
+      el.removeEventListener('pointerup', up);
+    };
+    el.addEventListener('pointermove', move);
+    el.addEventListener('pointerup', up);
+  });
+}
+
+document.querySelectorAll('.handle').forEach(h => {
+  makeDraggable(h, (fx, fy) => {
+    const key = h.dataset.key;
+    getLayout()[key].x = fx;
+    getLayout()[key].y = fy;
+    h.style.left = (fx * 100) + '%';
+    h.style.top = (fy * 100) + '%';
+    render();
+  });
+});
+
+// Dragging the photo itself pans it (image.x/y are the image's own center
+// point, not clamped to 0–1, so the photo can be pushed partly off-canvas
+// on purpose — full manual control rather than us guessing what fits).
+makeDraggable(dragPan, (fx, fy) => {
+  getLayout().image.x = fx;
+  getLayout().image.y = fy;
+  render();
+}, -0.4, 1.4);
 
 // ── UPLOAD HANDLING ──
 uploadZone.addEventListener('click', () => fileInput.click());
@@ -834,9 +1056,10 @@ function drawPill(x, y, h, text, bg, fg, font, anchorRight) {
 
 function render() {
   ctx.clearRect(0, 0, W, H);
+  const layout = getLayout();
 
   const bg1 = val('f-bg1'), bg2 = val('f-bg2'), accent = val('f-accent'), textColor = val('f-text');
-  const barH = H * 0.155; // bottom price/CTA bar height — referenced by both the product-image safe area and the bar itself
+  const barH = H * 0.155; // decorative bottom-bar height; the info/CTA text is independently draggable now
 
   // Background gradient
   const grad = ctx.createLinearGradient(0, 0, W, H);
@@ -854,7 +1077,7 @@ function render() {
 
   const bigText = val('f-bigtext').toUpperCase() || 'SALE';
 
-  // Ghost repeated text texture (rotated)
+  // Ghost repeated text texture (rotated) — decorative, not draggable
   ctx.save();
   ctx.translate(W*0.5, H*0.42);
   ctx.rotate(-8 * Math.PI/180);
@@ -868,56 +1091,19 @@ function render() {
   ctx.restore();
   ctx.globalAlpha = 1;
 
-  // Big headline text top
-  ctx.save();
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'alphabetic';
-  const headSize = fitFont(ctx, bigText, "'Barlow Condensed', sans-serif", 900, W*0.9, Math.min(W,H)*0.24, 30);
-  ctx.font = `900 ${headSize}px 'Barlow Condensed', sans-serif`;
-  ctx.fillStyle = textColor;
-  ctx.fillText(bigText, W*0.055, H*0.20);
-  ctx.restore();
-
-  // Brand mark top
-  ctx.save();
-  ctx.font = `700 ${W*0.028}px 'Inter', sans-serif`;
-  ctx.fillStyle = textColor;
-  ctx.globalAlpha = 0.9;
-  ctx.fillText((val('f-brand') || 'BRAND').toUpperCase(), W*0.055, H*0.08);
-  ctx.restore();
-
-  // Product image — sized to nearly fill the canvas edge-to-edge, matching
-  // the reference (product is the dominant element; the bottom bar's dark
-  // overlay sits semi-transparently ON TOP of it rather than the image
-  // shrinking to avoid it). Still hard-clamped so it can never actually
-  // draw outside the canvas, no matter the aspect ratio or scale slider.
+  // Product image — drawn early (behind text/badges) but its position/scale
+  // come entirely from layout.image, set by dragging the photo + zoom bar.
   if (productImg) {
-    const scalePct = parseInt(val('f-scale'), 10) / 100;
-    const safeTop = H * 0.06;
-    const safeBottom = H * 0.98;
-    const safeLeft = W * 0.03;
-    const safeRight = W * 0.97;
-    const safeW = safeRight - safeLeft;
-    const safeH = safeBottom - safeTop;
-
-    // The slider scales the box freely — no upper cap. Above 100% the image
-    // grows past the safe area and past the canvas edges on purpose (a
-    // centered "zoom crop" look); the canvas simply clips whatever falls
-    // outside its own bounds, so nothing extra is needed to contain it.
-    const boxW = safeW * scalePct;
-    const boxH = safeH * scalePct;
-
+    const safeW = W * 0.94, safeH = H * 0.92;
+    const boxW = safeW * layout.image.scale;
+    const boxH = safeH * layout.image.scale;
     const ratio = Math.min(boxW / productImg.width, boxH / productImg.height);
     const drawW = productImg.width * ratio;
     const drawH = productImg.height * ratio;
-
-    // Centered by default. Only pull the image back inside the canvas when
-    // it's smaller than the canvas on that axis — when it's larger (zoomed
-    // in), let it overflow symmetrically instead of snapping to one edge.
-    let dx = safeLeft + (safeW - drawW) / 2;
-    let dy = safeTop + (safeH - drawH) / 2;
-    dx = drawW <= W ? Math.max(0, Math.min(dx, W - drawW)) : (W - drawW) / 2;
-    dy = drawH <= H ? Math.max(0, Math.min(dy, H - drawH)) : (H - drawH) / 2;
+    const centerX = layout.image.x * W;
+    const centerY = layout.image.y * H;
+    const dx = centerX - drawW / 2;
+    const dy = centerY - drawH / 2;
 
     ctx.save();
     ctx.shadowColor = 'rgba(0,0,0,0.45)';
@@ -938,12 +1124,30 @@ function render() {
     ctx.restore();
   }
 
-  // Discount badge
+  // Big headline text — anchor is left/baseline, position from layout.headline
+  ctx.save();
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+  const headSize = fitFont(ctx, bigText, "'Barlow Condensed', sans-serif", 900, W*0.9, Math.min(W,H)*0.24, 30);
+  ctx.font = `900 ${headSize}px 'Barlow Condensed', sans-serif`;
+  ctx.fillStyle = textColor;
+  ctx.fillText(bigText, layout.headline.x * W, layout.headline.y * H);
+  ctx.restore();
+
+  // Brand mark — anchor left/baseline, position from layout.brand
+  ctx.save();
+  ctx.font = `700 ${W*0.028}px 'Inter', sans-serif`;
+  ctx.fillStyle = textColor;
+  ctx.globalAlpha = 0.9;
+  ctx.fillText((val('f-brand') || 'BRAND').toUpperCase(), layout.brand.x * W, layout.brand.y * H);
+  ctx.restore();
+
+  // Discount badge — anchor is the circle's center, position from layout.discount
   const discount = val('f-discount');
   const showDiscount = document.getElementById('t-discount').checked && !!discount;
   if (showDiscount) {
     ctx.save();
-    const bx = W*0.80, by = H*0.14, r = Math.min(W,H)*0.105;
+    const bx = layout.discount.x * W, by = layout.discount.y * H, r = Math.min(W,H)*0.105;
     ctx.translate(bx, by);
     ctx.rotate(12 * Math.PI/180);
     ctx.beginPath();
@@ -966,8 +1170,7 @@ function render() {
     ctx.restore();
   }
 
-  // Rating badge — stars + review count, sits just under the discount circle
-  // (or higher up if the discount badge is hidden)
+  // Rating badge — anchor is the pill's top-right corner, position from layout.rating
   if (document.getElementById('t-rating').checked) {
     const stars = parseFloat(val('f-rating-stars')) || 5;
     const count = val('f-rating-count');
@@ -975,8 +1178,8 @@ function render() {
     const starStr = '★'.repeat(filled) + '☆'.repeat(Math.max(0, 5 - filled));
 
     const pillH = Math.min(W, H) * 0.05;
-    const pillY = showDiscount ? H * 0.255 : H * 0.10;
-    const pillRightX = W * 0.945;
+    const pillY = layout.rating.y * H;
+    const pillRightX = layout.rating.x * W;
     const starFont = `700 ${pillH * 0.52}px Arial`;
     const countFont = `600 ${pillH * 0.4}px 'Inter', sans-serif`;
 
@@ -1005,22 +1208,21 @@ function render() {
     ctx.restore();
   }
 
-  // Custom text tile + coupon chip — float just above the bottom bar, one on
-  // each side, mirroring BigAtom's small info tags (e.g. "New Collection")
+  // Custom text tile + coupon chip — each independently draggable now.
+  // Custom tag anchors top-left, coupon anchors top-right.
   {
     const chipH = H * 0.044;
-    const chipY = H - barH - chipH - H * 0.018;
     const chipFont = `700 ${chipH * 0.4}px 'JetBrains Mono', monospace`;
 
     if (document.getElementById('t-customtag').checked && val('f-customtag')) {
-      drawPill(W * 0.055, chipY, chipH, val('f-customtag').toUpperCase(), accent, '#fff', chipFont, false);
+      drawPill(layout.customtag.x * W, layout.customtag.y * H, chipH, val('f-customtag').toUpperCase(), accent, '#fff', chipFont, false);
     }
     if (document.getElementById('t-coupon').checked && val('f-coupon')) {
-      drawPill(W * 0.945, chipY, chipH, 'CODE: ' + val('f-coupon').toUpperCase(), 'rgba(255,255,255,0.94)', '#1a1410', chipFont, true);
+      drawPill(layout.coupon.x * W, layout.coupon.y * H, chipH, 'CODE: ' + val('f-coupon').toUpperCase(), 'rgba(255,255,255,0.94)', '#1a1410', chipFont, true);
     }
   }
 
-  // Bottom bar
+  // Bottom bar — decorative translucent strip; the text on top of it moves independently
   ctx.save();
   ctx.fillStyle = 'rgba(0,0,0,0.28)';
   ctx.fillRect(0, H - barH, W, barH);
@@ -1031,29 +1233,34 @@ function render() {
   const oldPrice = val('f-oldprice');
   const cta = val('f-cta');
 
+  // Product name / price / original price — one draggable group, anchored
+  // at the product-name baseline (layout.info); price and old-price are
+  // offset from that same anchor so the group always moves together.
   ctx.save();
   ctx.textAlign = 'left';
+  const infoX = layout.info.x * W;
+  const infoY = layout.info.y * H;
   ctx.fillStyle = textColor;
   ctx.font = `700 ${W*0.028}px 'Inter', sans-serif`;
-  ctx.fillText(product, W*0.055, H - barH*0.58);
+  ctx.fillText(product, infoX, infoY);
 
-  let priceX = W*0.055;
+  const priceY = infoY + barH * 0.38;
   ctx.font = `900 ${W*0.042}px 'Barlow Condensed', sans-serif`;
   ctx.fillStyle = accent;
-  ctx.fillText(price, priceX, H - barH*0.20);
+  ctx.fillText(price, infoX, priceY);
   const priceW = ctx.measureText(price).width;
 
   if (oldPrice && document.getElementById('t-oldprice').checked) {
+    const oldPriceY = infoY + barH * 0.34;
     ctx.font = `500 ${W*0.024}px 'Inter', sans-serif`;
     ctx.fillStyle = textColor;
     ctx.globalAlpha = 0.55;
-    const ox = priceX + priceW + W*0.02;
-    const oy = H - barH*0.24;
-    ctx.fillText(oldPrice, ox, oy);
+    const ox = infoX + priceW + W*0.02;
+    ctx.fillText(oldPrice, ox, oldPriceY);
     const ow = ctx.measureText(oldPrice).width;
     ctx.beginPath();
-    ctx.moveTo(ox, oy - W*0.008);
-    ctx.lineTo(ox + ow, oy - W*0.008);
+    ctx.moveTo(ox, oldPriceY - W*0.008);
+    ctx.lineTo(ox + ow, oldPriceY - W*0.008);
     ctx.strokeStyle = textColor;
     ctx.lineWidth = 2;
     ctx.stroke();
@@ -1061,20 +1268,22 @@ function render() {
   }
   ctx.restore();
 
-  // CTA button
+  // CTA button — anchor is its own center, position from layout.cta
   if (cta && document.getElementById('t-cta').checked) {
     ctx.save();
     ctx.font = `700 ${W*0.024}px 'Inter', sans-serif`;
     const ctaW = ctx.measureText(cta).width + W*0.07;
     const ctaH = H*0.06;
-    const ctaX = W*0.945 - ctaW;
-    const ctaY = H - barH*0.5 - ctaH/2;
+    const ctaCenterX = layout.cta.x * W;
+    const ctaCenterY = layout.cta.y * H;
+    const ctaX = ctaCenterX - ctaW / 2;
+    const ctaY = ctaCenterY - ctaH / 2;
     ctx.fillStyle = accent;
     ctx.fillRect(ctaX, ctaY, ctaW, ctaH);
     ctx.fillStyle = '#fff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(cta + ' →', ctaX + ctaW/2, ctaY + ctaH/2 + 1);
+    ctx.fillText(cta + ' →', ctaCenterX, ctaCenterY + 1);
     ctx.restore();
   }
 }
@@ -1088,6 +1297,9 @@ downloadBtn.addEventListener('click', () => {
 });
 
 // Initial render (waits for web fonts to avoid fallback-font flash)
+syncZoomUI();
+updateHandleVisibility();
+positionHandles();
 document.fonts.ready.then(render);
 render();
 </script>
