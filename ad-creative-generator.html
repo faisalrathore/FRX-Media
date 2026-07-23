@@ -481,6 +481,21 @@
   }
   .zoom-reset:hover { color: #fff; border-color: var(--red); background: rgba(196,28,28,0.15); }
 
+  .platform-tabs { display: flex; gap: 6px; padding: 0 24px 12px; }
+  .platform-tab {
+    padding: 9px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(245,240,232,0.55); cursor: pointer;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .platform-tab:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+  .platform-tab.active { background: #fff; color: var(--dark); border-color: #fff; }
+
   .size-tabs { display: flex; gap: 6px; padding: 0 24px 18px; flex-wrap: wrap; }
   .size-tab {
     padding: 8px 14px;
@@ -493,6 +508,7 @@
   }
   .size-tab:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
   .size-tab.active { background: var(--red); color: #fff; border-color: var(--red); }
+  .size-tab.platform-hidden { display: none; }
 
   .download-btn {
     display: block; width: calc(100% - 48px);
@@ -796,11 +812,18 @@
         <div class="result-status"><span class="result-status-dot"></span>Renders In-Browser</div>
       </div>
 
+      <div class="platform-tabs">
+        <div class="platform-tab active" data-platform="meta">Meta</div>
+        <div class="platform-tab" data-platform="linkedin">LinkedIn</div>
+      </div>
+
       <div class="size-tabs">
-        <div class="size-tab active" data-w="1080" data-h="1080">Square 1:1</div>
-        <div class="size-tab" data-w="1080" data-h="1350">Portrait 4:5</div>
-        <div class="size-tab" data-w="1200" data-h="628">Landscape 1.91:1</div>
-        <div class="size-tab" data-w="1080" data-h="1920">Story 9:16</div>
+        <div class="size-tab active" data-platform="meta" data-w="1080" data-h="1080">Feed Square 1:1</div>
+        <div class="size-tab" data-platform="meta" data-w="1080" data-h="1350">Feed Portrait 4:5</div>
+        <div class="size-tab" data-platform="meta" data-w="1200" data-h="628">Link Ad 1.91:1</div>
+        <div class="size-tab" data-platform="meta" data-w="1080" data-h="1920">Stories/Reels 9:16</div>
+        <div class="size-tab platform-hidden" data-platform="linkedin" data-w="1200" data-h="627">Single Image 1.91:1</div>
+        <div class="size-tab platform-hidden" data-platform="linkedin" data-w="1200" data-h="1200">Square 1:1</div>
       </div>
 
       <div class="canvas-wrap">
@@ -928,17 +951,35 @@ function getLayout() {
 }
 
 // ── SIZE TABS ──
+function selectSizeTab(tab) {
+  document.querySelectorAll('.size-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  W = parseInt(tab.dataset.w, 10);
+  H = parseInt(tab.dataset.h, 10);
+  canvas.width = W; canvas.height = H;
+  syncZoomUI();
+  updateHandleVisibility();
+  syncSizeSliders();
+  render();
+}
 document.querySelectorAll('.size-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.size-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    W = parseInt(tab.dataset.w, 10);
-    H = parseInt(tab.dataset.h, 10);
-    canvas.width = W; canvas.height = H;
-    syncZoomUI();
-    updateHandleVisibility();
-    syncSizeSliders();
-    render();
+  tab.addEventListener('click', () => selectSizeTab(tab));
+});
+
+// ── PLATFORM TABS (Meta / LinkedIn) ──
+document.querySelectorAll('.platform-tab').forEach(pTab => {
+  pTab.addEventListener('click', () => {
+    if (pTab.classList.contains('active')) return;
+    document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+    pTab.classList.add('active');
+    const platform = pTab.dataset.platform;
+    let firstVisible = null;
+    document.querySelectorAll('.size-tab').forEach(sTab => {
+      const match = sTab.dataset.platform === platform;
+      sTab.classList.toggle('platform-hidden', !match);
+      if (match && !firstVisible) firstVisible = sTab;
+    });
+    if (firstVisible) selectSizeTab(firstVisible);
   });
 });
 
