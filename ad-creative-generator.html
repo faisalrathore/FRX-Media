@@ -371,13 +371,16 @@
   }
   .drag-pan:active { cursor: grabbing; }
   /* A Canva-style 4-arrow move handle. Anchored to the element's true
-     position but visually offset straight down by 20px so it floats just
-     below the text/badge instead of sitting on top of it. Scroll on it to
-     resize that element (see JS); drag to reposition. */
+     position but visually offset to whichever side has empty space, so it
+     floats beside the text/badge instead of on top of it — left-anchored
+     elements (text extends right) get pushed left; right-anchored badges
+     (pill extends left) get pushed right instead, via data-side. Scroll on
+     it to resize that element (see JS); drag to reposition. */
   .handle {
     position: absolute; z-index: 3;
     width: 26px; height: 26px;
-    transform: translate(-50%, 20px);
+    --tx: 16px; --ty: -50%;
+    transform: translate(var(--tx), var(--ty)) scale(1);
     border-radius: 7px;
     background: rgba(20,16,12,0.82);
     border: 1.5px solid rgba(255,255,255,0.45);
@@ -390,19 +393,21 @@
     background-size: 15px 15px;
     transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
   }
+  .handle[data-side="left"] { --tx: calc(-100% - 16px); }
+  .handle[data-side="right"] { --tx: 16px; }
   .handle::before {
     content: ''; position: absolute; inset: -6px; /* slightly larger invisible hit area */
   }
   .handle:hover {
     background-color: var(--red);
     border-color: #fff;
-    transform: translate(-50%, 20px) scale(1.1);
+    transform: translate(var(--tx), var(--ty)) scale(1.1);
   }
   .handle:active, .handle.dragging {
     cursor: grabbing;
     background-color: var(--red2);
     border-color: #fff;
-    transform: translate(-50%, 20px) scale(1.1);
+    transform: translate(var(--tx), var(--ty)) scale(1.1);
   }
   .handle.hidden-handle { display: none; }
 
@@ -811,14 +816,14 @@
           <div class="edit-layer" id="editLayer">
             <div class="drag-pan" id="dragPan" title="Drag to reposition the photo"></div>
             <div class="scale-readout" id="scaleReadout"></div>
-            <div class="handle" data-key="headline" title="Drag: headline text"></div>
-            <div class="handle" data-key="brand" title="Drag: brand name"></div>
-            <div class="handle" data-key="discount" title="Drag: discount badge"></div>
-            <div class="handle" data-key="rating" title="Drag: rating badge"></div>
-            <div class="handle" data-key="customtag" title="Drag: custom text tile"></div>
-            <div class="handle" data-key="coupon" title="Drag: coupon chip"></div>
-            <div class="handle" data-key="info" title="Drag: product name / price block"></div>
-            <div class="handle" data-key="cta" title="Drag: CTA button"></div>
+            <div class="handle" data-key="headline" data-side="left" title="Drag: headline text"></div>
+            <div class="handle" data-key="brand" data-side="left" title="Drag: brand name"></div>
+            <div class="handle" data-key="discount" data-side="right" title="Drag: discount badge"></div>
+            <div class="handle" data-key="rating" data-side="right" title="Drag: rating badge"></div>
+            <div class="handle" data-key="customtag" data-side="left" title="Drag: custom text tile"></div>
+            <div class="handle" data-key="coupon" data-side="right" title="Drag: coupon chip"></div>
+            <div class="handle" data-key="info" data-side="left" title="Drag: product name / price block"></div>
+            <div class="handle" data-key="cta" data-side="right" title="Drag: CTA button"></div>
           </div>
         </div>
       </div>
