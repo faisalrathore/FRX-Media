@@ -726,7 +726,17 @@ removeBgBtn.addEventListener('click', async () => {
     // make this import fail. If it does, we tell the user and leave their
     // uploaded photo untouched, instead of breaking the rest of the tool.
     const mod = await import("https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/index.mjs");
-    const imglyRemoveBackground = mod.default;
+    // The docs say `export default`, but be defensive about exactly how the
+    // published bundle exposes it rather than assuming — if this ever
+    // changes upstream we want a clear error, not a silent "not a function".
+    const imglyRemoveBackground =
+      (typeof mod.default === 'function' && mod.default) ||
+      (typeof mod.removeBackground === 'function' && mod.removeBackground) ||
+      (typeof mod === 'function' && mod) ||
+      null;
+    if (!imglyRemoveBackground) {
+      throw new Error('removeBackground function not found on module. Exported keys: [' + Object.keys(mod).join(', ') + ']');
+    }
     const blob = await imglyRemoveBackground(rawFile, {
       // 'cpu' avoids relying on WebGPU, which is inconsistently supported
       // across Safari versions and is a common silent-failure point.
