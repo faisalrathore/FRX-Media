@@ -534,8 +534,12 @@
   <div class="footer-copy">© FRX Media</div>
 </footer>
 
-<script type="module">
-import imglyRemoveBackground from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/index.mjs";
+<script>
+// NOTE: this is a classic (non-module) script on purpose. All UI wiring below
+// must work even if the background-removal library fails to load (blocked
+// network, offline, opened via file:// instead of a server, etc). The library
+// is loaded lazily via dynamic import() inside handleFile(), wrapped in its
+// own try/catch, so a failure there can never take down the rest of the tool.
 
 const canvas = document.getElementById('adCanvas');
 const ctx = canvas.getContext('2d');
@@ -595,10 +599,39 @@ fileInput.addEventListener('change', (e) => {
   if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
 });
 
+function loadPlainImage(file) {
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    productImg = img;
+    uploadStatus.classList.remove('show');
+    downloadBtn.disabled = false;
+    render();
+  };
+  img.onerror = () => {
+    uploadStatus.textContent = 'Could not read that file — try a JPG or PNG.';
+  };
+  img.src = url;
+}
+
 async function handleFile(file) {
+  uploadStatus.classList.remove('show');
+  uploadStatus.textContent = 'Removing background…';
+  // rebuild the loading bar (textContent above wiped it out)
+  const bar = document.createElement('div');
+  bar.className = 'bar';
+  bar.innerHTML = '<div class="bar-fill"></div>';
+  uploadStatus.appendChild(bar);
   uploadStatus.classList.add('show');
   downloadBtn.disabled = true;
+
   try {
+    // Loaded lazily and defensively — CDN/network issues, ad blockers, or
+    // opening this file directly (file://) instead of via a server can all
+    // make this import fail. If it does, we fall straight back to using the
+    // uploaded photo as-is so the rest of the tool keeps working.
+    const mod = await import("https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/index.mjs");
+    const imglyRemoveBackground = mod.default;
     const blob = await imglyRemoveBackground(file, { output: { format: 'image/png' } });
     const url = URL.createObjectURL(blob);
     const img = new Image();
@@ -608,14 +641,12 @@ async function handleFile(file) {
       downloadBtn.disabled = false;
       render();
     };
+    img.onerror = () => loadPlainImage(file);
     img.src = url;
   } catch (err) {
-    console.error(err);
-    uploadStatus.textContent = 'Background removal failed — using original image.';
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => { productImg = img; downloadBtn.disabled = false; render(); };
-    img.src = url;
+    console.error('Background removal unavailable, using original image:', err);
+    uploadStatus.textContent = 'Background removal unavailable — using original image.';
+    loadPlainImage(file);
   }
 }
 
