@@ -1474,6 +1474,67 @@ function fitFont(ctx, text, family, weight, maxWidth, maxSize, minSize) {
   return size;
 }
 
+// Average luminance of a rectangular canvas region (sampled sparsely for
+// speed) — used to decide whether text sitting on this spot needs a dark
+// outline (because the patch under it is light) or a dark glow (because the
+// patch is already dark). Wrapped in try/catch since getImageData can throw
+// on some browsers if the canvas is unexpectedly tainted.
+function sampleLuminance(x, y, w, h) {
+  try {
+    x = Math.max(0, Math.round(x)); y = Math.max(0, Math.round(y));
+    w = Math.max(1, Math.round(Math.min(w, W - x)));
+    h = Math.max(1, Math.round(Math.min(h, H - y)));
+    if (w <= 0 || h <= 0) return 128;
+    const data = ctx.getImageData(x, y, w, h).data;
+    let sum = 0, count = 0;
+    for (let i = 0; i < data.length; i += 4 * 11) { // sample every ~11th pixel
+      sum += 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
+      count++;
+    }
+    return count ? sum / count : 128;
+  } catch (e) {
+    return 128; // if sampling fails, fall back to "light background" behavior
+  }
+}
+
+// Draws text that automatically adapts to whatever is behind it — samples
+// the pixels already painted under the text's own bounding box (background
+// gradient, product photo, anything) and adds either a dark outline + soft
+// shadow (for light patches) or a dark glow (for dark patches), so headline,
+// brand, and price text stays readable no matter what image gets uploaded.
+function smartText(text, x, y) {
+  if (!text) return;
+  ctx.save();
+  const fontSizeMatch = /(\d+(?:\.\d+)?)px/.exec(ctx.font);
+  const fontSize = fontSizeMatch ? parseFloat(fontSizeMatch[1]) : 24;
+  const width = ctx.measureText(text).width;
+  let boxX = x;
+  if (ctx.textAlign === 'center') boxX = x - width / 2;
+  else if (ctx.textAlign === 'right') boxX = x - width;
+  let boxY = y - fontSize * 0.85;
+  if (ctx.textBaseline === 'middle') boxY = y - fontSize * 0.5;
+  const lum = sampleLuminance(boxX, boxY, Math.max(1, width), fontSize * 1.25);
+  const onLight = lum > 140;
+  const savedFill = ctx.fillStyle;
+  if (onLight) {
+    ctx.lineJoin = 'round';
+    ctx.miterLimit = 2;
+    ctx.lineWidth = Math.max(1.5, fontSize * 0.075);
+    ctx.strokeStyle = 'rgba(0,0,0,0.55)';
+    ctx.shadowColor = 'rgba(0,0,0,0.45)';
+    ctx.shadowBlur = fontSize * 0.16;
+    ctx.shadowOffsetY = fontSize * 0.03;
+    ctx.strokeText(text, x, y);
+  } else {
+    ctx.shadowColor = 'rgba(0,0,0,0.8)';
+    ctx.shadowBlur = fontSize * 0.3;
+    ctx.shadowOffsetY = fontSize * 0.05;
+  }
+  ctx.fillStyle = savedFill;
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
 function fillRoundRect(x, y, w, h, r) {
   if (ctx.roundRect) {
     ctx.beginPath();
@@ -1580,7 +1641,7 @@ function render() {
   const headSize = fitFont(ctx, bigText, "'Barlow Condensed', sans-serif", 900, W*0.9, Math.min(W,H)*0.24, 30) * sc('headline');
   ctx.font = `900 ${headSize}px 'Barlow Condensed', sans-serif`;
   ctx.fillStyle = textColor;
-  ctx.fillText(bigText, layout.headline.x * W, layout.headline.y * H);
+  smartText(bigText, layout.headline.x * W, layout.headline.y * H);
   ctx.restore();
 
   // Brand mark — anchor left/baseline, position from layout.brand
@@ -1588,7 +1649,7 @@ function render() {
   ctx.font = `700 ${W*0.028 * sc('brand')}px 'Inter', sans-serif`;
   ctx.fillStyle = textColor;
   ctx.globalAlpha = 0.9;
-  ctx.fillText((val('f-brand') || 'BRAND').toUpperCase(), layout.brand.x * W, layout.brand.y * H);
+  smartText((val('f-brand') || 'BRAND').toUpperCase(), layout.brand.x * W, layout.brand.y * H);
   ctx.restore();
 
   // Discount badge — anchor is the circle's center, position from layout.discount
@@ -1693,12 +1754,12 @@ function render() {
   const infoScale = sc('info');
   ctx.fillStyle = textColor;
   ctx.font = `700 ${W*0.028 * infoScale}px 'Inter', sans-serif`;
-  ctx.fillText(product, infoX, infoY);
+  smartText(product, infoX, infoY);
 
   const priceY = infoY + barH * 0.38 * infoScale;
   ctx.font = `900 ${W*0.042 * infoScale}px 'Barlow Condensed', sans-serif`;
   ctx.fillStyle = accent;
-  ctx.fillText(price, infoX, priceY);
+  smartText(price, infoX, priceY);
   const priceW = ctx.measureText(price).width;
 
   if (oldPrice && document.getElementById('t-oldprice').checked) {
@@ -1707,7 +1768,7 @@ function render() {
     ctx.fillStyle = textColor;
     ctx.globalAlpha = 0.55;
     const ox = infoX + priceW + W*0.02;
-    ctx.fillText(oldPrice, ox, oldPriceY);
+    smartText(oldPrice, ox, oldPriceY);
     const ow = ctx.measureText(oldPrice).width;
     ctx.beginPath();
     ctx.moveTo(ox, oldPriceY - W*0.008);
