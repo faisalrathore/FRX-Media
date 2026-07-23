@@ -401,27 +401,28 @@
     width: 32px; height: 32px;
     transform: translate(-50%, 14px) scale(1);
     border-radius: 50%;
-    background: #ffffff;
+    background: transparent;
     border: none;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.06);
+    box-shadow: none;
     cursor: grab; touch-action: none;
     user-select: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23161310' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 9 2 12 5 15'/%3E%3Cpolyline points='9 5 12 2 15 5'/%3E%3Cpolyline points='15 19 12 22 9 19'/%3E%3Cpolyline points='19 9 22 12 19 15'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cline x1='12' y1='2' x2='12' y2='22'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 9 2 12 5 15'/%3E%3Cpolyline points='9 5 12 2 15 5'/%3E%3Cpolyline points='15 19 12 22 9 19'/%3E%3Cpolyline points='19 9 22 12 19 15'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cline x1='12' y1='2' x2='12' y2='22'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 16px 16px;
-    transition: box-shadow 0.15s, transform 0.15s;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.85)) drop-shadow(0 0 3px rgba(0,0,0,0.5));
+    transition: filter 0.15s, transform 0.15s;
   }
   .handle::before {
     content: ''; position: absolute; inset: -6px; /* slightly larger invisible hit area */
   }
   .handle:hover {
-    box-shadow: 0 3px 10px rgba(0,0,0,0.4), 0 0 0 2px var(--red);
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.9)) drop-shadow(0 0 5px var(--red));
     transform: translate(-50%, 14px) scale(1.08);
   }
   .handle:active, .handle.dragging {
     cursor: grabbing;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.4), 0 0 0 2px var(--red2);
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.9)) drop-shadow(0 0 5px var(--red2));
     transform: translate(-50%, 14px) scale(1.08);
   }
   .handle.hidden-handle { display: none; }
