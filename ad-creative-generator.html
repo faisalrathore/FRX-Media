@@ -392,51 +392,29 @@
     cursor: grab; touch-action: none;
   }
   .drag-pan:active { cursor: grabbing; }
-  /* Canva-style floating move button: a plain white circle with a dark
-     4-arrow icon, centered horizontally on the element and floating just
-     below it with a small gap — matches Canva's own move handle exactly.
-     Scroll on it to resize that element (see JS); drag to reposition. */
+  /* No floating button at all — each handle IS the text/badge's own hit
+     area, sized and positioned to sit directly over what it moves (like the
+     photo's drag-pan). Fully invisible by default; a faint dashed outline
+     only appears on hover/drag so it stays discoverable without a button
+     covering the artwork. anchor-left/right/center controls which edge of
+     the box lines up with the element's own draw anchor (set in JS). */
   .handle {
     position: absolute; z-index: 3;
-    width: 20px; height: 20px;
-    /* sits just to the right of the element's anchor point, vertically
-       centered on it, instead of floating below it */
-    transform: translate(10px, -50%) scale(1);
-    border-radius: 50%;
+    transform: translate(-50%, -50%);
     background: transparent;
     border: none;
-    box-shadow: none;
     cursor: grab; touch-action: none;
     user-select: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 9 2 12 5 15'/%3E%3Cpolyline points='9 5 12 2 15 5'/%3E%3Cpolyline points='15 19 12 22 9 19'/%3E%3Cpolyline points='19 9 22 12 19 15'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cline x1='12' y1='2' x2='12' y2='22'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 12px 12px;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.85)) drop-shadow(0 0 3px rgba(0,0,0,0.5));
-    transition: filter 0.15s, transform 0.15s;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px transparent;
+    transition: background 0.15s, box-shadow 0.15s;
   }
-  /* handles anchored near the right edge of the canvas flip to the left
-     side of their anchor point so they don't hang off the canvas */
-  .handle.handle-left {
-    transform: translate(calc(-100% - 10px), -50%) scale(1);
-  }
-  .handle::before {
-    content: ''; position: absolute; inset: -8px; /* slightly larger invisible hit area */
-  }
-  .handle:hover {
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.9)) drop-shadow(0 0 5px var(--red));
-    transform: translate(10px, -50%) scale(1.15);
-  }
-  .handle.handle-left:hover {
-    transform: translate(calc(-100% - 10px), -50%) scale(1.15);
-  }
-  .handle:active, .handle.dragging {
+  .handle.anchor-left  { transform: translate(0, -50%); }
+  .handle.anchor-right { transform: translate(-100%, -50%); }
+  .handle:hover, .handle:active, .handle.dragging {
     cursor: grabbing;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.9)) drop-shadow(0 0 5px var(--red2));
-    transform: translate(10px, -50%) scale(1.15);
-  }
-  .handle.handle-left:active, .handle.handle-left.dragging {
-    transform: translate(calc(-100% - 10px), -50%) scale(1.15);
+    background: rgba(196,28,28,0.10);
+    box-shadow: 0 0 0 1px rgba(196,28,28,0.55);
   }
   .handle.hidden-handle { display: none; }
 
@@ -1127,6 +1105,36 @@ SIZE_SLIDER_KEYS.forEach(key => {
 // ── DRAG-TO-EDIT: text/badge handles ──
 // Each handle's data-key matches a key in the layout object. Dragging moves
 // that element's anchor point by the same fraction render() reads it from.
+// Each handle's hit box is sized/anchored to roughly match what it moves
+// (headline text, a badge, the CTA button, etc.) so dragging works directly
+// on top of the element itself, the same way panning works on the photo —
+// no separate floating button. w/h are CSS px against the canvas's own
+// display box (editLayer fills it 1:1), anchor picks which edge of the box
+// lines up with the element's own draw anchor from render().
+const HANDLE_BOX = {
+  headline:  { w: 320, h: 100, anchor: 'left'   },
+  brand:     { w: 220, h: 46,  anchor: 'left'   },
+  discount:  { w: 150, h: 150, anchor: 'center' },
+  rating:    { w: 240, h: 56,  anchor: 'right'  },
+  customtag: { w: 220, h: 52,  anchor: 'left'   },
+  coupon:    { w: 220, h: 52,  anchor: 'right'  },
+  info:      { w: 260, h: 100, anchor: 'left'   },
+  cta:       { w: 220, h: 66,  anchor: 'center' },
+  logo:      { w: 160, h: 160, anchor: 'center' }
+};
+
+function initHandleBoxes() {
+  document.querySelectorAll('.handle').forEach(h => {
+    const box = HANDLE_BOX[h.dataset.key];
+    if (!box) return;
+    h.style.width = box.w + 'px';
+    h.style.height = box.h + 'px';
+    h.classList.remove('anchor-left', 'anchor-right');
+    if (box.anchor === 'left') h.classList.add('anchor-left');
+    else if (box.anchor === 'right') h.classList.add('anchor-right');
+  });
+}
+
 function positionHandles() {
   const layout = getLayout();
   document.querySelectorAll('.handle').forEach(h => {
@@ -1135,9 +1143,6 @@ function positionHandles() {
     if (!pos) return;
     h.style.left = (pos.x * 100) + '%';
     h.style.top = (pos.y * 100) + '%';
-    // flip the button to the left side of its anchor once it's far enough
-    // right that a right-side button would hang off the canvas edge
-    h.classList.toggle('handle-left', pos.x > 0.82);
   });
 }
 
@@ -1202,7 +1207,6 @@ document.querySelectorAll('.handle').forEach(h => {
       getLayout()[key].y = fy;
       h.style.left = (fx * 100) + '%';
       h.style.top = (fy * 100) + '%';
-      h.classList.toggle('handle-left', fx > 0.82);
       render();
     }
   );
@@ -1847,6 +1851,7 @@ downloadBtn.addEventListener('click', () => {
 // Initial render (waits for web fonts to avoid fallback-font flash)
 syncZoomUI();
 updateHandleVisibility();
+initHandleBoxes();
 positionHandles();
 syncSizeSliders();
 document.fonts.ready.then(render);
