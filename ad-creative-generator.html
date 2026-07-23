@@ -363,6 +363,28 @@
     text-align: center; padding: 60px 20px; line-height: 1.7;
   }
 
+  /* ── UPLOAD-ONTO-CANVAS OVERLAY ── */
+  .canvas-upload-overlay {
+    position: absolute; inset: 0; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; text-align: center; padding: 20px;
+    cursor: pointer;
+    background: rgba(0,0,0,0.15);
+    border: 2px dashed rgba(255,255,255,0.25);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .canvas-upload-overlay:hover, .canvas-upload-overlay.dragover {
+    background: rgba(196,28,28,0.18); border-color: var(--red);
+  }
+  .canvas-upload-overlay.has-image { display: none; }
+  .canvas-upload-icon { font-size: 26px; color: rgba(255,255,255,0.85); }
+  .canvas-upload-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; color: #fff;
+  }
+  .canvas-upload-sub { font-size: 10.5px; color: rgba(255,255,255,0.55); }
+
   /* ── DRAG-TO-EDIT LAYER ── */
   .edit-layer { position: absolute; inset: 0; }
   .drag-pan {
@@ -847,8 +869,13 @@
       <div class="canvas-wrap">
         <div class="canvas-stage" id="canvasStage">
           <canvas id="adCanvas" width="1080" height="1080"></canvas>
+          <div class="canvas-upload-overlay" id="canvasUploadOverlay">
+            <div class="canvas-upload-icon">⇧</div>
+            <div class="canvas-upload-text">Click or drop a product photo here</div>
+            <div class="canvas-upload-sub">The creative's aspect ratio will auto-match your image</div>
+          </div>
           <div class="edit-layer" id="editLayer">
-            <div class="drag-pan" id="dragPan" title="Drag to reposition the photo"></div>
+            <div class="drag-pan" id="dragPan" title="Drag to reposition the photo — drop a new photo here anytime"></div>
             <div class="scale-readout" id="scaleReadout"></div>
             <div class="handle" data-key="headline" title="Drag: headline text"></div>
             <div class="handle" data-key="brand" title="Drag: brand name"></div>
@@ -1246,6 +1273,7 @@ removeLogoBtn.addEventListener('click', () => {
 });
 
 // ── UPLOAD HANDLING ──
+// Sidebar upload zone (Step 01)
 uploadZone.addEventListener('click', () => fileInput.click());
 uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
 uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
@@ -1257,6 +1285,47 @@ uploadZone.addEventListener('drop', (e) => {
 fileInput.addEventListener('change', (e) => {
   if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
 });
+
+// Upload directly onto the preview — click-to-upload overlay shown until a
+// photo exists, plus the whole canvas stage stays a drop target afterward so
+// dropping a new photo on top of the preview swaps it out.
+const canvasStage = document.getElementById('canvasStage');
+const canvasUploadOverlay = document.getElementById('canvasUploadOverlay');
+
+canvasUploadOverlay.addEventListener('click', () => fileInput.click());
+[canvasStage, canvasUploadOverlay].forEach(el => {
+  el.addEventListener('dragover', (e) => { e.preventDefault(); canvasUploadOverlay.classList.add('dragover'); });
+  el.addEventListener('dragleave', () => canvasUploadOverlay.classList.remove('dragover'));
+  el.addEventListener('drop', (e) => {
+    e.preventDefault();
+    canvasUploadOverlay.classList.remove('dragover');
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+});
+
+// ── AUTO-MATCH ASPECT RATIO ──
+// Picks whichever size tab's own ratio is numerically closest to the
+// uploaded image's own ratio (log-scale comparison so e.g. 2:1 and 1:2 are
+// equally "far" from 1:1), switching platform tab first if needed.
+function autoSelectClosestAspectRatio(img) {
+  if (!img.naturalWidth || !img.naturalHeight) return;
+  const imgRatio = img.naturalWidth / img.naturalHeight;
+  let best = null, bestDelta = Infinity;
+  document.querySelectorAll('.size-tab').forEach(tab => {
+    const tw = parseInt(tab.dataset.w, 10), th = parseInt(tab.dataset.h, 10);
+    if (!tw || !th) return;
+    const delta = Math.abs(Math.log(tw / th) - Math.log(imgRatio));
+    if (delta < bestDelta) { bestDelta = delta; best = tab; }
+  });
+  if (!best) return;
+  const platform = best.dataset.platform;
+  const activePlatformTab = document.querySelector('.platform-tab.active');
+  if (activePlatformTab && activePlatformTab.dataset.platform !== platform) {
+    const platformTab = document.querySelector(`.platform-tab[data-platform="${platform}"]`);
+    if (platformTab) platformTab.click(); // reveals the matching size tabs for that platform
+  }
+  selectSizeTab(best);
+}
 
 function setStatus(text, showBar) {
   uploadStatus.textContent = text;
@@ -1296,6 +1365,8 @@ function handleFile(file) {
     removeBgBtn.classList.remove('working');
     removeBgBtn.textContent = 'Remove Background (AI)';
     removeBgHint.textContent = 'Cuts the product out onto a transparent layer — runs locally in your browser, nothing is uploaded.';
+    canvasUploadOverlay.classList.add('has-image');
+    autoSelectClosestAspectRatio(img); // also calls render() via selectSizeTab
     render();
   });
 }
