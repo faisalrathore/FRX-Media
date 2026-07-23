@@ -268,6 +268,20 @@
   }
   .toggle-field { padding: 14px 16px; background: var(--parchment); border: 1px solid var(--border); margin-bottom: 14px; }
   .toggle-field .field-row .field label { margin-bottom: 4px; }
+
+  .size-row {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 8px;
+  }
+  .size-row label {
+    font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); flex-shrink: 0; margin-bottom: 0; width: 34px;
+  }
+  .size-row input[type=range] { flex: 1; }
+  .size-row .size-val {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--mid); width: 36px; text-align: right; flex-shrink: 0;
+  }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   select, input[type=text], input[type=range] {
     width: 100%; padding: 11px 13px;
@@ -356,33 +370,39 @@
     cursor: grab; touch-action: none;
   }
   .drag-pan:active { cursor: grabbing; }
-  /* Small and mostly-transparent by default so they don't sit on top of and
-     obscure the text/badge they control — they light up on hover so they're
-     still easy to find, but stay out of the way otherwise. A ring rather
-     than a filled dot keeps even the small size easy to grab precisely. */
+  /* A Canva-style 4-arrow move handle. Anchored to the element's true
+     position but visually offset straight down by 20px so it floats just
+     below the text/badge instead of sitting on top of it. Scroll on it to
+     resize that element (see JS); drag to reposition. */
   .handle {
     position: absolute; z-index: 3;
-    width: 12px; height: 12px;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: rgba(196,28,28,0.35);
-    border: 1.5px solid rgba(255,255,255,0.75);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    width: 26px; height: 26px;
+    transform: translate(-50%, 20px);
+    border-radius: 7px;
+    background: rgba(20,16,12,0.82);
+    border: 1.5px solid rgba(255,255,255,0.45);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.45);
     cursor: grab; touch-action: none;
     user-select: none;
-    transition: all 0.15s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 9 2 12 5 15'/%3E%3Cpolyline points='9 5 12 2 15 5'/%3E%3Cpolyline points='15 19 12 22 9 19'/%3E%3Cpolyline points='19 9 22 12 19 15'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cline x1='12' y1='2' x2='12' y2='22'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 15px 15px;
+    transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
   }
   .handle::before {
-    content: ''; position: absolute; inset: -9px; /* larger invisible hit area than the visible dot */
+    content: ''; position: absolute; inset: -6px; /* slightly larger invisible hit area */
   }
   .handle:hover {
-    width: 16px; height: 16px;
-    background: var(--red2); border-color: #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.55);
+    background-color: var(--red);
+    border-color: #fff;
+    transform: translate(-50%, 20px) scale(1.1);
   }
   .handle:active, .handle.dragging {
-    cursor: grabbing; width: 16px; height: 16px;
-    background: #fff; border-color: var(--red);
+    cursor: grabbing;
+    background-color: var(--red2);
+    border-color: #fff;
+    transform: translate(-50%, 20px) scale(1.1);
   }
   .handle.hidden-handle { display: none; }
 
@@ -620,22 +640,42 @@
       <div class="field">
         <label>Big Background Text</label>
         <input type="text" id="f-bigtext" placeholder="e.g. SALE" value="SALE" maxlength="14">
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-headline" min="40" max="300" value="100">
+          <span class="size-val" id="szv-headline">100%</span>
+        </div>
       </div>
 
       <div class="field-row">
         <div class="field">
           <label class="toggle-label"><input type="checkbox" id="t-discount" checked><span>Discount Badge</span></label>
           <input type="text" id="f-discount" placeholder="e.g. 40% OFF" value="40% OFF" maxlength="12">
+          <div class="size-row">
+            <label>Size</label>
+            <input type="range" id="sz-discount" min="40" max="300" value="100">
+            <span class="size-val" id="szv-discount">100%</span>
+          </div>
         </div>
         <div class="field">
           <label class="toggle-label"><input type="checkbox" id="t-cta" checked><span>CTA Button</span></label>
           <input type="text" id="f-cta" placeholder="e.g. Shop Now" value="Shop Now" maxlength="16">
+          <div class="size-row">
+            <label>Size</label>
+            <input type="range" id="sz-cta" min="40" max="300" value="100">
+            <span class="size-val" id="szv-cta">100%</span>
+          </div>
         </div>
       </div>
 
       <div class="field">
         <label>Brand Name</label>
         <input type="text" id="f-brand" placeholder="e.g. Nike" value="Your Brand" maxlength="20">
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-brand" min="40" max="300" value="100">
+          <span class="size-val" id="szv-brand">100%</span>
+        </div>
       </div>
 
       <div class="field-row">
@@ -652,6 +692,12 @@
       <div class="field">
         <label class="toggle-label"><input type="checkbox" id="t-oldprice" checked><span>Original Price (shown struck-through)</span></label>
         <input type="text" id="f-oldprice" placeholder="e.g. $79.00" value="$79.00" maxlength="12">
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-info" min="40" max="300" value="100">
+          <span class="size-val" id="szv-info">100%</span>
+        </div>
+        <div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-top:4px;">Sizes the whole product name / price block together</div>
       </div>
 
       <div class="section-divider">Extra Overlays</div>
@@ -674,16 +720,31 @@
             <input type="text" id="f-rating-count" value="3,299 Customers" maxlength="22">
           </div>
         </div>
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-rating" min="40" max="300" value="100">
+          <span class="size-val" id="szv-rating">100%</span>
+        </div>
       </div>
 
       <div class="field toggle-field">
         <label class="toggle-label"><input type="checkbox" id="t-coupon"><span>Coupon Code</span></label>
         <input type="text" id="f-coupon" placeholder="e.g. SAVE40" value="SAVE40" maxlength="16" style="margin-top:8px;">
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-coupon" min="40" max="300" value="100">
+          <span class="size-val" id="szv-coupon">100%</span>
+        </div>
       </div>
 
       <div class="field toggle-field">
         <label class="toggle-label"><input type="checkbox" id="t-customtag"><span>Custom Text Tile</span></label>
         <input type="text" id="f-customtag" placeholder="e.g. New Collection" value="New Collection" maxlength="24" style="margin-top:8px;">
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-customtag" min="40" max="300" value="100">
+          <span class="size-val" id="szv-customtag">100%</span>
+        </div>
       </div>
 
       <div class="section-divider">Style</div>
@@ -878,6 +939,7 @@ document.querySelectorAll('.size-tab').forEach(tab => {
     canvas.width = W; canvas.height = H;
     syncZoomUI();
     updateHandleVisibility();
+    syncSizeSliders();
     render();
   });
 });
@@ -927,7 +989,38 @@ document.getElementById('resetLayoutBtn').addEventListener('click', () => {
   layoutStore[sizeKey()] = defaultLayoutFor(W, H);
   syncZoomUI();
   positionHandles();
+  syncSizeSliders();
   render();
+});
+
+// ── SIDEBAR SIZE SLIDERS ──
+// Explicit, precise alternative to scroll-to-resize on the canvas — same
+// underlying layout[key].scale, so both controls always agree with each
+// other no matter which one was used last.
+const SIZE_SLIDER_KEYS = ['headline', 'brand', 'discount', 'rating', 'customtag', 'coupon', 'info', 'cta'];
+
+function syncSizeSliders() {
+  const layout = getLayout();
+  SIZE_SLIDER_KEYS.forEach(key => {
+    const slider = document.getElementById('sz-' + key);
+    const label = document.getElementById('szv-' + key);
+    if (!slider || !layout[key]) return;
+    const pct = Math.round((layout[key].scale || 1) * 100);
+    slider.value = pct;
+    if (label) label.textContent = pct + '%';
+  });
+}
+
+SIZE_SLIDER_KEYS.forEach(key => {
+  const slider = document.getElementById('sz-' + key);
+  const label = document.getElementById('szv-' + key);
+  if (!slider) return;
+  slider.addEventListener('input', () => {
+    const pct = parseInt(slider.value, 10);
+    getLayout()[key].scale = pct / 100;
+    if (label) label.textContent = pct + '%';
+    render();
+  });
 });
 
 // ── DRAG-TO-EDIT: text/badge handles ──
@@ -1036,6 +1129,7 @@ document.querySelectorAll('.handle').forEach(h => {
     const next = Math.max(0.4, Math.min(3, current + (e.deltaY < 0 ? 0.06 : -0.06)));
     entry.scale = next;
     flashScaleReadout(h, key, next);
+    syncSizeSliders();
     render();
   }, { passive: false });
 });
@@ -1490,6 +1584,7 @@ downloadBtn.addEventListener('click', () => {
 syncZoomUI();
 updateHandleVisibility();
 positionHandles();
+syncSizeSliders();
 document.fonts.ready.then(render);
 render();
 </script>
