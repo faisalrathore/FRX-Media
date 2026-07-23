@@ -386,6 +386,19 @@
   }
   .handle.hidden-handle { display: none; }
 
+  .scale-readout {
+    position: absolute; z-index: 5;
+    transform: translate(-50%, -100%);
+    background: rgba(10,8,6,0.92); color: #fff;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600;
+    letter-spacing: 0.04em; white-space: nowrap;
+    padding: 4px 9px; border-radius: 3px;
+    pointer-events: none; opacity: 0;
+    transition: opacity 0.15s;
+    margin-top: -10px;
+  }
+  .scale-readout.show { opacity: 1; }
+
   /* ── PHOTO TOOLBAR (background removal + undo, next to the preview) ── */
   .photo-toolbar {
     display: flex; align-items: center; gap: 8px;
@@ -711,7 +724,7 @@
 
       <div class="field" style="margin-bottom:0;">
         <div style="font-size:10.5px; color:var(--muted); font-family:'JetBrains Mono',monospace; line-height:1.6; padding:10px 12px; background:var(--parchment); border-left:2px solid var(--red);">
-          Positioning &amp; zoom moved next to the preview — drag any dot on the creative to move it, drag the photo itself to pan, use the zoom bar under the preview to scale.
+          Positioning &amp; zoom moved next to the preview — drag any dot on the creative to move it, scroll on a dot to resize that text/badge, drag the photo itself to pan, use the zoom bar under the preview to scale it.
         </div>
       </div>
 
@@ -736,6 +749,7 @@
           <canvas id="adCanvas" width="1080" height="1080"></canvas>
           <div class="edit-layer" id="editLayer">
             <div class="drag-pan" id="dragPan" title="Drag to reposition the photo"></div>
+            <div class="scale-readout" id="scaleReadout"></div>
             <div class="handle" data-key="headline" title="Drag: headline text"></div>
             <div class="handle" data-key="brand" title="Drag: brand name"></div>
             <div class="handle" data-key="discount" title="Drag: discount badge"></div>
@@ -770,7 +784,7 @@
           <li>Upload runs a neural background-removal model locally in your browser tab</li>
           <li>Your image never leaves your device — no server, no upload</li>
           <li>Edit any field and the creative updates instantly</li>
-          <li>Drag any dot to reposition text/badges, drag the photo to pan, use the zoom bar to scale it</li>
+          <li>Drag any dot to reposition text/badges, scroll on a dot to resize it, drag the photo to pan, use the zoom bar to scale it</li>
           <li>Each aspect ratio remembers its own layout — switching sizes won't reset your edits</li>
           <li>Toggle rating, coupon, and custom tag overlays on or off per-creative</li>
           <li>Export is full-resolution PNG, ready to upload to Meta / Google Ads</li>
@@ -830,17 +844,21 @@ let layoutStore = {};
 function defaultLayoutFor(w, h) {
   const wide = w >= h * 1.3; // landscape-ish ratios get a bit more breathing room
   return {
-    headline:  { x: 0.055, y: wide ? 0.30 : 0.20 },
-    brand:     { x: 0.055, y: 0.08 },
-    discount:  { x: 0.80,  y: 0.14 },
-    rating:    { x: 0.945, y: 0.255 },
-    customtag: { x: 0.055, y: 0.783 },
-    coupon:    { x: 0.945, y: 0.783 },
-    info:      { x: 0.055, y: 0.910 },
-    cta:       { x: 0.895, y: 0.9225 },
-    image:     { x: 0.5,   y: 0.5, scale: 1.0 }
+    headline:  { x: 0.055, y: wide ? 0.30 : 0.20, scale: 1.0 },
+    brand:     { x: 0.055, y: 0.08,   scale: 1.0 },
+    discount:  { x: 0.80,  y: 0.14,   scale: 1.0 },
+    rating:    { x: 0.945, y: 0.255,  scale: 1.0 },
+    customtag: { x: 0.055, y: 0.783,  scale: 1.0 },
+    coupon:    { x: 0.945, y: 0.783,  scale: 1.0 },
+    info:      { x: 0.055, y: 0.910,  scale: 1.0 },
+    cta:       { x: 0.895, y: 0.9225, scale: 1.0 },
+    image:     { x: 0.5,   y: 0.5,    scale: 1.0 }
   };
 }
+
+// Text/badge size for a layout element — falls back to 1 for any layout
+// saved before this feature existed (so old saved layouts don't break).
+function sc(key) { return getLayout()[key].scale || 1; }
 
 function sizeKey() { return W + 'x' + H; }
 
@@ -989,6 +1007,37 @@ document.querySelectorAll('.handle').forEach(h => {
       render();
     }
   );
+});
+
+// ── SCROLL-TO-RESIZE: each handle's text/badge grows or shrinks on wheel ──
+const scaleReadout = document.getElementById('scaleReadout');
+const HANDLE_SIZE_LABEL = {
+  headline: 'Headline Size', brand: 'Brand Text Size', discount: 'Badge Size',
+  rating: 'Rating Badge Size', customtag: 'Tag Size', coupon: 'Coupon Size',
+  info: 'Price Block Size', cta: 'Button Size'
+};
+let scaleReadoutTimer = null;
+function flashScaleReadout(handleEl, key, pct) {
+  scaleReadout.textContent = (HANDLE_SIZE_LABEL[key] || 'Size') + ': ' + Math.round(pct * 100) + '%';
+  scaleReadout.style.left = handleEl.style.left;
+  scaleReadout.style.top = handleEl.style.top;
+  scaleReadout.classList.add('show');
+  clearTimeout(scaleReadoutTimer);
+  scaleReadoutTimer = setTimeout(() => scaleReadout.classList.remove('show'), 850);
+}
+
+document.querySelectorAll('.handle').forEach(h => {
+  h.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const key = h.dataset.key;
+    const entry = getLayout()[key];
+    if (!entry) return;
+    const current = entry.scale || 1;
+    const next = Math.max(0.4, Math.min(3, current + (e.deltaY < 0 ? 0.06 : -0.06)));
+    entry.scale = next;
+    flashScaleReadout(h, key, next);
+    render();
+  }, { passive: false });
 });
 
 // Dragging the photo itself pans it (image.x/y are the image's own center
@@ -1266,7 +1315,7 @@ function render() {
   ctx.save();
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
-  const headSize = fitFont(ctx, bigText, "'Barlow Condensed', sans-serif", 900, W*0.9, Math.min(W,H)*0.24, 30);
+  const headSize = fitFont(ctx, bigText, "'Barlow Condensed', sans-serif", 900, W*0.9, Math.min(W,H)*0.24, 30) * sc('headline');
   ctx.font = `900 ${headSize}px 'Barlow Condensed', sans-serif`;
   ctx.fillStyle = textColor;
   ctx.fillText(bigText, layout.headline.x * W, layout.headline.y * H);
@@ -1274,7 +1323,7 @@ function render() {
 
   // Brand mark — anchor left/baseline, position from layout.brand
   ctx.save();
-  ctx.font = `700 ${W*0.028}px 'Inter', sans-serif`;
+  ctx.font = `700 ${W*0.028 * sc('brand')}px 'Inter', sans-serif`;
   ctx.fillStyle = textColor;
   ctx.globalAlpha = 0.9;
   ctx.fillText((val('f-brand') || 'BRAND').toUpperCase(), layout.brand.x * W, layout.brand.y * H);
@@ -1285,7 +1334,7 @@ function render() {
   const showDiscount = document.getElementById('t-discount').checked && !!discount;
   if (showDiscount) {
     ctx.save();
-    const bx = layout.discount.x * W, by = layout.discount.y * H, r = Math.min(W,H)*0.105;
+    const bx = layout.discount.x * W, by = layout.discount.y * H, r = Math.min(W,H)*0.105 * sc('discount');
     ctx.translate(bx, by);
     ctx.rotate(12 * Math.PI/180);
     ctx.beginPath();
@@ -1315,7 +1364,7 @@ function render() {
     const filled = Math.round(stars);
     const starStr = '★'.repeat(filled) + '☆'.repeat(Math.max(0, 5 - filled));
 
-    const pillH = Math.min(W, H) * 0.05;
+    const pillH = Math.min(W, H) * 0.05 * sc('rating');
     const pillY = layout.rating.y * H;
     const pillRightX = layout.rating.x * W;
     const starFont = `700 ${pillH * 0.52}px Arial`;
@@ -1346,17 +1395,18 @@ function render() {
     ctx.restore();
   }
 
-  // Custom text tile + coupon chip — each independently draggable now.
-  // Custom tag anchors top-left, coupon anchors top-right.
+  // Custom text tile + coupon chip — each independently draggable AND
+  // independently resizable now, so each gets its own chip height.
   {
-    const chipH = H * 0.044;
-    const chipFont = `700 ${chipH * 0.4}px 'JetBrains Mono', monospace`;
-
     if (document.getElementById('t-customtag').checked && val('f-customtag')) {
-      drawPill(layout.customtag.x * W, layout.customtag.y * H, chipH, val('f-customtag').toUpperCase(), accent, '#fff', chipFont, false);
+      const tagH = H * 0.044 * sc('customtag');
+      const tagFont = `700 ${tagH * 0.4}px 'JetBrains Mono', monospace`;
+      drawPill(layout.customtag.x * W, layout.customtag.y * H, tagH, val('f-customtag').toUpperCase(), accent, '#fff', tagFont, false);
     }
     if (document.getElementById('t-coupon').checked && val('f-coupon')) {
-      drawPill(layout.coupon.x * W, layout.coupon.y * H, chipH, 'CODE: ' + val('f-coupon').toUpperCase(), 'rgba(255,255,255,0.94)', '#1a1410', chipFont, true);
+      const couponH = H * 0.044 * sc('coupon');
+      const couponFont = `700 ${couponH * 0.4}px 'JetBrains Mono', monospace`;
+      drawPill(layout.coupon.x * W, layout.coupon.y * H, couponH, 'CODE: ' + val('f-coupon').toUpperCase(), 'rgba(255,255,255,0.94)', '#1a1410', couponFont, true);
     }
   }
 
@@ -1378,19 +1428,20 @@ function render() {
   ctx.textAlign = 'left';
   const infoX = layout.info.x * W;
   const infoY = layout.info.y * H;
+  const infoScale = sc('info');
   ctx.fillStyle = textColor;
-  ctx.font = `700 ${W*0.028}px 'Inter', sans-serif`;
+  ctx.font = `700 ${W*0.028 * infoScale}px 'Inter', sans-serif`;
   ctx.fillText(product, infoX, infoY);
 
-  const priceY = infoY + barH * 0.38;
-  ctx.font = `900 ${W*0.042}px 'Barlow Condensed', sans-serif`;
+  const priceY = infoY + barH * 0.38 * infoScale;
+  ctx.font = `900 ${W*0.042 * infoScale}px 'Barlow Condensed', sans-serif`;
   ctx.fillStyle = accent;
   ctx.fillText(price, infoX, priceY);
   const priceW = ctx.measureText(price).width;
 
   if (oldPrice && document.getElementById('t-oldprice').checked) {
-    const oldPriceY = infoY + barH * 0.34;
-    ctx.font = `500 ${W*0.024}px 'Inter', sans-serif`;
+    const oldPriceY = infoY + barH * 0.34 * infoScale;
+    ctx.font = `500 ${W*0.024 * infoScale}px 'Inter', sans-serif`;
     ctx.fillStyle = textColor;
     ctx.globalAlpha = 0.55;
     const ox = infoX + priceW + W*0.02;
@@ -1409,9 +1460,10 @@ function render() {
   // CTA button — anchor is its own center, position from layout.cta
   if (cta && document.getElementById('t-cta').checked) {
     ctx.save();
-    ctx.font = `700 ${W*0.024}px 'Inter', sans-serif`;
-    const ctaW = ctx.measureText(cta).width + W*0.07;
-    const ctaH = H*0.06;
+    const ctaScale = sc('cta');
+    ctx.font = `700 ${W*0.024 * ctaScale}px 'Inter', sans-serif`;
+    const ctaW = ctx.measureText(cta).width + W*0.07 * ctaScale;
+    const ctaH = H*0.06 * ctaScale;
     const ctaCenterX = layout.cta.x * W;
     const ctaCenterY = layout.cta.y * H;
     const ctaX = ctaCenterX - ctaW / 2;
