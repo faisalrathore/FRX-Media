@@ -367,11 +367,15 @@
   .canvas-upload-overlay {
     position: absolute; inset: 0; z-index: 2;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 4px; text-align: center; padding: 20px;
+    gap: 8px; text-align: center; padding: 20px;
     cursor: pointer;
     background: rgba(0,0,0,0.15);
     border: none;
     transition: background 0.2s;
+    /* .canvas-stage sets line-height:0 to trim whitespace under the inline
+       <canvas> — reset it here so this overlay's text lines don't collapse
+       on top of each other. */
+    line-height: 1.4;
   }
   .canvas-upload-overlay:hover, .canvas-upload-overlay.dragover {
     background: rgba(196,28,28,0.18);
