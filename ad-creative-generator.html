@@ -370,11 +370,11 @@
     gap: 4px; text-align: center; padding: 20px;
     cursor: pointer;
     background: rgba(0,0,0,0.15);
-    border: 2px dashed rgba(255,255,255,0.25);
-    transition: background 0.2s, border-color 0.2s;
+    border: none;
+    transition: background 0.2s;
   }
   .canvas-upload-overlay:hover, .canvas-upload-overlay.dragover {
-    background: rgba(196,28,28,0.18); border-color: var(--red);
+    background: rgba(196,28,28,0.18);
   }
   .canvas-upload-overlay.has-image { display: none; }
   .canvas-upload-icon { font-size: 26px; color: rgba(255,255,255,0.85); }
@@ -1609,20 +1609,6 @@ function render() {
 
   const bigText = val('f-bigtext').toUpperCase() || 'SALE';
 
-  // Ghost repeated text texture (rotated) — decorative, not draggable
-  ctx.save();
-  ctx.translate(W*0.5, H*0.42);
-  ctx.rotate(-8 * Math.PI/180);
-  ctx.globalAlpha = 0.10;
-  ctx.fillStyle = textColor;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  const ghostSize = Math.min(W,H) * 0.42;
-  ctx.font = `900 ${ghostSize}px 'Barlow Condensed', sans-serif`;
-  ctx.fillText(bigText, 0, 0);
-  ctx.restore();
-  ctx.globalAlpha = 1;
-
   // Product image — drawn early (behind text/badges) but its position/scale
   // come entirely from layout.image, set by dragging the photo + zoom bar.
   if (productImg) {
@@ -1642,17 +1628,6 @@ function render() {
     ctx.shadowBlur = W * 0.03;
     ctx.shadowOffsetY = H * 0.015;
     ctx.drawImage(productImg, dx, dy, drawW, drawH);
-    ctx.restore();
-  } else {
-    ctx.save();
-    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-    ctx.setLineDash([10, 8]);
-    ctx.lineWidth = 3;
-    ctx.strokeRect(W*0.18, H*0.30, W*0.64, H*0.42);
-    ctx.fillStyle = 'rgba(255,255,255,0.35)';
-    ctx.font = `600 ${W*0.026}px 'JetBrains Mono', monospace`;
-    ctx.textAlign = 'center';
-    ctx.fillText('UPLOAD A PRODUCT PHOTO', W*0.5, H*0.52);
     ctx.restore();
   }
 
