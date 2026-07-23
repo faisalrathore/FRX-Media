@@ -226,6 +226,15 @@
     letter-spacing: 0.1em; text-transform: uppercase;
     color: var(--mid); margin-bottom: 6px;
   }
+  .toggle-label {
+    display: flex !important; align-items: center; gap: 8px;
+    cursor: pointer; user-select: none;
+  }
+  .toggle-label input[type=checkbox] {
+    width: 14px; height: 14px; accent-color: var(--red); cursor: pointer; flex-shrink: 0;
+  }
+  .toggle-field { padding: 14px 16px; background: var(--parchment); border: 1px solid var(--border); margin-bottom: 14px; }
+  .toggle-field .field-row .field label { margin-bottom: 4px; }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   select, input[type=text], input[type=range] {
     width: 100%; padding: 11px 13px;
@@ -439,11 +448,11 @@
 
       <div class="field-row">
         <div class="field">
-          <label>Discount Badge</label>
+          <label class="toggle-label"><input type="checkbox" id="t-discount" checked><span>Discount Badge</span></label>
           <input type="text" id="f-discount" placeholder="e.g. 40% OFF" value="40% OFF" maxlength="12">
         </div>
         <div class="field">
-          <label>CTA Button</label>
+          <label class="toggle-label"><input type="checkbox" id="t-cta" checked><span>CTA Button</span></label>
           <input type="text" id="f-cta" placeholder="e.g. Shop Now" value="Shop Now" maxlength="16">
         </div>
       </div>
@@ -465,8 +474,40 @@
       </div>
 
       <div class="field">
-        <label>Original Price <span style="text-transform:none; font-weight:400;">(optional, shown struck-through)</span></label>
+        <label class="toggle-label"><input type="checkbox" id="t-oldprice" checked><span>Original Price (shown struck-through)</span></label>
         <input type="text" id="f-oldprice" placeholder="e.g. $79.00" value="$79.00" maxlength="12">
+      </div>
+
+      <div class="section-divider">Extra Overlays</div>
+
+      <div class="field toggle-field">
+        <label class="toggle-label"><input type="checkbox" id="t-rating" checked><span>Rating Badge</span></label>
+        <div class="field-row" style="margin-top:8px;">
+          <div class="field" style="margin-bottom:0;">
+            <label>Stars</label>
+            <select id="f-rating-stars">
+              <option value="5">★★★★★ (5.0)</option>
+              <option value="4.5" selected>★★★★☆ (4.5)</option>
+              <option value="4">★★★★☆ (4.0)</option>
+              <option value="3.5">★★★☆☆ (3.5)</option>
+              <option value="3">★★★☆☆ (3.0)</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Review Count</label>
+            <input type="text" id="f-rating-count" value="3,299 Customers" maxlength="22">
+          </div>
+        </div>
+      </div>
+
+      <div class="field toggle-field">
+        <label class="toggle-label"><input type="checkbox" id="t-coupon"><span>Coupon Code</span></label>
+        <input type="text" id="f-coupon" placeholder="e.g. SAVE40" value="SAVE40" maxlength="16" style="margin-top:8px;">
+      </div>
+
+      <div class="field toggle-field">
+        <label class="toggle-label"><input type="checkbox" id="t-customtag"><span>Custom Text Tile</span></label>
+        <input type="text" id="f-customtag" placeholder="e.g. New Collection" value="New Collection" maxlength="24" style="margin-top:8px;">
       </div>
 
       <div class="section-divider">Style</div>
@@ -538,6 +579,7 @@
           <li>Upload runs a neural background-removal model locally in your browser tab</li>
           <li>Your image never leaves your device — no server, no upload</li>
           <li>Edit any field and the creative updates instantly</li>
+          <li>Toggle rating, coupon, and custom tag overlays on or off per-creative</li>
           <li>Export is full-resolution PNG, ready to upload to Meta / Google Ads</li>
         </ul>
       </div>
@@ -604,8 +646,15 @@ syncColor('f-accent','f-accent-hex');
 syncColor('f-text','f-text-hex');
 
 // ── LIVE FIELDS ──
-['f-bigtext','f-discount','f-cta','f-brand','f-product','f-price','f-oldprice'].forEach(id => {
+[
+  'f-bigtext','f-discount','f-cta','f-brand','f-product','f-price','f-oldprice',
+  'f-rating-stars','f-rating-count','f-coupon','f-customtag'
+].forEach(id => {
   document.getElementById(id).addEventListener('input', render);
+  document.getElementById(id).addEventListener('change', render);
+});
+['t-discount','t-cta','t-oldprice','t-rating','t-coupon','t-customtag'].forEach(id => {
+  document.getElementById(id).addEventListener('change', render);
 });
 document.getElementById('f-scale').addEventListener('input', (e) => {
   document.getElementById('scaleVal').textContent = e.target.value + '%';
@@ -713,6 +762,35 @@ function fitFont(ctx, text, family, weight, maxWidth, maxSize, minSize) {
   return size;
 }
 
+function fillRoundRect(x, y, w, h, r) {
+  if (ctx.roundRect) {
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, r);
+    ctx.fill();
+  } else {
+    ctx.fillRect(x, y, w, h);
+  }
+}
+
+// Draws a pill-shaped chip and returns its width. anchorRight=true positions
+// the chip so its right edge sits at x (used to right-align a row of chips).
+function drawPill(x, y, h, text, bg, fg, font, anchorRight) {
+  ctx.save();
+  ctx.font = font;
+  const padX = h * 0.42;
+  const textW = ctx.measureText(text).width;
+  const w = textW + padX * 2;
+  const drawX = anchorRight ? x - w : x;
+  ctx.fillStyle = bg;
+  fillRoundRect(drawX, y, w, h, h / 2);
+  ctx.fillStyle = fg;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, drawX + padX, y + h / 2 + h * 0.04);
+  ctx.restore();
+  return w;
+}
+
 function render() {
   ctx.clearRect(0, 0, W, H);
 
@@ -815,7 +893,8 @@ function render() {
 
   // Discount badge
   const discount = val('f-discount');
-  if (discount) {
+  const showDiscount = document.getElementById('t-discount').checked && !!discount;
+  if (showDiscount) {
     ctx.save();
     const bx = W*0.80, by = H*0.14, r = Math.min(W,H)*0.105;
     ctx.translate(bx, by);
@@ -838,6 +917,60 @@ function render() {
       ctx.fillText(discount, 0, 0);
     }
     ctx.restore();
+  }
+
+  // Rating badge — stars + review count, sits just under the discount circle
+  // (or higher up if the discount badge is hidden)
+  if (document.getElementById('t-rating').checked) {
+    const stars = parseFloat(val('f-rating-stars')) || 5;
+    const count = val('f-rating-count');
+    const filled = Math.round(stars);
+    const starStr = '★'.repeat(filled) + '☆'.repeat(Math.max(0, 5 - filled));
+
+    const pillH = Math.min(W, H) * 0.05;
+    const pillY = showDiscount ? H * 0.255 : H * 0.10;
+    const pillRightX = W * 0.945;
+    const starFont = `700 ${pillH * 0.52}px Arial`;
+    const countFont = `600 ${pillH * 0.4}px 'Inter', sans-serif`;
+
+    ctx.save();
+    ctx.font = countFont;
+    const countW = count ? ctx.measureText(count).width : 0;
+    ctx.font = starFont;
+    const starsW = ctx.measureText(starStr).width;
+    const padX = pillH * 0.38;
+    const gap = count ? pillH * 0.22 : 0;
+    const totalW = starsW + gap + countW + padX * 2;
+    const pillX = pillRightX - totalW;
+
+    ctx.fillStyle = 'rgba(255,255,255,0.94)';
+    fillRoundRect(pillX, pillY, totalW, pillH, pillH / 2);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#f5a623';
+    ctx.font = starFont;
+    ctx.fillText(starStr, pillX + padX, pillY + pillH / 2 + pillH * 0.04);
+    if (count) {
+      ctx.fillStyle = '#1a1410';
+      ctx.font = countFont;
+      ctx.fillText(count, pillX + padX + starsW + gap, pillY + pillH / 2 + pillH * 0.04);
+    }
+    ctx.restore();
+  }
+
+  // Custom text tile + coupon chip — float just above the bottom bar, one on
+  // each side, mirroring BigAtom's small info tags (e.g. "New Collection")
+  {
+    const chipH = H * 0.044;
+    const chipY = H - barH - chipH - H * 0.018;
+    const chipFont = `700 ${chipH * 0.4}px 'JetBrains Mono', monospace`;
+
+    if (document.getElementById('t-customtag').checked && val('f-customtag')) {
+      drawPill(W * 0.055, chipY, chipH, val('f-customtag').toUpperCase(), accent, '#fff', chipFont, false);
+    }
+    if (document.getElementById('t-coupon').checked && val('f-coupon')) {
+      drawPill(W * 0.945, chipY, chipH, 'CODE: ' + val('f-coupon').toUpperCase(), 'rgba(255,255,255,0.94)', '#1a1410', chipFont, true);
+    }
   }
 
   // Bottom bar
@@ -863,7 +996,7 @@ function render() {
   ctx.fillText(price, priceX, H - barH*0.20);
   const priceW = ctx.measureText(price).width;
 
-  if (oldPrice) {
+  if (oldPrice && document.getElementById('t-oldprice').checked) {
     ctx.font = `500 ${W*0.024}px 'Inter', sans-serif`;
     ctx.fillStyle = textColor;
     ctx.globalAlpha = 0.55;
@@ -882,7 +1015,7 @@ function render() {
   ctx.restore();
 
   // CTA button
-  if (cta) {
+  if (cta && document.getElementById('t-cta').checked) {
     ctx.save();
     ctx.font = `700 ${W*0.024}px 'Inter', sans-serif`;
     const ctaW = ctx.measureText(cta).width + W*0.07;
