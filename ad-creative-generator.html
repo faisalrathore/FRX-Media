@@ -370,44 +370,37 @@
     cursor: grab; touch-action: none;
   }
   .drag-pan:active { cursor: grabbing; }
-  /* A Canva-style 4-arrow move handle. Anchored to the element's true
-     position but visually offset to whichever side has empty space, so it
-     floats beside the text/badge instead of on top of it — left-anchored
-     elements (text extends right) get pushed left; right-anchored badges
-     (pill extends left) get pushed right instead, via data-side. Scroll on
-     it to resize that element (see JS); drag to reposition. */
+  /* Canva-style floating move button: a plain white circle with a dark
+     4-arrow icon, centered horizontally on the element and floating just
+     below it with a small gap — matches Canva's own move handle exactly.
+     Scroll on it to resize that element (see JS); drag to reposition. */
   .handle {
     position: absolute; z-index: 3;
-    width: 26px; height: 26px;
-    --tx: 16px; --ty: -50%;
-    transform: translate(var(--tx), var(--ty)) scale(1);
-    border-radius: 7px;
-    background: rgba(20,16,12,0.82);
-    border: 1.5px solid rgba(255,255,255,0.45);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.45);
+    width: 32px; height: 32px;
+    transform: translate(-50%, 14px) scale(1);
+    border-radius: 50%;
+    background: #ffffff;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.06);
     cursor: grab; touch-action: none;
     user-select: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 9 2 12 5 15'/%3E%3Cpolyline points='9 5 12 2 15 5'/%3E%3Cpolyline points='15 19 12 22 9 19'/%3E%3Cpolyline points='19 9 22 12 19 15'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cline x1='12' y1='2' x2='12' y2='22'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23161310' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 9 2 12 5 15'/%3E%3Cpolyline points='9 5 12 2 15 5'/%3E%3Cpolyline points='15 19 12 22 9 19'/%3E%3Cpolyline points='19 9 22 12 19 15'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cline x1='12' y1='2' x2='12' y2='22'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 15px 15px;
-    transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
+    background-size: 16px 16px;
+    transition: box-shadow 0.15s, transform 0.15s;
   }
-  .handle[data-side="left"] { --tx: calc(-100% - 16px); }
-  .handle[data-side="right"] { --tx: 16px; }
   .handle::before {
     content: ''; position: absolute; inset: -6px; /* slightly larger invisible hit area */
   }
   .handle:hover {
-    background-color: var(--red);
-    border-color: #fff;
-    transform: translate(var(--tx), var(--ty)) scale(1.1);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.4), 0 0 0 2px var(--red);
+    transform: translate(-50%, 14px) scale(1.08);
   }
   .handle:active, .handle.dragging {
     cursor: grabbing;
-    background-color: var(--red2);
-    border-color: #fff;
-    transform: translate(var(--tx), var(--ty)) scale(1.1);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.4), 0 0 0 2px var(--red2);
+    transform: translate(-50%, 14px) scale(1.08);
   }
   .handle.hidden-handle { display: none; }
 
@@ -816,14 +809,14 @@
           <div class="edit-layer" id="editLayer">
             <div class="drag-pan" id="dragPan" title="Drag to reposition the photo"></div>
             <div class="scale-readout" id="scaleReadout"></div>
-            <div class="handle" data-key="headline" data-side="left" title="Drag: headline text"></div>
-            <div class="handle" data-key="brand" data-side="left" title="Drag: brand name"></div>
-            <div class="handle" data-key="discount" data-side="right" title="Drag: discount badge"></div>
-            <div class="handle" data-key="rating" data-side="right" title="Drag: rating badge"></div>
-            <div class="handle" data-key="customtag" data-side="left" title="Drag: custom text tile"></div>
-            <div class="handle" data-key="coupon" data-side="right" title="Drag: coupon chip"></div>
-            <div class="handle" data-key="info" data-side="left" title="Drag: product name / price block"></div>
-            <div class="handle" data-key="cta" data-side="right" title="Drag: CTA button"></div>
+            <div class="handle" data-key="headline" title="Drag: headline text"></div>
+            <div class="handle" data-key="brand" title="Drag: brand name"></div>
+            <div class="handle" data-key="discount" title="Drag: discount badge"></div>
+            <div class="handle" data-key="rating" title="Drag: rating badge"></div>
+            <div class="handle" data-key="customtag" title="Drag: custom text tile"></div>
+            <div class="handle" data-key="coupon" title="Drag: coupon chip"></div>
+            <div class="handle" data-key="info" title="Drag: product name / price block"></div>
+            <div class="handle" data-key="cta" title="Drag: CTA button"></div>
           </div>
         </div>
       </div>
