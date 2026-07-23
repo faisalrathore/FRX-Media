@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FRX Media | Ad Creative Generator</title>
+<!--
+  @imgly/background-removal internally does `import ... from "onnxruntime-web"`
+  — a bare module specifier. Browsers can't resolve bare specifiers to a URL
+  on their own (that's normally a bundler's job); an import map is what maps
+  the plain name to an actual CDN URL at runtime. This must be declared
+  before any module script/import() runs, so it lives here in <head>.
+-->
+<script type="importmap">
+{
+  "imports": {
+    "onnxruntime-web": "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0-dev.20250206-d981b153d3/dist/ort.min.mjs"
+  }
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,600;1,700;1,800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -548,7 +562,7 @@
 
       <div class="field">
         <label>Product Scale — <span id="scaleVal">100%</span></label>
-        <input type="range" id="f-scale" min="60" max="140" value="100">
+        <input type="range" id="f-scale" min="40" max="220" value="100">
       </div>
 
     </div>
@@ -886,20 +900,24 @@ function render() {
     const safeW = safeRight - safeLeft;
     const safeH = safeBottom - safeTop;
 
-    // Box the slider is allowed to grow into, hard-capped so it can never
-    // exceed the safe area (which itself never exceeds the canvas).
-    const boxW = Math.min(safeW * scalePct, safeW);
-    const boxH = Math.min(safeH * scalePct, safeH);
+    // The slider scales the box freely — no upper cap. Above 100% the image
+    // grows past the safe area and past the canvas edges on purpose (a
+    // centered "zoom crop" look); the canvas simply clips whatever falls
+    // outside its own bounds, so nothing extra is needed to contain it.
+    const boxW = safeW * scalePct;
+    const boxH = safeH * scalePct;
 
     const ratio = Math.min(boxW / productImg.width, boxH / productImg.height);
     const drawW = productImg.width * ratio;
     const drawH = productImg.height * ratio;
 
+    // Centered by default. Only pull the image back inside the canvas when
+    // it's smaller than the canvas on that axis — when it's larger (zoomed
+    // in), let it overflow symmetrically instead of snapping to one edge.
     let dx = safeLeft + (safeW - drawW) / 2;
     let dy = safeTop + (safeH - drawH) / 2;
-    // Belt-and-braces clamp: guarantees the image is always fully on-canvas.
-    dx = Math.max(0, Math.min(dx, W - drawW));
-    dy = Math.max(0, Math.min(dy, H - drawH));
+    dx = drawW <= W ? Math.max(0, Math.min(dx, W - drawW)) : (W - drawW) / 2;
+    dy = drawH <= H ? Math.max(0, Math.min(dy, H - drawH)) : (H - drawH) / 2;
 
     ctx.save();
     ctx.shadowColor = 'rgba(0,0,0,0.45)';
