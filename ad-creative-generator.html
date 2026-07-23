@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRX Media | Ad Creative Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,600;1,700;1,800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:    #f5f0e8;
+    --cream2:   #ede8de;
+    --cream3:   #e5dfd3;
+    --parchment:#f9f6f0;
+    --dark:     #1a1410;
+    --charcoal: #2c2420;
+    --mid:      #5a4e44;
+    --muted:    rgba(26,20,16,0.42);
+    --red:      #c41c1c;
+    --red2:     #d92222;
+    --red3:     #e83535;
+    --red-pale: rgba(196,28,28,0.08);
+    --border:   rgba(26,20,16,0.1);
+    --border-strong: rgba(26,20,16,0.18);
+    --shadow:   0 4px 32px rgba(26,20,16,0.08);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--parchment);
+    color: var(--dark);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 18px 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(245,240,232,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo img {
+    height: 35px; width: auto;
+    transform: scale(4.5);
+    transform-origin: left center;
+  }
+  @media(max-width:1024px) { .logo img { transform: scale(2.8); } }
+  @media(max-width:480px)  { .logo img { transform: scale(2.2); } }
+  .nav-links { display: flex; gap: 44px; list-style: none; align-items: center; }
+  .nav-links a {
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--mid); text-decoration: none; transition: color 0.25s;
+  }
+  .nav-links a:hover { color: var(--red); }
+  .nav-cta {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500;
+    letter-spacing: 0.1em; color: #fff; background: var(--red);
+    padding: 11px 26px; text-decoration: none; transition: all 0.25s;
+    border: 1px solid var(--red);
+  }
+  .nav-cta:hover { background: var(--red2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(196,28,28,0.3); }
+  @media(max-width:768px) {
+    nav { padding: 18px 28px; }
+    .nav-links { display: none; }
+  }
+
+  /* ── HERO ── */
+  .tool-hero {
+    padding-top: 110px;
+    background: var(--dark);
+    border-bottom: 2px solid var(--red);
+    padding-bottom: 52px;
+    padding-left: 64px; padding-right: 64px;
+    position: relative; overflow: hidden;
+  }
+  .tool-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px);
+    pointer-events: none;
+  }
+  .tool-hero::after {
+    content: '';
+    position: absolute; top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(196,28,28,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .tool-hero-inner { max-width: 1200px; margin: 0 auto; }
+  .tool-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .tool-eyebrow::before {
+    content: ''; display: inline-block;
+    width: 28px; height: 1px; background: var(--red);
+  }
+  .tool-hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(40px, 7vw, 80px);
+    font-weight: 900; text-transform: uppercase;
+    letter-spacing: 0.02em; color: #fff;
+    line-height: 1.0; margin-bottom: 12px;
+  }
+  .tool-hero h1 em { font-style: italic; color: var(--red); font-weight: 800; }
+  .tool-hero-sub {
+    font-size: 14px; color: rgba(245,240,232,0.5);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.06em; margin-top: 8px;
+  }
+  @media(max-width:768px) { .tool-hero { padding-left: 24px; padding-right: 24px; } }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 1280px; margin: 0 auto;
+    padding: 48px 48px 100px;
+  }
+  @media(max-width:768px) { main { padding: 32px 20px 60px; } }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 24px; align-items: start;
+  }
+  @media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    padding: 32px 36px;
+    box-shadow: 0 8px 40px rgba(26,20,16,0.07);
+  }
+  .form-head {
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .form-eyebrow::before {
+    content: ''; display: inline-block;
+    width: 20px; height: 1px; background: var(--red);
+  }
+  .form-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 30px; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.02em;
+    color: var(--dark);
+  }
+
+  /* ── UPLOAD ZONE ── */
+  .upload-zone {
+    border: 2px dashed var(--border-strong);
+    background: var(--parchment);
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  .upload-zone:hover, .upload-zone.dragover { border-color: var(--red); background: var(--red-pale); }
+  .upload-zone input[type=file] { display: none; }
+  .upload-icon { font-size: 26px; margin-bottom: 8px; }
+  .upload-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--dark); margin-bottom: 4px;
+  }
+  .upload-sub { font-size: 11px; color: var(--muted); }
+  .upload-status {
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.06em;
+    color: var(--red); display: none;
+  }
+  .upload-status.show { display: block; }
+  .upload-status .bar {
+    height: 3px; background: var(--border); margin-top: 6px; overflow: hidden;
+  }
+  .upload-status .bar-fill {
+    height: 100%; width: 30%; background: var(--red);
+    animation: barSlide 1.1s ease-in-out infinite;
+  }
+  @keyframes barSlide { 0%{transform:translateX(-100%);} 100%{transform:translateX(400%);} }
+
+  /* ── FIELDS ── */
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--mid); margin-bottom: 6px;
+  }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  select, input[type=text], input[type=range] {
+    width: 100%; padding: 11px 13px;
+    font-size: 13px; font-family: 'Inter', sans-serif;
+    background: var(--parchment);
+    color: var(--dark);
+    border: 1px solid var(--border-strong);
+    border-radius: 0; appearance: none; outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  select:focus, input[type=text]:focus { border-color: var(--red); background: #fff; }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a4e44'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px;
+  }
+  input[type=color] {
+    width: 44px; height: 38px; padding: 2px; border: 1px solid var(--border-strong);
+    background: var(--parchment); cursor: pointer;
+  }
+  .color-field { display: flex; align-items: center; gap: 10px; }
+  .color-field input[type=text] { flex: 1; }
+  input[type=range] { padding: 0; height: 4px; accent-color: var(--red); cursor: pointer; }
+
+  .section-divider {
+    margin: 26px 0 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--red);
+  }
+
+  /* ── PREVIEW PANEL ── */
+  .result-panel {
+    background: var(--dark);
+    position: sticky; top: 84px;
+    box-shadow: 0 8px 40px rgba(26,20,16,0.18);
+    border-top: 2px solid var(--red);
+    padding-bottom: 22px;
+  }
+  .result-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(245,240,232,0.35);
+  }
+  .result-status {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: #3a8a52; letter-spacing: 0.1em;
+  }
+  .result-status-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #3a8a52;
+    animation: statusPulse 2s ease-in-out infinite;
+  }
+  @keyframes statusPulse { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+
+  .canvas-wrap {
+    padding: 24px; display: flex; justify-content: center; align-items: center;
+    min-height: 320px;
+  }
+  #adCanvas {
+    max-width: 100%; height: auto;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    background: #222;
+  }
+  .canvas-placeholder {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: rgba(245,240,232,0.25);
+    text-align: center; padding: 60px 20px; line-height: 1.7;
+  }
+
+  .size-tabs { display: flex; gap: 6px; padding: 0 24px 18px; flex-wrap: wrap; }
+  .size-tab {
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(245,240,232,0.5); cursor: pointer;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.2s;
+  }
+  .size-tab:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
+  .size-tab.active { background: var(--red); color: #fff; border-color: var(--red); }
+
+  .download-btn {
+    display: block; width: calc(100% - 48px);
+    margin: 4px 24px 0;
+    padding: 14px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer;
+    background: var(--red); color: #fff;
+    border: 1px solid var(--red);
+    transition: all 0.25s;
+  }
+  .download-btn:hover { background: var(--red2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(196,28,28,0.3); }
+  .download-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .rules-block {
+    margin: 20px 24px 0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .rules-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(245,240,232,0.25);
+    margin-bottom: 10px;
+  }
+  .rules-list { list-style: none; }
+  .rules-list li {
+    font-size: 11px; color: rgba(245,240,232,0.35);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.7; padding-left: 14px; position: relative;
+  }
+  .rules-list li::before {
+    content: '→'; position: absolute; left: 0;
+    color: var(--red); font-size: 9px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--cream);
+    border-top: 1px solid var(--border);
+    padding: 48px 64px;
+    display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  }
+  .footer-logo img { height: 26px; width: auto; }
+  .footer-links { display: flex; gap: 32px; }
+  .footer-links a {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; transition: color 0.25s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .footer-links a:hover { color: var(--red); }
+  .footer-copy {
+    font-size: 10px; color: rgba(26,20,16,0.3);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  @media(max-width:640px) {
+    footer { padding: 28px 20px; flex-direction: column; align-items: center; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo"><img src="logotransparent.png" alt="FRX Media"></div>
+  <ul class="nav-links">
+    <li><a href="https://frxmedia.com/#services">Services</a></li>
+    <li><a href="https://frxmedia.com/#results">Results</a></li>
+    <li><a href="https://frxmedia.com/#process">Process</a></li>
+    <li><a href="https://frxmedia.com/#contact">Contact</a></li>
+  </ul>
+  <a href="https://frxmedia.com/#contact" class="nav-cta">Request Audit →</a>
+</nav>
+
+<!-- HERO -->
+<div class="tool-hero">
+  <div class="tool-hero-inner">
+    <div class="tool-eyebrow">Free Tool · FRX Media</div>
+    <h1>Ad Creative<br><em>Generator</em></h1>
+    <div class="tool-hero-sub">Product Photo → Sale-Ready Creative — 100% Browser-Side, Nothing Uploaded to a Server</div>
+  </div>
+</div>
+<div style="height:1px;background:linear-gradient(90deg,var(--red),transparent);opacity:0.4;"></div>
+
+<main>
+  <div class="grid">
+
+    <!-- FORM COLUMN -->
+    <div class="form-card">
+      <div class="form-head">
+        <div class="form-eyebrow">Step 01</div>
+        <div class="form-title">Upload Product</div>
+      </div>
+
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept="image/*">
+        <div class="upload-icon">⇧</div>
+        <div class="upload-label">Click or drop product image</div>
+        <div class="upload-sub">JPG / PNG — background is removed automatically</div>
+        <div class="upload-status" id="uploadStatus">
+          Removing background…
+          <div class="bar"><div class="bar-fill"></div></div>
+        </div>
+      </div>
+
+      <div class="form-head">
+        <div class="form-eyebrow">Step 02</div>
+        <div class="form-title">Creative Details</div>
+      </div>
+
+      <div class="field">
+        <label>Big Background Text</label>
+        <input type="text" id="f-bigtext" placeholder="e.g. SALE" value="SALE" maxlength="14">
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Discount Badge</label>
+          <input type="text" id="f-discount" placeholder="e.g. 40% OFF" value="40% OFF" maxlength="12">
+        </div>
+        <div class="field">
+          <label>CTA Button</label>
+          <input type="text" id="f-cta" placeholder="e.g. Shop Now" value="Shop Now" maxlength="16">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Brand Name</label>
+        <input type="text" id="f-brand" placeholder="e.g. Nike" value="Your Brand" maxlength="20">
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Product Name</label>
+          <input type="text" id="f-product" placeholder="e.g. Joyride Run Flyknit" value="Product Name" maxlength="26">
+        </div>
+        <div class="field">
+          <label>Price</label>
+          <input type="text" id="f-price" placeholder="e.g. $49.00" value="$49.00" maxlength="12">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Original Price <span style="text-transform:none; font-weight:400;">(optional, shown struck-through)</span></label>
+        <input type="text" id="f-oldprice" placeholder="e.g. $79.00" value="$79.00" maxlength="12">
+      </div>
+
+      <div class="section-divider">Style</div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Background Color</label>
+          <div class="color-field">
+            <input type="color" id="f-bg1" value="#1c3b3a">
+            <input type="text" id="f-bg1-hex" value="#1c3b3a">
+          </div>
+        </div>
+        <div class="field">
+          <label>Background Color 2</label>
+          <div class="color-field">
+            <input type="color" id="f-bg2" value="#0c1e1d">
+            <input type="text" id="f-bg2-hex" value="#0c1e1d">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Accent Color</label>
+          <div class="color-field">
+            <input type="color" id="f-accent" value="#e0342a">
+            <input type="text" id="f-accent-hex" value="#e0342a">
+          </div>
+        </div>
+        <div class="field">
+          <label>Text Color</label>
+          <div class="color-field">
+            <input type="color" id="f-text" value="#ffffff">
+            <input type="text" id="f-text-hex" value="#ffffff">
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Product Scale — <span id="scaleVal">100%</span></label>
+        <input type="range" id="f-scale" min="60" max="140" value="100">
+      </div>
+
+    </div>
+
+    <!-- PREVIEW COLUMN -->
+    <div class="result-panel">
+      <div class="result-header">
+        <div class="result-label">Live Preview</div>
+        <div class="result-status"><span class="result-status-dot"></span>Renders In-Browser</div>
+      </div>
+
+      <div class="size-tabs">
+        <div class="size-tab active" data-w="1080" data-h="1080">Square 1:1</div>
+        <div class="size-tab" data-w="1080" data-h="1350">Portrait 4:5</div>
+        <div class="size-tab" data-w="1200" data-h="628">Landscape 1.91:1</div>
+        <div class="size-tab" data-w="1080" data-h="1920">Story 9:16</div>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="adCanvas" width="1080" height="1080"></canvas>
+      </div>
+
+      <button class="download-btn" id="downloadBtn">Download PNG</button>
+
+      <div class="rules-block">
+        <div class="rules-title">How It Works</div>
+        <ul class="rules-list">
+          <li>Upload runs a neural background-removal model locally in your browser tab</li>
+          <li>Your image never leaves your device — no server, no upload</li>
+          <li>Edit any field and the creative updates instantly</li>
+          <li>Export is full-resolution PNG, ready to upload to Meta / Google Ads</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><img src="logotransparent.png" alt="FRX Media"></div>
+  <div class="footer-links">
+    <a href="https://frxmedia.com/#services">Services</a>
+    <a href="https://frxmedia.com/naming.html">Naming Generator</a>
+    <a href="https://frxmedia.com/#contact">Contact</a>
+  </div>
+  <div class="footer-copy">© FRX Media</div>
+</footer>
+
+<script type="module">
+import imglyRemoveBackground from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/index.mjs";
+
+const canvas = document.getElementById('adCanvas');
+const ctx = canvas.getContext('2d');
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+const uploadStatus = document.getElementById('uploadStatus');
+const downloadBtn = document.getElementById('downloadBtn');
+
+let productImg = null;   // HTMLImageElement, background removed
+let W = 1080, H = 1080;
+
+// ── SIZE TABS ──
+document.querySelectorAll('.size-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.size-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    W = parseInt(tab.dataset.w, 10);
+    H = parseInt(tab.dataset.h, 10);
+    canvas.width = W; canvas.height = H;
+    render();
+  });
+});
+
+// ── COLOR <-> HEX SYNC ──
+function syncColor(colorId, hexId) {
+  const c = document.getElementById(colorId);
+  const h = document.getElementById(hexId);
+  c.addEventListener('input', () => { h.value = c.value; render(); });
+  h.addEventListener('input', () => {
+    if (/^#[0-9a-fA-F]{6}$/.test(h.value)) { c.value = h.value; render(); }
+  });
+}
+syncColor('f-bg1','f-bg1-hex');
+syncColor('f-bg2','f-bg2-hex');
+syncColor('f-accent','f-accent-hex');
+syncColor('f-text','f-text-hex');
+
+// ── LIVE FIELDS ──
+['f-bigtext','f-discount','f-cta','f-brand','f-product','f-price','f-oldprice'].forEach(id => {
+  document.getElementById(id).addEventListener('input', render);
+});
+document.getElementById('f-scale').addEventListener('input', (e) => {
+  document.getElementById('scaleVal').textContent = e.target.value + '%';
+  render();
+});
+
+// ── UPLOAD HANDLING ──
+uploadZone.addEventListener('click', () => fileInput.click());
+uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadZone.classList.remove('dragover');
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
+});
+
+async function handleFile(file) {
+  uploadStatus.classList.add('show');
+  downloadBtn.disabled = true;
+  try {
+    const blob = await imglyRemoveBackground(file, { output: { format: 'image/png' } });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      productImg = img;
+      uploadStatus.classList.remove('show');
+      downloadBtn.disabled = false;
+      render();
+    };
+    img.src = url;
+  } catch (err) {
+    console.error(err);
+    uploadStatus.textContent = 'Background removal failed — using original image.';
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => { productImg = img; downloadBtn.disabled = false; render(); };
+    img.src = url;
+  }
+}
+
+// ── RENDER ──
+function val(id) { return document.getElementById(id).value; }
+
+function fitFont(ctx, text, family, weight, maxWidth, maxSize, minSize) {
+  let size = maxSize;
+  while (size > minSize) {
+    ctx.font = `${weight} ${size}px ${family}`;
+    if (ctx.measureText(text).width <= maxWidth) break;
+    size -= 2;
+  }
+  return size;
+}
+
+function render() {
+  ctx.clearRect(0, 0, W, H);
+
+  const bg1 = val('f-bg1'), bg2 = val('f-bg2'), accent = val('f-accent'), textColor = val('f-text');
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, bg1);
+  grad.addColorStop(1, bg2);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle radial glow
+  const glow = ctx.createRadialGradient(W*0.7, H*0.25, 10, W*0.7, H*0.25, W*0.6);
+  glow.addColorStop(0, 'rgba(255,255,255,0.08)');
+  glow.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  const bigText = val('f-bigtext').toUpperCase() || 'SALE';
+
+  // Ghost repeated text texture (rotated)
+  ctx.save();
+  ctx.translate(W*0.5, H*0.42);
+  ctx.rotate(-8 * Math.PI/180);
+  ctx.globalAlpha = 0.10;
+  ctx.fillStyle = textColor;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const ghostSize = Math.min(W,H) * 0.42;
+  ctx.font = `900 ${ghostSize}px 'Barlow Condensed', sans-serif`;
+  ctx.fillText(bigText, 0, 0);
+  ctx.restore();
+  ctx.globalAlpha = 1;
+
+  // Big headline text top
+  ctx.save();
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+  const headSize = fitFont(ctx, bigText, "'Barlow Condensed', sans-serif", 900, W*0.9, Math.min(W,H)*0.24, 30);
+  ctx.font = `900 ${headSize}px 'Barlow Condensed', sans-serif`;
+  ctx.fillStyle = textColor;
+  ctx.fillText(bigText, W*0.055, H*0.20);
+  ctx.restore();
+
+  // Brand mark top
+  ctx.save();
+  ctx.font = `700 ${W*0.028}px 'Inter', sans-serif`;
+  ctx.fillStyle = textColor;
+  ctx.globalAlpha = 0.9;
+  ctx.fillText((val('f-brand') || 'BRAND').toUpperCase(), W*0.055, H*0.08);
+  ctx.restore();
+
+  // Product image
+  if (productImg) {
+    const scalePct = parseInt(val('f-scale'), 10) / 100;
+    const boxW = W * 0.72 * scalePct;
+    const boxH = H * 0.52 * scalePct;
+    const ratio = Math.min(boxW / productImg.width, boxH / productImg.height);
+    const drawW = productImg.width * ratio;
+    const drawH = productImg.height * ratio;
+    const dx = (W - drawW) / 2;
+    const dy = H * 0.30 + (boxH - drawH) / 2;
+
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.45)';
+    ctx.shadowBlur = W * 0.03;
+    ctx.shadowOffsetY = H * 0.015;
+    ctx.drawImage(productImg, dx, dy, drawW, drawH);
+    ctx.restore();
+  } else {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.setLineDash([10, 8]);
+    ctx.lineWidth = 3;
+    ctx.strokeRect(W*0.18, H*0.30, W*0.64, H*0.42);
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.font = `600 ${W*0.026}px 'JetBrains Mono', monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText('UPLOAD A PRODUCT PHOTO', W*0.5, H*0.52);
+    ctx.restore();
+  }
+
+  // Discount badge
+  const discount = val('f-discount');
+  if (discount) {
+    ctx.save();
+    const bx = W*0.80, by = H*0.14, r = Math.min(W,H)*0.105;
+    ctx.translate(bx, by);
+    ctx.rotate(12 * Math.PI/180);
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI*2);
+    ctx.fillStyle = accent;
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const dSize = fitFont(ctx, discount, "'Barlow Condensed', sans-serif", 800, r*1.5, r*0.34, 10);
+    ctx.font = `800 ${dSize}px 'Barlow Condensed', sans-serif`;
+    const words = discount.split(' ');
+    if (words.length > 1) {
+      ctx.fillText(words[0], 0, -dSize*0.32);
+      ctx.font = `600 ${dSize*0.5}px 'Inter', sans-serif`;
+      ctx.fillText(words.slice(1).join(' '), 0, dSize*0.38);
+    } else {
+      ctx.fillText(discount, 0, 0);
+    }
+    ctx.restore();
+  }
+
+  // Bottom bar
+  const barH = H * 0.155;
+  ctx.save();
+  ctx.fillStyle = 'rgba(0,0,0,0.28)';
+  ctx.fillRect(0, H - barH, W, barH);
+  ctx.restore();
+
+  const product = val('f-product');
+  const price = val('f-price');
+  const oldPrice = val('f-oldprice');
+  const cta = val('f-cta');
+
+  ctx.save();
+  ctx.textAlign = 'left';
+  ctx.fillStyle = textColor;
+  ctx.font = `700 ${W*0.028}px 'Inter', sans-serif`;
+  ctx.fillText(product, W*0.055, H - barH*0.58);
+
+  let priceX = W*0.055;
+  ctx.font = `900 ${W*0.042}px 'Barlow Condensed', sans-serif`;
+  ctx.fillStyle = accent;
+  ctx.fillText(price, priceX, H - barH*0.20);
+  const priceW = ctx.measureText(price).width;
+
+  if (oldPrice) {
+    ctx.font = `500 ${W*0.024}px 'Inter', sans-serif`;
+    ctx.fillStyle = textColor;
+    ctx.globalAlpha = 0.55;
+    const ox = priceX + priceW + W*0.02;
+    const oy = H - barH*0.24;
+    ctx.fillText(oldPrice, ox, oy);
+    const ow = ctx.measureText(oldPrice).width;
+    ctx.beginPath();
+    ctx.moveTo(ox, oy - W*0.008);
+    ctx.lineTo(ox + ow, oy - W*0.008);
+    ctx.strokeStyle = textColor;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+  ctx.restore();
+
+  // CTA button
+  if (cta) {
+    ctx.save();
+    ctx.font = `700 ${W*0.024}px 'Inter', sans-serif`;
+    const ctaW = ctx.measureText(cta).width + W*0.07;
+    const ctaH = H*0.06;
+    const ctaX = W*0.945 - ctaW;
+    const ctaY = H - barH*0.5 - ctaH/2;
+    ctx.fillStyle = accent;
+    ctx.fillRect(ctaX, ctaY, ctaW, ctaH);
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(cta + ' →', ctaX + ctaW/2, ctaY + ctaH/2 + 1);
+    ctx.restore();
+  }
+}
+
+// ── DOWNLOAD ──
+downloadBtn.addEventListener('click', () => {
+  const link = document.createElement('a');
+  link.download = `frx-ad-creative-${W}x${H}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+});
+
+// Initial render (waits for web fonts to avoid fallback-font flash)
+document.fonts.ready.then(render);
+render();
+</script>
+
+</body>
+</html>
