@@ -1,0 +1,2879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRX Creative Studio | Ad Creative Generator — FRX Media</title>
+<meta name="description" content="FRX Creative Studio — a free tool from FRX Media that turns a product photo into a sale-ready ad creative with AI background removal, drag-to-position overlays, and one-click export for Meta and Google Ads.">
+<!--
+  @imgly/background-removal internally does `import ... from "onnxruntime-web"`
+  — a bare module specifier. Browsers can't resolve bare specifiers to a URL
+  on their own (that's normally a bundler's job); an import map is what maps
+  the plain name to an actual CDN URL at runtime. This must be declared
+  before any module script/import() runs, so it lives here in <head>.
+-->
+<script type="importmap">
+{
+  "imports": {
+    "onnxruntime-web": "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0-dev.20250206-d981b153d3/dist/ort.min.mjs"
+  }
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,600;1,700;1,800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Anton&family=Bebas+Neue&family=Oswald:wght@500;700&family=Montserrat:wght@700;900&family=Poppins:wght@700;800&family=Playfair+Display:wght@700;900&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:    #f5f0e8;
+    --cream2:   #ede8de;
+    --cream3:   #e5dfd3;
+    --parchment:#f9f6f0;
+    --dark:     #1a1410;
+    --charcoal: #2c2420;
+    --mid:      #5a4e44;
+    --muted:    rgba(26,20,16,0.42);
+    --red:      #c41c1c;
+    --red2:     #d92222;
+    --red3:     #e83535;
+    --red-pale: rgba(196,28,28,0.08);
+    --border:   rgba(26,20,16,0.1);
+    --border-strong: rgba(26,20,16,0.18);
+    --shadow:   0 4px 32px rgba(26,20,16,0.08);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--parchment);
+    color: var(--dark);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 18px 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(245,240,232,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo img {
+    height: 35px; width: auto;
+    transform: scale(4.5);
+    transform-origin: left center;
+  }
+  @media(max-width:1024px) { .logo img { transform: scale(2.8); } }
+  @media(max-width:480px)  { .logo img { transform: scale(2.2); } }
+  .nav-links { display: flex; gap: 44px; list-style: none; align-items: center; }
+  .nav-links a {
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--mid); text-decoration: none; transition: color 0.25s;
+  }
+  .nav-links a:hover { color: var(--red); }
+  .nav-dropdown { position: relative; display: flex; align-items: center; }
+  .nav-dropdown-toggle {
+    font: inherit;
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--mid); cursor: pointer; transition: color 0.25s;
+    display: flex; align-items: center; gap: 5px;
+    background: none; border: none; padding: 0; margin: 0;
+    line-height: 1;
+  }
+  .nav-dropdown-toggle::after {
+    content: '▾'; font-size: 10px; transition: transform 0.25s;
+  }
+  .nav-dropdown.open .nav-dropdown-toggle { color: var(--red); }
+  .nav-dropdown.open .nav-dropdown-toggle::after { transform: rotate(180deg); }
+  .nav-dropdown-menu {
+    position: absolute; top: calc(100% + 18px); left: 50%; transform: translateX(-50%);
+    background: #fff; border: 1px solid var(--border);
+    min-width: 240px; padding: 8px; list-style: none;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 99999;
+  }
+  .nav-dropdown.open .nav-dropdown-menu {
+    opacity: 1; visibility: visible; pointer-events: auto;
+  }
+  .nav-dropdown-menu li a {
+    display: block; padding: 10px 14px; font-size: 12px;
+    letter-spacing: 0.06em; text-transform: none; font-weight: 500;
+    color: var(--mid); text-decoration: none; transition: background 0.2s, color 0.2s;
+  }
+  .nav-dropdown-menu li a:hover { background: var(--cream2); color: var(--red); }
+  .nav-cta {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500;
+    letter-spacing: 0.1em; color: #fff; background: var(--red);
+    padding: 11px 26px; text-decoration: none; transition: all 0.25s;
+    border: 1px solid var(--red);
+  }
+  .nav-cta:hover { background: var(--red2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(196,28,28,0.3); }
+  @media(max-width:768px) {
+    nav { padding: 18px 28px; }
+    .nav-links { display: none; }
+  }
+
+  /* ── HERO ──
+     Kept as a slim single-line strip (not a full-height banner) so the
+     editing panel and live preview below it can fit inside one screen —
+     the whole point is to minimize scrolling to reach/use the tool. */
+  .tool-hero {
+    /* nav's own layout height is ~70px, but its logo is visually scaled up
+       4.5x via transform (which doesn't add to layout height) and can
+       overflow past nav's box — keep a generous buffer here so that
+       enlarged logo graphic never visually collides with the hero strip. */
+    padding-top: 100px;
+    background: var(--dark);
+    border-bottom: 2px solid var(--red);
+    padding-bottom: 10px;
+    padding-left: 64px; padding-right: 64px;
+    position: relative; overflow: hidden;
+  }
+  .tool-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px);
+    pointer-events: none;
+  }
+  .tool-hero::after {
+    content: '';
+    position: absolute; top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(196,28,28,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .tool-hero-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+  }
+  .tool-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--red);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .tool-eyebrow::before {
+    content: ''; display: inline-block;
+    width: 28px; height: 1px; background: var(--red);
+  }
+  .tool-hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 900; text-transform: uppercase;
+    letter-spacing: 0.02em; color: #fff;
+    line-height: 1.0;
+  }
+  .tool-hero h1 em { font-style: italic; color: var(--red); font-weight: 800; }
+  .tool-hero-sub {
+    font-size: 11px; color: rgba(245,240,232,0.45);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+  @media(max-width:768px) { .tool-hero { padding-left: 24px; padding-right: 24px; } }
+  @media(max-width:900px) { .tool-hero-sub { display: none; } }
+
+  /* ── MAIN ──
+     On wide-enough screens, main is height-locked to exactly what's left of
+     the viewport below the hero (set by fitAppHeight() in the script), and
+     .grid/.form-card/.result-panel below are wired so the editing form
+     scrolls WITHIN its own column while the live preview never needs to
+     scroll at all — both stay fully visible without moving the page. Below
+     900px there isn't room for that, so it falls back to the normal
+     stacked, page-scrolling layout. */
+  main {
+    max-width: 1280px; margin: 0 auto;
+    padding: 20px 48px 100px;
+  }
+  @media(max-width:768px) { main { padding: 32px 20px 60px; } }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 24px; align-items: start;
+  }
+  @media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    padding: 32px 36px;
+    box-shadow: 0 8px 40px rgba(26,20,16,0.07);
+  }
+  .form-head {
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .form-eyebrow::before {
+    content: ''; display: inline-block;
+    width: 20px; height: 1px; background: var(--red);
+  }
+  .form-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 30px; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.02em;
+    color: var(--dark);
+  }
+
+  /* ── UPLOAD ZONE ── */
+  .upload-zone {
+    border: 2px dashed var(--border-strong);
+    background: var(--parchment);
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  .upload-zone:hover, .upload-zone.dragover { border-color: var(--red); background: var(--red-pale); }
+  .upload-zone input[type=file] { display: none; }
+  .upload-icon { font-size: 26px; margin-bottom: 8px; }
+  .upload-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--dark); margin-bottom: 4px;
+  }
+  .upload-sub { font-size: 11px; color: var(--muted); }
+  .upload-status {
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.06em;
+    color: var(--red); display: none;
+  }
+  .upload-status.show { display: block; }
+  .upload-status .bar {
+    height: 3px; background: var(--border); margin-top: 6px; overflow: hidden;
+  }
+  .upload-status .bar-fill {
+    height: 100%; width: 30%; background: var(--red);
+    animation: barSlide 1.1s ease-in-out infinite;
+  }
+  @keyframes barSlide { 0%{transform:translateX(-100%);} 100%{transform:translateX(400%);} }
+
+  .removebg-hint {
+    font-size: 10.5px; color: var(--muted); line-height: 1.5;
+    margin-bottom: 22px; font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── FIELDS ── */
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--mid); margin-bottom: 6px;
+  }
+  .toggle-label {
+    display: flex !important; align-items: center; gap: 8px;
+    cursor: pointer; user-select: none;
+  }
+  .toggle-label input[type=checkbox] {
+    width: 14px; height: 14px; accent-color: var(--red); cursor: pointer; flex-shrink: 0;
+  }
+  .toggle-field { padding: 14px 16px; background: var(--parchment); border: 1px solid var(--border); margin-bottom: 14px; }
+  .toggle-field .field-row .field label { margin-bottom: 4px; }
+
+  .size-row {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 8px;
+  }
+  .size-row label {
+    font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); flex-shrink: 0; margin-bottom: 0; width: 34px;
+  }
+  .size-row input[type=range] { flex: 1; }
+  .size-row .size-val {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--mid); width: 36px; text-align: right; flex-shrink: 0;
+  }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  select, input[type=text], input[type=range] {
+    width: 100%; padding: 11px 13px;
+    font-size: 13px; font-family: 'Inter', sans-serif;
+    background: var(--parchment);
+    color: var(--dark);
+    border: 1px solid var(--border-strong);
+    border-radius: 0; appearance: none; outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  select:focus, input[type=text]:focus { border-color: var(--red); background: #fff; }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a4e44'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px;
+  }
+  input[type=color] {
+    width: 44px; height: 38px; padding: 2px; border: 1px solid var(--border-strong);
+    background: var(--parchment); cursor: pointer;
+  }
+  .color-field { display: flex; align-items: center; gap: 10px; }
+  .color-field input[type=text] { flex: 1; }
+  input[type=range] { padding: 0; height: 4px; accent-color: var(--red); cursor: pointer; }
+
+  /* ── SIMPLE CIRCLE COLOR PICKER (background color + eyedropper) ── */
+  .color-circle-row { display: flex; align-items: center; gap: 14px; }
+  .color-circle-wrap { position: relative; width: 52px; height: 52px; flex-shrink: 0; }
+  .color-circle-wrap input[type=color] {
+    width: 52px; height: 52px; padding: 0; border: none; border-radius: 50%;
+    background: none; cursor: pointer; box-shadow: 0 0 0 3px var(--parchment), 0 0 0 4px var(--border-strong);
+  }
+  .color-circle-wrap input[type=color]::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
+  .color-circle-wrap input[type=color]::-webkit-color-swatch { border: none; border-radius: 50%; }
+  .color-circle-wrap input[type=color]::-moz-color-swatch { border: none; border-radius: 50%; }
+  .eyedropper-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    background: var(--parchment); border: 1px solid var(--border-strong);
+    cursor: pointer; font-size: 14px; transition: border-color 0.2s, transform 0.15s;
+  }
+  .eyedropper-btn:hover { border-color: var(--red); transform: translateY(-1px); }
+  .eyedropper-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .color-circle-info { flex: 1; }
+  .color-circle-hex {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mid);
+    letter-spacing: 0.04em; margin-top: 2px;
+  }
+
+  /* ── PER-ELEMENT PANEL SEPARATION ── */
+  .element-panel {
+    border: 1px solid var(--border); border-left: 3px solid var(--border-strong);
+    background: #fff; padding: 16px 16px 14px; margin-bottom: 16px;
+    border-radius: 2px; transition: border-left-color 0.25s, box-shadow 0.25s;
+    scroll-margin-top: 90px;
+  }
+  .element-panel.panel-flash {
+    border-left-color: var(--red);
+    box-shadow: 0 0 0 2px rgba(224,52,42,0.18);
+    animation: panelFlashPulse 0.9s ease;
+  }
+  @keyframes panelFlashPulse {
+    0% { background: rgba(224,52,42,0.08); }
+    100% { background: #fff; }
+  }
+
+  /* ── LAYOUT TEMPLATES ── */
+  .template-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    margin-top: 8px;
+  }
+  .template-swatch {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    border: 2px solid var(--border-strong);
+    background: var(--charcoal);
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .template-swatch:hover { transform: translateY(-1px); border-color: var(--mid); }
+  .template-swatch.active { border-color: var(--red); box-shadow: 0 0 0 1px var(--red); }
+  .template-swatch .tpl-dot {
+    position: absolute;
+    border-radius: 2px;
+    background: rgba(245,240,232,0.8);
+    transform: translate(-50%, -50%);
+  }
+  .template-swatch .tpl-photo {
+    position: absolute;
+    border: 1px dashed rgba(245,240,232,0.35);
+    border-radius: 2px;
+    transform: translate(-50%, -50%);
+  }
+  .template-swatch .tpl-name {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 3px 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5px; font-weight: 600; letter-spacing: 0.02em;
+    text-transform: uppercase; color: #fff;
+    background: rgba(0,0,0,0.55);
+    text-align: center;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .section-divider {
+    margin: 26px 0 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--red);
+  }
+
+  /* ── PREVIEW PANEL ── */
+  .result-panel {
+    background: var(--dark);
+    position: sticky; top: 14px;
+    max-height: calc(100vh - 28px);
+    overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(26,20,16,0.18);
+    border-top: 2px solid var(--red);
+    padding-bottom: 22px;
+  }
+  .result-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(245,240,232,0.35);
+  }
+  .result-status {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: #3a8a52; letter-spacing: 0.1em;
+  }
+  .result-status-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #3a8a52;
+    animation: statusPulse 2s ease-in-out infinite;
+  }
+  @keyframes statusPulse { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+
+  /* ── CANVAS AREA + SIDE TOOLBAR ──
+     Canvas-wrap and the controls (remove bg, grid, zoom, rotate, download)
+     sit side by side instead of stacked, so the preview itself gets all the
+     vertical space that used to be eaten by full-width toolbar rows below
+     it — the canvas ends up meaningfully bigger without needing more
+     overall panel height. Falls back to stacked (toolbar below canvas) on
+     narrow screens where a fixed side column would be too cramped. */
+  .canvas-area {
+    display: flex; flex-direction: column;
+  }
+  @media(min-width: 640px) {
+    .canvas-area { flex-direction: row; align-items: stretch; }
+  }
+  .side-toolbar {
+    display: flex; flex-direction: column; gap: 14px;
+    padding: 20px 20px 24px;
+    flex-shrink: 0;
+  }
+  @media(min-width: 640px) {
+    .side-toolbar {
+      width: 208px;
+      border-left: 1px solid rgba(255,255,255,0.07);
+      overflow-y: auto;
+    }
+  }
+  .side-toolbar-group {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .side-toolbar-group .toolbar-btn { width: 100%; }
+  .side-zoom-row { display: flex; align-items: center; gap: 8px; }
+  .side-zoom-row input[type=range] { flex: 1; }
+
+  .canvas-wrap {
+    padding: 24px; display: flex; justify-content: center; align-items: center;
+    min-height: 320px;
+    flex: 1; min-width: 0;
+  }
+  .canvas-stage {
+    position: relative; display: inline-block; line-height: 0;
+    max-width: 100%;
+  }
+  #adCanvas {
+    max-width: 100%; height: auto; display: block;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    background: #222;
+  }
+  .canvas-placeholder {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: rgba(245,240,232,0.25);
+    text-align: center; padding: 60px 20px; line-height: 1.7;
+  }
+
+  /* ── UPLOAD-ONTO-CANVAS OVERLAY ── */
+  .canvas-upload-overlay {
+    position: absolute; inset: 0; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; text-align: center; padding: 20px;
+    cursor: pointer;
+    background: rgba(0,0,0,0.15);
+    border: none;
+    transition: background 0.2s;
+    /* .canvas-stage sets line-height:0 to trim whitespace under the inline
+       <canvas> — reset it here so this overlay's text lines don't collapse
+       on top of each other. */
+    line-height: 1.4;
+  }
+  .canvas-upload-overlay:hover, .canvas-upload-overlay.dragover {
+    background: rgba(196,28,28,0.18);
+  }
+  .canvas-upload-overlay.has-image { display: none; }
+  .canvas-upload-icon { font-size: 26px; color: rgba(255,255,255,0.85); }
+  .canvas-upload-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; color: #fff;
+  }
+  .canvas-upload-sub { font-size: 10.5px; color: rgba(255,255,255,0.55); }
+
+  /* ── ALIGNMENT GRID (editor-only guide, never exported to the PNG) ── */
+  .grid-overlay {
+    position: absolute; inset: 0; z-index: 4;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    /* rule-of-thirds lines (two evenly-spaced verticals + horizontals) plus
+       an outer safe-zone border */
+    background-image:
+      linear-gradient(90deg,
+        transparent calc(33.333% - 1px), rgba(255,255,255,0.55) calc(33.333% - 1px), rgba(255,255,255,0.55) 33.333%, transparent 33.333%,
+        transparent calc(66.666% - 1px), rgba(255,255,255,0.55) calc(66.666% - 1px), rgba(255,255,255,0.55) 66.666%, transparent 66.666%),
+      linear-gradient(0deg,
+        transparent calc(33.333% - 1px), rgba(255,255,255,0.55) calc(33.333% - 1px), rgba(255,255,255,0.55) 33.333%, transparent 33.333%,
+        transparent calc(66.666% - 1px), rgba(255,255,255,0.55) calc(66.666% - 1px), rgba(255,255,255,0.55) 66.666%, transparent 66.666%);
+    box-shadow: inset 0 0 0 2px rgba(196,28,28,0.6);
+  }
+  .grid-overlay.show { opacity: 1; }
+
+  /* ── BACKGROUND-REMOVAL PROCESSING OVERLAY ── */
+  .processing-overlay {
+    position: absolute; inset: 0; z-index: 6;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px;
+    background: rgba(10,8,6,0.68);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .processing-overlay.show { opacity: 1; pointer-events: auto; }
+  .spinner {
+    width: 42px; height: 42px;
+    border: 4px solid rgba(255,255,255,0.22);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spinnerRotate 0.85s linear infinite;
+  }
+  @keyframes spinnerRotate { to { transform: rotate(360deg); } }
+  .processing-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #fff; text-align: center;
+    max-width: 80%;
+  }
+  .processing-bar-track {
+    width: 180px; height: 4px;
+    background: rgba(255,255,255,0.18);
+    overflow: hidden;
+  }
+  .processing-bar-fill {
+    height: 100%; width: 0%;
+    background: var(--red2);
+    transition: width 0.25s ease-out;
+  }
+  /* indeterminate state (no known percentage yet) — sliding stripe instead of a fixed %  */
+  .processing-bar-fill.indeterminate {
+    width: 30% !important;
+    animation: processingSlide 1.1s ease-in-out infinite;
+  }
+  @keyframes processingSlide { 0%{transform:translateX(-100%);} 100%{transform:translateX(400%);} }
+
+  /* ── DRAG-TO-EDIT LAYER ── */
+  .edit-layer { position: absolute; inset: 0; }
+  .drag-pan {
+    position: absolute; inset: 0; z-index: 1;
+    cursor: grab; touch-action: none;
+  }
+  .drag-pan:active { cursor: grabbing; }
+  /* No floating button at all — each handle IS the text/badge's own hit
+     area. left/top/width/height are set exactly (in %) to the real pixel
+     box render() just drew for that element (see syncHandleGeometry in the
+     script), so the draggable area matches the visible text/badge exactly —
+     no transform offset needed, the box itself is already in the right
+     place. Fully invisible by default; a faint highlight appears on
+     hover/drag so it stays discoverable without a button covering the art. */
+  .handle {
+    position: absolute; z-index: 3;
+    background: transparent;
+    border: none;
+    cursor: grab; touch-action: none;
+    user-select: none;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px transparent;
+    transition: background 0.15s, box-shadow 0.15s;
+  }
+  .handle:hover, .handle:active, .handle.dragging {
+    cursor: grabbing;
+    background: rgba(196,28,28,0.10);
+    box-shadow: 0 0 0 1px rgba(196,28,28,0.55);
+  }
+  .handle.hidden-handle { display: none; }
+
+  .scale-readout {
+    position: absolute; z-index: 5;
+    transform: translate(-50%, -100%);
+    background: rgba(10,8,6,0.92); color: #fff;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600;
+    letter-spacing: 0.04em; white-space: nowrap;
+    padding: 4px 9px; border-radius: 3px;
+    pointer-events: none; opacity: 0;
+    transition: opacity 0.15s;
+    margin-top: -10px;
+  }
+  .scale-readout.show { opacity: 1; }
+
+  /* ── PHOTO TOOLBAR (background removal + undo, next to the preview) ── */
+  .photo-toolbar {
+    display: flex; align-items: center; gap: 8px;
+    margin: 0 24px 10px;
+    flex-wrap: wrap;
+  }
+  .toolbar-btn {
+    padding: 10px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer;
+    background: rgba(255,255,255,0.06); color: #fff;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: all 0.2s;
+  }
+  .toolbar-btn:hover:not(:disabled) { background: var(--red); border-color: var(--red); }
+  .toolbar-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .toolbar-btn.working { background: var(--red2); border-color: var(--red2); }
+  .toolbar-btn.undo-btn {
+    background: transparent; color: rgba(245,240,232,0.6);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .toolbar-btn.undo-btn:hover { color: #fff; border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.06); }
+  .hidden-btn { display: none; }
+
+  /* ── ZOOM BAR (next to the preview, not the form) ── */
+  .zoom-bar {
+    display: flex; align-items: center; gap: 10px;
+    margin: 0 24px 18px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    flex-wrap: wrap;
+  }
+  .zoom-bar-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(245,240,232,0.45); margin-right: 2px;
+  }
+  .zoom-btn {
+    width: 26px; height: 26px; flex-shrink: 0;
+    background: rgba(255,255,255,0.06); color: #fff;
+    border: 1px solid rgba(255,255,255,0.15);
+    font-size: 15px; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .zoom-btn:hover { background: var(--red); border-color: var(--red); }
+  .zoom-bar input[type=range] { flex: 1; min-width: 60px; }
+  .zoom-val {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: rgba(245,240,232,0.6); width: 38px; flex-shrink: 0;
+  }
+  .zoom-reset {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(245,240,232,0.5); background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 7px 10px; cursor: pointer; flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .zoom-reset:hover { color: #fff; border-color: var(--red); background: rgba(196,28,28,0.15); }
+
+  .platform-tabs { display: flex; gap: 6px; padding: 0 24px 12px; }
+  .platform-tab {
+    padding: 9px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(245,240,232,0.55); cursor: pointer;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .platform-tab:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+  .platform-tab.active { background: #fff; color: var(--dark); border-color: #fff; }
+
+  .size-tabs { display: flex; gap: 6px; padding: 0 24px 18px; flex-wrap: wrap; }
+  .size-tab {
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(245,240,232,0.5); cursor: pointer;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.2s;
+  }
+  .size-tab:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
+  .size-tab.active { background: var(--red); color: #fff; border-color: var(--red); }
+  .size-tab.platform-hidden { display: none; }
+
+  .download-btn {
+    display: block; width: 100%;
+    margin: auto 0 0; /* pinned to the bottom of the side toolbar */
+    padding: 14px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer;
+    background: var(--red); color: #fff;
+    border: 1px solid var(--red);
+    transition: all 0.25s;
+  }
+  .download-btn:hover { background: var(--red2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(196,28,28,0.3); }
+  .download-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .rules-block {
+    margin: 20px 24px 0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .rules-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(245,240,232,0.25);
+    margin-bottom: 10px;
+  }
+  .rules-list { list-style: none; }
+  .rules-list li {
+    font-size: 11px; color: rgba(245,240,232,0.35);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.7; padding-left: 14px; position: relative;
+  }
+  .rules-list li::before {
+    content: '→'; position: absolute; left: 0;
+    color: var(--red); font-size: 9px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--cream);
+    border-top: 1px solid var(--border);
+    padding: 48px 64px;
+    display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  }
+  .footer-logo img { height: 26px; width: auto; }
+  .footer-links { display: flex; gap: 32px; }
+  .footer-links a {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; transition: color 0.25s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .footer-links a:hover { color: var(--red); }
+  .footer-copy {
+    font-size: 10px; color: rgba(26,20,16,0.3);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  @media(max-width:640px) {
+    footer { padding: 28px 20px; flex-direction: column; align-items: center; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+  }
+
+  /* ── FIT-TO-SCREEN MODE ──
+     Placed last so it wins the cascade over the earlier base rules for
+     .result-panel/.canvas-wrap/#adCanvas above (same specificity, later
+     source order). On screens wide enough for the two-column layout, main
+     is height-locked by fitAppHeight() (see the page script) to exactly
+     fill the viewport below the slim hero strip. The form column then
+     scrolls WITHIN itself; the live preview column never needs to scroll —
+     both stay fully visible without moving the page. Below 901px there's
+     no room for that, so it falls back to the normal stacked, page-
+     scrolling layout untouched. */
+  @media(min-width: 901px) {
+    main { display: flex; flex-direction: column; padding-top: 14px; padding-bottom: 14px; overflow: hidden; }
+    .grid { flex: 1; min-height: 0; align-items: stretch; }
+    .form-card { height: 100%; overflow-y: auto; }
+    /* Sticky + max-height stays ON here too (not overridden to static) as a
+       safety net: if fitAppHeight()'s JS pixel-lock is ever off (a resize
+       race, a slow web-font load, a future bug), the preview still can't
+       scroll out of the viewport — it just sticks and self-caps via CSS
+       alone, no JS required. When the JS sizing *does* land correctly,
+       main's own height already equals the available space, so sticky
+       has nothing to "stick" against and this rule is a no-op in practice. */
+    .result-panel { height: 100%; display: flex; flex-direction: column; overflow-y: auto; max-height: 100%; }
+    /* canvas-stage stays inline-block/shrink-to-fit (untouched) so it keeps
+       hugging the canvas exactly — the drag handles, grid overlay, and
+       upload overlay are all positioned absolutely against canvas-stage's
+       own box, and that alignment breaks if this box ever gets bigger than
+       the canvas itself. #adCanvas's actual max-height is set as an inline
+       px style by fitAppHeight() in the script instead of in CSS, because a
+       percentage max-height can't resolve through a shrink-to-fit ancestor
+       (canvas-stage's own height is defined BY its content, i.e. circular) —
+       this is the standard CSS height-percentage limitation, not a bug. */
+    .canvas-area { flex: 1; min-height: 0; }
+    .canvas-wrap { flex: 1; min-height: 0; padding: 14px; overflow: hidden; }
+    .side-toolbar { max-height: 100%; }
+    .rules-block { display: none; } /* least-essential content — dropped first to give the preview room to breathe */
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo"><a href="https://frxmedia.com/"><img src="logotransparent.png" alt="FRX Media"></a></div>
+  <ul class="nav-links">
+    <li><a href="https://frxmedia.com/">Home</a></li><li><a href="https://frxmedia.com/#services">Services</a></li>
+    <li><a href="https://frxmedia.com/#results">Results</a></li>
+    <li><a href="https://frxmedia.com/#process">Process</a></li>
+    <li class="nav-dropdown" id="toolsDropdown">
+      <button type="button" class="nav-dropdown-toggle" id="toolsDropdownToggle">Tools</button>
+      <ul class="nav-dropdown-menu">
+        <li><a href="naming.html">FRX Namer — Campaign Naming</a></li>
+        <li><a href="adgen.html">FRX Creative Studio — Ad Creatives</a></li>
+      </ul>
+    </li>
+    <li><a href="https://frxmedia.com/#contact">Contact</a></li>
+  </ul>
+  <a href="https://frxmedia.com/#contact" class="nav-cta">Request Audit →</a>
+</nav>
+
+<!-- HERO -->
+<div class="tool-hero">
+  <div class="tool-hero-inner">
+    <div class="tool-eyebrow">Free Tool · FRX Media</div>
+    <h1>FRX Creative <em>Studio</em></h1>
+    <div class="tool-hero-sub">Ad Creative Generator — Product Photo → Sale-Ready Creative — 100% Browser-Side, Nothing Uploaded to a Server</div>
+  </div>
+</div>
+<div style="height:1px;background:linear-gradient(90deg,var(--red),transparent);opacity:0.4;"></div>
+
+<script>
+(function() {
+  var dropdown = document.getElementById('toolsDropdown');
+  var toggle = document.getElementById('toolsDropdownToggle');
+  if (!dropdown || !toggle) return;
+  toggle.addEventListener('click', function(e) {
+    e.stopPropagation();
+    dropdown.classList.toggle('open');
+  });
+  document.addEventListener('click', function(e) {
+    if (dropdown.classList.contains('open') && !dropdown.contains(e.target)) {
+      dropdown.classList.remove('open');
+    }
+  });
+  window.addEventListener('scroll', function() {
+    dropdown.classList.remove('open');
+  }, { passive: true });
+})();
+</script>
+
+<main>
+  <div class="grid">
+
+    <!-- FORM COLUMN -->
+    <div class="form-card">
+      <div class="form-head">
+        <div class="form-eyebrow">Step 01</div>
+        <div class="form-title">Upload Product</div>
+      </div>
+
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept="image/*">
+        <div class="upload-icon">⇧</div>
+        <div class="upload-label">Click or drop product image</div>
+        <div class="upload-sub">JPG / PNG — placed onto the creative as-is</div>
+        <div class="upload-status" id="uploadStatus">
+          Removing background…
+          <div class="bar"><div class="bar-fill"></div></div>
+        </div>
+      </div>
+      <div class="removebg-hint" id="removeBgHint">Background removal, undo, and zoom now live in the photo toolbar right above the preview — scroll or look to the right →</div>
+
+      <div class="field toggle-field element-panel" id="panel-logo" style="margin-bottom:22px;">
+        <label>Brand Logo (optional)</label>
+        <div class="upload-zone" id="logoUploadZone" style="padding:18px 14px; margin-bottom:0;">
+          <input type="file" id="logoFileInput" accept="image/*">
+          <div class="upload-icon" style="font-size:20px; margin-bottom:4px;">⇧</div>
+          <div class="upload-label">Click or drop logo image</div>
+          <div class="upload-sub">PNG with transparency recommended — drag it into place on the preview</div>
+        </div>
+        <div id="logoActions" style="display:none; margin-top:10px; gap:8px;">
+          <button type="button" class="toolbar-btn undo-btn" id="removeLogoBtn" style="flex:1; color: var(--mid); background: var(--parchment); border-color: var(--border-strong);">Remove Logo</button>
+        </div>
+        <label class="toggle-label" style="margin-top:10px;"><input type="checkbox" id="t-logo" checked><span>Show Logo</span></label>
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-logo" min="20" max="300" value="100">
+          <span class="size-val" id="szv-logo">100%</span>
+        </div>
+        <div class="size-row">
+          <label>Rotate</label>
+          <input type="range" id="rot-logo" min="-180" max="180" value="0">
+          <span class="size-val" id="rotv-logo">0°</span>
+        </div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-logo" min="10" max="100" value="100">
+          <span class="size-val" id="opv-logo">100%</span>
+        </div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-logo"><span>Place behind photo</span></label>
+      </div>
+
+      <div class="form-head">
+        <div class="form-eyebrow">Step 02</div>
+        <div class="form-title">Creative Details</div>
+      </div>
+
+      <div class="field">
+        <label>Layout Templates</label>
+        <div class="template-grid" id="templateGrid"></div>
+        <div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-top:6px;">Repositions every element for this aspect ratio in one click. Colors, text, and photo stay as they are — drag anything afterward to fine-tune.</div>
+      </div>
+
+      <div class="field element-panel" id="panel-headline">
+        <label class="toggle-label"><input type="checkbox" id="t-headline" checked><span>Big Background Text</span></label>
+        <input type="text" id="f-bigtext" placeholder="e.g. SALE" value="SALE" maxlength="14">
+        <select id="f-headline-font" style="margin-top:8px;">
+          <option value="'Barlow Condensed', sans-serif" data-weight="900" selected>Barlow Condensed (Classic)</option>
+          <option value="'Anton', sans-serif" data-weight="400">Anton</option>
+          <option value="'Bebas Neue', sans-serif" data-weight="400">Bebas Neue</option>
+          <option value="'Oswald', sans-serif" data-weight="700">Oswald</option>
+          <option value="'Montserrat', sans-serif" data-weight="900">Montserrat</option>
+          <option value="'Poppins', sans-serif" data-weight="800">Poppins</option>
+          <option value="'Playfair Display', serif" data-weight="900">Playfair Display</option>
+          <option value="'Archivo Black', sans-serif" data-weight="400">Archivo Black</option>
+          <option value="'JetBrains Mono', monospace" data-weight="700">JetBrains Mono</option>
+        </select>
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-headline" min="40" max="300" value="100">
+          <span class="size-val" id="szv-headline">100%</span>
+        </div>
+        <div class="size-row">
+          <label>Rotate</label>
+          <input type="range" id="rot-headline" min="-45" max="45" value="0">
+          <span class="size-val" id="rotv-headline">0°</span>
+        </div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-headline" min="10" max="100" value="100">
+          <span class="size-val" id="opv-headline">100%</span>
+        </div>
+        <div class="size-row">
+          <label>Outline</label>
+          <input type="range" id="outline-headline" min="0" max="150" value="50">
+          <span class="size-val" id="outlinev-headline">100%</span>
+        </div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-headline"><span>Place behind photo</span></label>
+      </div>
+
+      <div class="field-row">
+        <div class="field element-panel" id="panel-discount">
+          <label class="toggle-label"><input type="checkbox" id="t-discount" checked><span>Discount Badge</span></label>
+          <input type="text" id="f-discount" placeholder="e.g. 40% OFF" value="40% OFF" maxlength="12">
+          <div class="size-row">
+            <label>Size</label>
+            <input type="range" id="sz-discount" min="40" max="300" value="100">
+            <span class="size-val" id="szv-discount">100%</span>
+          </div>
+          <div class="size-row">
+            <label>Opacity</label>
+            <input type="range" id="op-discount" min="10" max="100" value="100">
+            <span class="size-val" id="opv-discount">100%</span>
+          </div>
+          <label class="toggle-label" style="margin-top:6px; font-size:10px;"><input type="checkbox" id="layer-discount"><span>Behind photo</span></label>
+        </div>
+        <div class="field element-panel" id="panel-cta">
+          <label class="toggle-label"><input type="checkbox" id="t-cta" checked><span>CTA Button</span></label>
+          <input type="text" id="f-cta" placeholder="e.g. Shop Now" value="Shop Now" maxlength="16">
+          <div class="size-row">
+            <label>Size</label>
+            <input type="range" id="sz-cta" min="40" max="300" value="100">
+            <span class="size-val" id="szv-cta">100%</span>
+          </div>
+          <div class="size-row">
+            <label>Opacity</label>
+            <input type="range" id="op-cta" min="10" max="100" value="100">
+            <span class="size-val" id="opv-cta">100%</span>
+          </div>
+          <label class="toggle-label" style="margin-top:6px; font-size:10px;"><input type="checkbox" id="layer-cta"><span>Behind photo</span></label>
+        </div>
+      </div>
+
+      <div class="field element-panel" id="panel-brand">
+        <label class="toggle-label"><input type="checkbox" id="t-brand" checked><span>Brand Name</span></label>
+        <input type="text" id="f-brand" placeholder="e.g. Nike" value="Your Brand" maxlength="20">
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-brand" min="40" max="300" value="100">
+          <span class="size-val" id="szv-brand">100%</span>
+        </div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-brand" min="10" max="100" value="100">
+          <span class="size-val" id="opv-brand">100%</span>
+        </div>
+        <div class="size-row">
+          <label>Outline</label>
+          <input type="range" id="outline-brand" min="0" max="150" value="50">
+          <span class="size-val" id="outlinev-brand">100%</span>
+        </div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-brand"><span>Place behind photo</span></label>
+      </div>
+
+      <div class="element-panel" id="panel-info">
+        <div class="field toggle-field" style="margin-bottom:14px;">
+          <label class="toggle-label"><input type="checkbox" id="t-info" checked><span>Product Name / Price Block</span></label>
+          <div class="field-row" style="margin-top:8px;">
+            <div class="field" style="margin-bottom:0;">
+              <label>Product Name</label>
+              <input type="text" id="f-product" placeholder="e.g. Joyride Run Flyknit" value="Product Name" maxlength="26">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label>Price</label>
+              <input type="text" id="f-price" placeholder="e.g. $49.00" value="$49.00" maxlength="12">
+            </div>
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom:0;">
+          <label class="toggle-label"><input type="checkbox" id="t-oldprice" checked><span>Original Price (shown struck-through)</span></label>
+          <input type="text" id="f-oldprice" placeholder="e.g. $79.00" value="$79.00" maxlength="12">
+          <div class="size-row">
+            <label>Size</label>
+            <input type="range" id="sz-info" min="40" max="300" value="100">
+            <span class="size-val" id="szv-info">100%</span>
+          </div>
+          <div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-top:4px;">Sizes the whole product name / price block together</div>
+          <div class="size-row">
+            <label>Opacity</label>
+            <input type="range" id="op-info" min="10" max="100" value="100">
+            <span class="size-val" id="opv-info">100%</span>
+          </div>
+          <div class="size-row">
+            <label>Outline</label>
+            <input type="range" id="outline-info" min="0" max="150" value="50">
+            <span class="size-val" id="outlinev-info">100%</span>
+          </div>
+          <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-info"><span>Place behind photo</span></label>
+        </div>
+      </div>
+
+      <div class="section-divider">Extra Overlays</div>
+
+      <div class="field toggle-field element-panel" id="panel-rating">
+        <label class="toggle-label"><input type="checkbox" id="t-rating" checked><span>Rating Badge</span></label>
+        <div class="field-row" style="margin-top:8px;">
+          <div class="field" style="margin-bottom:0;">
+            <label>Stars</label>
+            <select id="f-rating-stars">
+              <option value="5">★★★★★ (5.0)</option>
+              <option value="4.5" selected>★★★★☆ (4.5)</option>
+              <option value="4">★★★★☆ (4.0)</option>
+              <option value="3.5">★★★☆☆ (3.5)</option>
+              <option value="3">★★★☆☆ (3.0)</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Review Count</label>
+            <input type="text" id="f-rating-count" value="3,299 Customers" maxlength="22">
+          </div>
+        </div>
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-rating" min="40" max="300" value="100">
+          <span class="size-val" id="szv-rating">100%</span>
+        </div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-rating" min="10" max="100" value="100">
+          <span class="size-val" id="opv-rating">100%</span>
+        </div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-rating"><span>Place behind photo</span></label>
+      </div>
+
+      <div class="field toggle-field element-panel" id="panel-coupon">
+        <label class="toggle-label"><input type="checkbox" id="t-coupon"><span>Coupon Code</span></label>
+        <input type="text" id="f-coupon" placeholder="e.g. SAVE40" value="SAVE40" maxlength="16" style="margin-top:8px;">
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-coupon" min="40" max="300" value="100">
+          <span class="size-val" id="szv-coupon">100%</span>
+        </div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-coupon" min="10" max="100" value="100">
+          <span class="size-val" id="opv-coupon">100%</span>
+        </div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-coupon"><span>Place behind photo</span></label>
+      </div>
+
+      <div class="field toggle-field element-panel" id="panel-customtag">
+        <label class="toggle-label"><input type="checkbox" id="t-customtag"><span>Custom Text Tile</span></label>
+        <input type="text" id="f-customtag" placeholder="e.g. New Collection" value="New Collection" maxlength="24" style="margin-top:8px;">
+        <div class="size-row">
+          <label>Size</label>
+          <input type="range" id="sz-customtag" min="40" max="300" value="100">
+          <span class="size-val" id="szv-customtag">100%</span>
+        </div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-customtag" min="10" max="100" value="100">
+          <span class="size-val" id="opv-customtag">100%</span>
+        </div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-customtag"><span>Place behind photo</span></label>
+      </div>
+
+      <div class="section-divider" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <span>Style</span>
+        <button type="button" id="resetColorsBtn" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:var(--mid); background:var(--parchment); border:1px solid var(--border-strong); padding:5px 10px; cursor:pointer;">Reset Colors</button>
+      </div>
+
+      <div class="field">
+        <label>Background Gradient</label>
+        <div class="color-circle-row">
+          <div style="text-align:center;">
+            <div class="color-circle-wrap">
+              <input type="color" id="f-bg1" value="#1c3b3a">
+            </div>
+            <button type="button" class="eyedropper-btn" id="bg1EyedropperBtn" title="Pick color 1 from your photo or screen" style="margin:6px auto 0;">🎨</button>
+          </div>
+          <div style="font-size:16px; color:var(--muted);">→</div>
+          <div style="text-align:center;">
+            <div class="color-circle-wrap">
+              <input type="color" id="f-bg2" value="#0c1e1d">
+            </div>
+            <button type="button" class="eyedropper-btn" id="bg2EyedropperBtn" title="Pick color 2 from your photo or screen" style="margin:6px auto 0;">🎨</button>
+          </div>
+          <div class="color-circle-info">
+            <div class="color-circle-hex" id="f-bg1-hexlabel">#1C3B3A</div>
+            <div class="color-circle-hex" id="f-bg2-hexlabel" style="margin-top:2px;">#0C1E1D</div>
+          </div>
+        </div>
+        <input type="text" id="f-bg1-hex" value="#1c3b3a" style="display:none;">
+        <input type="text" id="f-bg2-hex" value="#0c1e1d" style="display:none;">
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Accent Color</label>
+          <div class="color-circle-row">
+            <div class="color-circle-wrap" style="width:38px; height:38px;">
+              <input type="color" id="f-accent" value="#e0342a" style="width:38px; height:38px;">
+            </div>
+          </div>
+          <input type="text" id="f-accent-hex" value="#e0342a" style="display:none;">
+        </div>
+        <div class="field">
+          <label>Text Color</label>
+          <div class="color-circle-row">
+            <div class="color-circle-wrap" style="width:38px; height:38px;">
+              <input type="color" id="f-text" value="#ffffff" style="width:38px; height:38px;">
+            </div>
+          </div>
+          <input type="text" id="f-text-hex" value="#ffffff" style="display:none;">
+        </div>
+      </div>
+
+      <div class="field toggle-field">
+        <label class="toggle-label"><input type="checkbox" id="t-overlay"><span>Gradient Overlay (duotone tint over the whole creative)</span></label>
+        <div class="field-row" style="margin-top:8px;">
+          <div class="field" style="margin-bottom:0;">
+            <label>Overlay Color 1</label>
+            <div class="color-field">
+              <input type="color" id="f-overlay1" value="#c41c1c">
+              <input type="text" id="f-overlay1-hex" value="#c41c1c">
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Overlay Color 2</label>
+            <div class="color-field">
+              <input type="color" id="f-overlay2" value="#1a1410">
+              <input type="text" id="f-overlay2-hex" value="#1a1410">
+            </div>
+          </div>
+        </div>
+        <div class="size-row">
+          <label>Strength</label>
+          <input type="range" id="sz-overlay" min="0" max="70" value="25">
+          <span class="size-val" id="szv-overlay">25%</span>
+        </div>
+      </div>
+
+      <div class="field toggle-field">
+        <label class="toggle-label"><input type="checkbox" id="t-textbackdrop"><span>Text Backdrop (soft blurred panel behind the headline for readability)</span></label>
+        <div class="size-row">
+          <label>Blur</label>
+          <input type="range" id="sz-backdropblur" min="0" max="100" value="50">
+          <span class="size-val" id="szv-backdropblur">50%</span>
+        </div>
+      </div>
+
+      <div class="field toggle-field">
+        <label>Text Outline Strength</label>
+        <div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-bottom:6px;">Controls the dark outline/shadow every text element auto-adds for readability — turn it down if it looks too heavy, or off entirely at 0%.</div>
+        <div class="size-row">
+          <label>Strength</label>
+          <input type="range" id="sz-outline" min="0" max="150" value="50">
+          <span class="size-val" id="szv-outline">100%</span>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <div style="font-size:10.5px; color:var(--muted); font-family:'JetBrains Mono',monospace; line-height:1.6; padding:10px 12px; background:var(--parchment); border-left:2px solid var(--red);">
+          Positioning &amp; zoom moved next to the preview — drag any dot on the creative to move it, scroll on a dot to resize that text/badge, drag the photo itself to pan, use the zoom bar under the preview to scale it.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PREVIEW COLUMN -->
+    <div class="result-panel">
+      <div class="result-header">
+        <div class="result-label">Live Preview</div>
+        <div class="result-status"><span class="result-status-dot"></span>Renders In-Browser</div>
+      </div>
+
+      <div class="platform-tabs">
+        <div class="platform-tab active" data-platform="meta">Meta</div>
+        <div class="platform-tab" data-platform="linkedin">LinkedIn</div>
+      </div>
+
+      <div class="size-tabs">
+        <div class="size-tab active" data-platform="meta" data-w="1080" data-h="1080">Feed Square 1:1</div>
+        <div class="size-tab" data-platform="meta" data-w="1080" data-h="1350">Feed Portrait 4:5</div>
+        <div class="size-tab" data-platform="meta" data-w="1200" data-h="628">Link Ad 1.91:1</div>
+        <div class="size-tab" data-platform="meta" data-w="1080" data-h="1920">Stories/Reels 9:16</div>
+        <div class="size-tab platform-hidden" data-platform="linkedin" data-w="1200" data-h="627">Single Image 1.91:1</div>
+        <div class="size-tab platform-hidden" data-platform="linkedin" data-w="1200" data-h="1200">Square 1:1</div>
+      </div>
+
+      <div class="canvas-area">
+        <div class="canvas-wrap">
+          <div class="canvas-stage" id="canvasStage">
+            <canvas id="adCanvas" width="1080" height="1080"></canvas>
+            <div class="canvas-upload-overlay" id="canvasUploadOverlay">
+              <div class="canvas-upload-icon">⇧</div>
+              <div class="canvas-upload-text">Click or drop a product photo here</div>
+              <div class="canvas-upload-sub">The creative's aspect ratio will auto-match your image</div>
+            </div>
+            <div class="edit-layer" id="editLayer">
+              <div class="drag-pan" id="dragPan" title="Drag to reposition the photo — drop a new photo here anytime"></div>
+              <div class="scale-readout" id="scaleReadout"></div>
+              <div class="handle" data-key="headline" title="Drag: headline text"></div>
+              <div class="handle" data-key="brand" title="Drag: brand name"></div>
+              <div class="handle" data-key="discount" title="Drag: discount badge"></div>
+              <div class="handle" data-key="rating" title="Drag: rating badge"></div>
+              <div class="handle" data-key="customtag" title="Drag: custom text tile"></div>
+              <div class="handle" data-key="coupon" title="Drag: coupon chip"></div>
+              <div class="handle" data-key="info" title="Drag: product name / price block"></div>
+              <div class="handle" data-key="cta" title="Drag: CTA button"></div>
+              <div class="handle hidden-handle" data-key="logo" title="Drag: logo"></div>
+            </div>
+            <div class="grid-overlay show" id="gridOverlay"></div>
+            <div class="processing-overlay" id="processingOverlay">
+              <div class="spinner"></div>
+              <div class="processing-text" id="processingText">Removing background…</div>
+              <div class="processing-bar-track"><div class="processing-bar-fill" id="processingBarFill"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-toolbar">
+          <div class="side-toolbar-group">
+            <button type="button" class="toolbar-btn" id="removeBgBtn" disabled>Remove Background (AI)</button>
+            <button type="button" class="toolbar-btn undo-btn hidden-btn" id="undoBgBtn">↺ Undo</button>
+            <button type="button" class="toolbar-btn working" id="gridToggleBtn">Hide Grid</button>
+          </div>
+
+          <div class="side-toolbar-group">
+            <span class="zoom-bar-label">Photo Zoom</span>
+            <div class="side-zoom-row">
+              <button type="button" class="zoom-btn" id="zoomOutBtn">−</button>
+              <input type="range" id="imgZoom" min="40" max="220" value="100">
+              <button type="button" class="zoom-btn" id="zoomInBtn">+</button>
+            </div>
+            <span class="zoom-val" id="zoomVal">100%</span>
+          </div>
+
+          <div class="side-toolbar-group">
+            <span class="zoom-bar-label">Photo Rotate</span>
+            <input type="range" id="imgRotate" min="-180" max="180" value="0">
+            <span class="zoom-val" id="rotateVal">0°</span>
+          </div>
+
+          <div class="side-toolbar-group">
+            <button type="button" class="zoom-reset" id="resetLayoutBtn" style="width:100%;">Reset Layout</button>
+          </div>
+
+          <button class="download-btn" id="downloadBtn">Download PNG</button>
+        </div>
+      </div>
+
+      <div class="rules-block">
+        <div class="rules-title">How It Works</div>
+        <ul class="rules-list">
+          <li>Upload runs a neural background-removal model locally in your browser tab</li>
+          <li>Your image never leaves your device — no server, no upload</li>
+          <li>Edit any field and the creative updates instantly</li>
+          <li>Drag any dot to reposition text/badges, scroll on a dot to resize it, drag the photo to pan, use the zoom bar to scale it</li>
+          <li>Each aspect ratio remembers its own layout — switching sizes won't reset your edits</li>
+          <li>Toggle rating, coupon, and custom tag overlays on or off per-creative</li>
+          <li>Export is full-resolution PNG, ready to upload to Meta / Google Ads</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><img src="logotransparent.png" alt="FRX Media"></div>
+  <div class="footer-links">
+    <a href="https://frxmedia.com/#services">Services</a>
+    <a href="https://frxmedia.com/naming.html">FRX Namer</a>
+    <a href="https://frxmedia.com/#contact">Contact</a>
+  </div>
+  <div class="footer-copy">© FRX Media</div>
+</footer>
+
+<script>
+// NOTE: this is a classic (non-module) script on purpose. All UI wiring below
+// must work even if the background-removal library fails to load (blocked
+// network, offline, opened via file:// instead of a server, etc). The library
+// is loaded lazily via dynamic import() inside handleFile(), wrapped in its
+// own try/catch, so a failure there can never take down the rest of the tool.
+
+const canvas = document.getElementById('adCanvas');
+// `let`, not `const` — exportHiResCanvas() temporarily points this at an
+// offscreen higher-resolution context so the exact same render() code can
+// draw the full-quality export without ever touching the on-screen canvas.
+let ctx = canvas.getContext('2d');
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+const uploadStatus = document.getElementById('uploadStatus');
+const downloadBtn = document.getElementById('downloadBtn');
+const removeBgBtn = document.getElementById('removeBgBtn');
+const undoBgBtn = document.getElementById('undoBgBtn');
+const removeBgHint = document.getElementById('removeBgHint');
+const editLayer = document.getElementById('editLayer');
+const dragPan = document.getElementById('dragPan');
+const imgZoom = document.getElementById('imgZoom');
+const zoomVal = document.getElementById('zoomVal');
+
+let productImg = null;   // HTMLImageElement currently drawn on the canvas
+let rawFile = null;      // the last uploaded File, kept so "Remove Background" can be run/re-run on it
+let plainImg = null;     // the original uploaded photo, untouched — what "Undo" restores
+let cutoutImg = null;    // cached background-removed result, so toggling back doesn't re-run the AI model
+let logoImg = null;      // HTMLImageElement for the uploaded brand logo, drawn + draggable independently of the photo
+let W = 1080, H = 1080;
+
+// Exact pixel bounding box (in canvas coordinate space) of whatever render()
+// just drew for each draggable key — refreshed every render() call, then
+// mirrored onto each handle's DOM box by syncHandleGeometry() so the
+// draggable area matches the actual visible text/badge 1:1, not a fixed-size
+// guess. Cleared at the top of render() so hidden elements report nothing.
+let elementBoxes = {};
+
+// ── LAYOUT (drag-to-position state) ──
+// Every draggable element is stored as a fraction (0–1) of the canvas's own
+// W/H, using the exact same anchor point render() draws it from — so moving
+// a handle and redrawing never need any unit conversion beyond *W / *H.
+// Kept per aspect-ratio (keyed by "WxH") so switching sizes can't clip or
+// hide anything — each ratio remembers its own arrangement.
+let layoutStore = {};
+
+function defaultLayoutFor(w, h) {
+  const wide = w >= h * 1.3; // landscape-ish ratios get a bit more breathing room
+  return {
+    headline:  { x: 0.055, y: wide ? 0.30 : 0.20, scale: 1.0 },
+    brand:     { x: 0.055, y: 0.08,   scale: 1.0 },
+    discount:  { x: 0.80,  y: 0.14,   scale: 1.0 },
+    rating:    { x: 0.945, y: 0.255,  scale: 1.0 },
+    customtag: { x: 0.055, y: 0.783,  scale: 1.0 },
+    coupon:    { x: 0.945, y: 0.783,  scale: 1.0 },
+    info:      { x: 0.055, y: 0.910,  scale: 1.0 },
+    cta:       { x: 0.895, y: 0.9225, scale: 1.0 },
+    image:     { x: 0.5,   y: 0.5,    scale: 1.0 },
+    logo:      { x: 0.9,   y: 0.08,   scale: 1.0 }
+  };
+}
+
+// Text/badge size for a layout element — falls back to 1 for any layout
+// saved before this feature existed (so old saved layouts don't break).
+function sc(key) { return getLayout()[key].scale || 1; }
+
+function sizeKey() { return W + 'x' + H; }
+
+function getLayout() {
+  const key = sizeKey();
+  if (!layoutStore[key]) layoutStore[key] = defaultLayoutFor(W, H);
+  return layoutStore[key];
+}
+
+// ── LAYOUT TEMPLATES ──
+// Full-arrangement presets, à la Canva's template gallery — each one
+// repositions every draggable element (not just colors). Everything stays
+// fraction-based (0–1 of W/H) exactly like defaultLayoutFor, so a template
+// applies cleanly to whatever aspect ratio is currently selected. Text
+// content, photo, and colors are untouched; only x/y/scale change, and the
+// result lands in the normal layoutStore so it's still fully draggable
+// afterward.
+const LAYOUT_TEMPLATES = [
+  {
+    key: 'classic', name: 'Classic',
+    dots: { headline:[0.2,0.28], brand:[0.2,0.1], discount:[0.78,0.16], rating:[0.86,0.28], customtag:[0.2,0.76], coupon:[0.8,0.76], info:[0.2,0.88], cta:[0.78,0.9], image:[0.5,0.5] },
+    build: defaultLayoutFor
+  },
+  {
+    // Headline sits well clear of brand above and the badge/rating column
+    // stays clear on the right; photo is a mid-size backdrop behind the
+    // bottom info row (that's intentional layering — smartText's adaptive
+    // shadow keeps it readable — only foreground-vs-foreground text/badge
+    // collisions are treated as real overlap here).
+    key: 'topBanner', name: 'Top Banner',
+    dots: { headline:[0.2,0.24], brand:[0.2,0.06], discount:[0.86,0.13], rating:[0.9,0.28], customtag:[0.2,0.78], coupon:[0.8,0.78], info:[0.2,0.885], cta:[0.5,0.945], image:[0.5,0.62] },
+    build: (w, h) => ({
+      headline:  { x: 0.055, y: 0.235, scale: 0.78 },
+      brand:     { x: 0.055, y: 0.055, scale: 0.8  },
+      discount:  { x: 0.86,  y: 0.135, scale: 0.68 },
+      rating:    { x: 0.945, y: 0.285, scale: 0.75 },
+      customtag: { x: 0.055, y: 0.775, scale: 0.85 },
+      coupon:    { x: 0.945, y: 0.775, scale: 0.85 },
+      info:      { x: 0.055, y: 0.885, scale: 0.9  },
+      cta:       { x: 0.5,   y: 0.945, scale: 0.85 },
+      image:     { x: 0.5,   y: 0.64,  scale: 0.85 },
+      logo:      { x: 0.92,  y: 0.055, scale: 0.7  }
+    })
+  },
+  {
+    // Text column occupies roughly the left 42% of the canvas, stacked
+    // top-to-bottom with generous gaps; photo takes the right ~55%. Every
+    // left-column element is scaled down (≤0.85) specifically so it fits
+    // that narrower width without wrapping into the photo half.
+    key: 'sideSplit', name: 'Side Split',
+    dots: { brand:[0.1,0.08], headline:[0.1,0.24], discount:[0.16,0.4], customtag:[0.1,0.5], coupon:[0.36,0.6], info:[0.1,0.72], rating:[0.36,0.86], cta:[0.2,0.9], image:[0.74,0.5] },
+    build: (w, h) => ({
+      brand:     { x: 0.045, y: 0.08,  scale: 0.8  },
+      headline:  { x: 0.045, y: 0.245, scale: 0.55 },
+      discount:  { x: 0.155, y: 0.42,  scale: 0.36 },
+      customtag: { x: 0.045, y: 0.535, scale: 0.6  },
+      coupon:    { x: 0.40,  y: 0.535, scale: 0.5  },
+      info:      { x: 0.045, y: 0.70,  scale: 0.62 },
+      rating:    { x: 0.40,  y: 0.855, scale: 0.5  },
+      cta:       { x: 0.20,  y: 0.925, scale: 0.7  },
+      image:     { x: 0.74,  y: 0.5,   scale: 1.05 },
+      logo:      { x: 0.045, y: 0.925, scale: 0.4  }
+    })
+  },
+  {
+    // Every text/badge element lives in its own corner or edge slot with no
+    // two elements sharing a row; the photo is the dominant full-bleed
+    // backdrop behind all of it.
+    key: 'minimalCorner', name: 'Minimal Corner',
+    dots: { brand:[0.2,0.07], discount:[0.86,0.12], rating:[0.9,0.26], customtag:[0.2,0.2], coupon:[0.9,0.4], logo:[0.82,0.82], headline:[0.2,0.87], info:[0.2,0.965], cta:[0.82,0.925], image:[0.5,0.46] },
+    build: (w, h) => ({
+      brand:     { x: 0.055, y: 0.065, scale: 0.7  },
+      discount:  { x: 0.90,  y: 0.115, scale: 0.5  },
+      rating:    { x: 0.945, y: 0.255, scale: 0.5  },
+      customtag: { x: 0.055, y: 0.19,  scale: 0.6  },
+      coupon:    { x: 0.945, y: 0.395, scale: 0.55 },
+      logo:      { x: 0.865, y: 0.82,  scale: 0.45 },
+      headline:  { x: 0.055, y: 0.87,  scale: 0.5  },
+      info:      { x: 0.055, y: 0.965, scale: 0.5  },
+      cta:       { x: 0.865, y: 0.925, scale: 0.7  },
+      image:     { x: 0.5,   y: 0.46,  scale: 1.05 }
+    })
+  },
+  {
+    // Big centered badge up top with clear air around it, headline/brand
+    // stacked below-left, rating balances it top-right, photo fills the
+    // lower half as a backdrop behind the bottom info row.
+    key: 'badgeFocus', name: 'Badge Focus',
+    dots: { discount:[0.5,0.17], brand:[0.2,0.38], headline:[0.2,0.5], rating:[0.86,0.38], customtag:[0.2,0.78], coupon:[0.8,0.78], info:[0.2,0.885], cta:[0.78,0.9225], image:[0.5,0.72] },
+    build: (w, h) => ({
+      discount:  { x: 0.5,   y: 0.175, scale: 0.85 },
+      brand:     { x: 0.055, y: 0.375, scale: 0.75 },
+      headline:  { x: 0.055, y: 0.50,  scale: 0.65 },
+      rating:    { x: 0.945, y: 0.375, scale: 0.7  },
+      customtag: { x: 0.055, y: 0.775, scale: 0.85 },
+      coupon:    { x: 0.945, y: 0.775, scale: 0.85 },
+      info:      { x: 0.055, y: 0.885, scale: 0.9  },
+      cta:       { x: 0.895, y: 0.9225,scale: 0.9  },
+      image:     { x: 0.5,   y: 0.72,  scale: 0.9  },
+      logo:      { x: 0.9,   y: 0.075, scale: 0.7  }
+    })
+  }
+];
+
+// Tracks which template (if any) currently matches each aspect ratio's
+// layout, purely for the "active" highlight — cleared by markTemplateDirty()
+// whenever the user drags/resizes/scales anything by hand, since at that
+// point the layout no longer matches the template exactly.
+let activeTemplatePerSize = {};
+function markTemplateDirty() {
+  activeTemplatePerSize[sizeKey()] = null;
+  syncTemplateActiveState();
+}
+
+function applyTemplate(tpl) {
+  layoutStore[sizeKey()] = tpl.build(W, H);
+  activeTemplatePerSize[sizeKey()] = tpl.key;
+  // Templates define a clean, deliberate arrangement — clear any manual
+  // tilt on the headline/logo so switching templates doesn't leave a
+  // leftover rotation that no longer matches the new layout.
+  const rotHeadline = document.getElementById('rot-headline');
+  const rotLogo = document.getElementById('rot-logo');
+  rotHeadline.value = 0; document.getElementById('rotv-headline').textContent = '0°';
+  rotLogo.value = 0; document.getElementById('rotv-logo').textContent = '0°';
+  syncZoomUI();
+  positionHandles();
+  syncSizeSliders();
+  syncTemplateActiveState();
+  render();
+}
+
+function syncTemplateActiveState() {
+  const active = activeTemplatePerSize[sizeKey()];
+  document.querySelectorAll('.template-swatch').forEach(el => {
+    el.classList.toggle('active', el.dataset.key === active);
+  });
+}
+
+function buildTemplateGrid() {
+  const grid = document.getElementById('templateGrid');
+  grid.innerHTML = '';
+  LAYOUT_TEMPLATES.forEach(tpl => {
+    const el = document.createElement('div');
+    el.className = 'template-swatch';
+    el.dataset.key = tpl.key;
+    el.title = tpl.name;
+    let dotsHtml = `<div class="tpl-photo" style="left:${tpl.dots.image[0]*100}%; top:${tpl.dots.image[1]*100}%; width:46%; height:46%;"></div>`;
+    Object.keys(tpl.dots).forEach(k => {
+      if (k === 'image') return;
+      const [dx, dy] = tpl.dots[k];
+      dotsHtml += `<div class="tpl-dot" style="left:${dx*100}%; top:${dy*100}%; width:${k==='headline'?16:9}px; height:${k==='headline'?6:5}px;"></div>`;
+    });
+    dotsHtml += `<div class="tpl-name">${tpl.name}</div>`;
+    el.innerHTML = dotsHtml;
+    el.addEventListener('click', () => applyTemplate(tpl));
+    grid.appendChild(el);
+  });
+  syncTemplateActiveState();
+}
+
+// ── SIZE TABS ──
+function selectSizeTab(tab) {
+  document.querySelectorAll('.size-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  W = parseInt(tab.dataset.w, 10);
+  H = parseInt(tab.dataset.h, 10);
+  canvas.width = W; canvas.height = H;
+  syncZoomUI();
+  updateHandleVisibility();
+  syncSizeSliders();
+  syncTemplateActiveState();
+  render();
+}
+document.querySelectorAll('.size-tab').forEach(tab => {
+  tab.addEventListener('click', () => selectSizeTab(tab));
+});
+
+// ── PLATFORM TABS (Meta / LinkedIn) ──
+document.querySelectorAll('.platform-tab').forEach(pTab => {
+  pTab.addEventListener('click', () => {
+    if (pTab.classList.contains('active')) return;
+    document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+    pTab.classList.add('active');
+    const platform = pTab.dataset.platform;
+    let firstVisible = null;
+    document.querySelectorAll('.size-tab').forEach(sTab => {
+      const match = sTab.dataset.platform === platform;
+      sTab.classList.toggle('platform-hidden', !match);
+      if (match && !firstVisible) firstVisible = sTab;
+    });
+    if (firstVisible) selectSizeTab(firstVisible);
+  });
+});
+
+// ── COLOR <-> HEX SYNC ──
+function syncColor(colorId, hexId) {
+  const c = document.getElementById(colorId);
+  const h = document.getElementById(hexId);
+  c.addEventListener('input', () => { h.value = c.value; render(); });
+  h.addEventListener('input', () => {
+    if (/^#[0-9a-fA-F]{6}$/.test(h.value)) { c.value = h.value; render(); }
+  });
+}
+syncColor('f-bg1','f-bg1-hex');
+syncColor('f-bg2','f-bg2-hex');
+syncColor('f-accent','f-accent-hex');
+syncColor('f-text','f-text-hex');
+syncColor('f-overlay1','f-overlay1-hex');
+syncColor('f-overlay2','f-overlay2-hex');
+
+// ── BACKGROUND GRADIENT: two simple circles, one per stop. Each has its
+// own eyedropper so colors can be picked straight off the uploaded photo
+// instead of hunting for a hex code. ──
+function setBgColorLabel(key, hex) {
+  document.getElementById('f-' + key).value = hex;
+  document.getElementById('f-' + key + '-hex').value = hex;
+  const label = document.getElementById('f-' + key + '-hexlabel');
+  if (label) label.textContent = hex.toUpperCase();
+}
+// NOTE: this must NOT call render() here — at this point in the script,
+// consts declared further down (e.g. HANDLE_PAD_FRAC used inside render's
+// syncHandleGeometry) haven't been initialized yet, so an early render()
+// call throws and silently kills every listener wired after it, including
+// the upload buttons. render() runs on its own once the page finishes
+// initializing, so these just need to set the label/value, not redraw.
+function setBgColor(key, hex) {
+  setBgColorLabel(key, hex);
+  render();
+}
+document.getElementById('f-bg1').addEventListener('input', (e) => setBgColor('bg1', e.target.value));
+document.getElementById('f-bg2').addEventListener('input', (e) => setBgColor('bg2', e.target.value));
+setBgColorLabel('bg1', document.getElementById('f-bg1').value);
+setBgColorLabel('bg2', document.getElementById('f-bg2').value);
+
+// Eyedropper buttons: pick a gradient stop straight off the screen (photo
+// included). Falls back to a disabled button with an explanatory tooltip
+// in browsers without the EyeDropper API (e.g. Firefox, Safari).
+function wireEyedropper(btnId, key) {
+  const btn = document.getElementById(btnId);
+  if (typeof window.EyeDropper === 'function') {
+    btn.addEventListener('click', async () => {
+      try {
+        const result = await new window.EyeDropper().open();
+        if (result && result.sRGBHex) setBgColor(key, result.sRGBHex);
+      } catch (e) { /* user cancelled the pick — nothing to do */ }
+    });
+  } else {
+    btn.disabled = true;
+    btn.title = 'Color picking from the image needs Chrome or Edge';
+  }
+}
+wireEyedropper('bg1EyedropperBtn', 'bg1');
+wireEyedropper('bg2EyedropperBtn', 'bg2');
+
+// Restores the tool's original color scheme (dark teal background, red
+// accent, white text) — an easy way back if colors get changed into an
+// unreadable combo like white text on a white background.
+const DEFAULT_COLORS = { bg1: '#1c3b3a', bg2: '#0c1e1d', accent: '#e0342a', text: '#ffffff' };
+document.getElementById('resetColorsBtn').addEventListener('click', () => {
+  setBgColor('bg1', DEFAULT_COLORS.bg1);
+  setBgColor('bg2', DEFAULT_COLORS.bg2);
+  document.getElementById('f-accent').value = DEFAULT_COLORS.accent;
+  document.getElementById('f-accent-hex').value = DEFAULT_COLORS.accent;
+  document.getElementById('f-text').value = DEFAULT_COLORS.text;
+  document.getElementById('f-text-hex').value = DEFAULT_COLORS.text;
+  render();
+});
+
+// ── LIVE FIELDS ──
+[
+  'f-bigtext','f-discount','f-cta','f-brand','f-product','f-price','f-oldprice',
+  'f-rating-stars','f-rating-count','f-coupon','f-customtag','f-headline-font'
+].forEach(id => {
+  document.getElementById(id).addEventListener('input', render);
+  document.getElementById(id).addEventListener('change', render);
+});
+['t-headline','t-brand','t-info','t-discount','t-cta','t-oldprice','t-rating','t-coupon','t-customtag'].forEach(id => {
+  document.getElementById(id).addEventListener('change', () => { updateHandleVisibility(); render(); });
+});
+['t-overlay','t-textbackdrop'].forEach(id => {
+  document.getElementById(id).addEventListener('change', render);
+});
+[
+  'layer-headline','layer-brand','layer-discount','layer-rating',
+  'layer-customtag','layer-coupon','layer-info','layer-cta','layer-logo'
+].forEach(id => {
+  document.getElementById(id).addEventListener('change', render);
+});
+document.getElementById('sz-overlay').addEventListener('input', () => {
+  document.getElementById('szv-overlay').textContent = document.getElementById('sz-overlay').value + '%';
+  render();
+});
+document.getElementById('sz-backdropblur').addEventListener('input', () => {
+  document.getElementById('szv-backdropblur').textContent = document.getElementById('sz-backdropblur').value + '%';
+  render();
+});
+document.getElementById('sz-outline').addEventListener('input', () => {
+  const v = document.getElementById('sz-outline').value;
+  document.getElementById('szv-outline').textContent = Math.round(v / 50 * 100) + '%';
+  render();
+});
+['outline-headline','outline-brand','outline-info'].forEach(id => {
+  const slider = document.getElementById(id);
+  const label = document.getElementById(id.replace('outline-', 'outlinev-'));
+  slider.addEventListener('input', () => {
+    if (label) label.textContent = Math.round(slider.value / 50 * 100) + '%';
+    render();
+  });
+});
+['op-headline','op-brand','op-info','op-cta','op-discount','op-rating','op-coupon','op-customtag','op-logo'].forEach(id => {
+  const slider = document.getElementById(id);
+  const label = document.getElementById(id.replace('op-', 'opv-'));
+  slider.addEventListener('input', () => {
+    if (label) label.textContent = slider.value + '%';
+    render();
+  });
+});
+function opacityOf(key) {
+  const slider = document.getElementById('op-' + key);
+  return slider ? (parseInt(slider.value, 10) || 100) / 100 : 1;
+}
+
+// ── ROTATION SLIDERS (headline text, logo, product photo) ──
+function wireRotationSlider(sliderId, labelId, onChange) {
+  const slider = document.getElementById(sliderId);
+  const label = document.getElementById(labelId);
+  slider.addEventListener('input', () => {
+    if (label) label.textContent = slider.value + '°';
+    if (onChange) onChange();
+    markTemplateDirty();
+    render();
+  });
+}
+wireRotationSlider('rot-headline', 'rotv-headline');
+wireRotationSlider('rot-logo', 'rotv-logo');
+wireRotationSlider('imgRotate', 'rotateVal');
+
+// ── ZOOM BAR (lives next to the preview, drives layout.image.scale) ──
+function syncZoomUI() {
+  const pct = Math.round(getLayout().image.scale * 100);
+  imgZoom.value = pct;
+  zoomVal.textContent = pct + '%';
+}
+function setZoom(pct) {
+  pct = Math.max(parseInt(imgZoom.min, 10), Math.min(parseInt(imgZoom.max, 10), pct));
+  getLayout().image.scale = pct / 100;
+  syncZoomUI();
+  markTemplateDirty();
+  render();
+}
+imgZoom.addEventListener('input', () => setZoom(parseInt(imgZoom.value, 10)));
+document.getElementById('zoomOutBtn').addEventListener('click', () => setZoom(parseInt(imgZoom.value, 10) - 10));
+document.getElementById('zoomInBtn').addEventListener('click', () => setZoom(parseInt(imgZoom.value, 10) + 10));
+document.getElementById('resetLayoutBtn').addEventListener('click', () => {
+  applyTemplate(LAYOUT_TEMPLATES[0]); // "Classic" is the original default layout
+});
+
+// ── SIDEBAR SIZE SLIDERS ──
+// Explicit, precise alternative to scroll-to-resize on the canvas — same
+// underlying layout[key].scale, so both controls always agree with each
+// other no matter which one was used last.
+const SIZE_SLIDER_KEYS = ['headline', 'brand', 'discount', 'rating', 'customtag', 'coupon', 'info', 'cta', 'logo'];
+
+function syncSizeSliders() {
+  const layout = getLayout();
+  SIZE_SLIDER_KEYS.forEach(key => {
+    const slider = document.getElementById('sz-' + key);
+    const label = document.getElementById('szv-' + key);
+    if (!slider || !layout[key]) return;
+    const pct = Math.round((layout[key].scale || 1) * 100);
+    slider.value = pct;
+    if (label) label.textContent = pct + '%';
+  });
+}
+
+SIZE_SLIDER_KEYS.forEach(key => {
+  const slider = document.getElementById('sz-' + key);
+  const label = document.getElementById('szv-' + key);
+  if (!slider) return;
+  slider.addEventListener('input', () => {
+    const pct = parseInt(slider.value, 10);
+    getLayout()[key].scale = pct / 100;
+    if (label) label.textContent = pct + '%';
+    markTemplateDirty();
+    render();
+  });
+});
+
+// ── DRAG-TO-EDIT: text/badge handles ──
+// Each handle's data-key matches a key in the layout object. Dragging moves
+// that element's anchor point by the same fraction render() reads it from.
+//
+// The handle's hit box is no longer a fixed guess — every render() call
+// records the exact pixel box it just drew for each element into
+// elementBoxes, and this function mirrors that box (plus a small grab
+// margin) onto the handle's left/top/width/height as percentages of the
+// canvas. Because the box is set as % of W/H — the same units the drawing
+// itself uses — it lines up pixel-for-pixel with the visible text/badge no
+// matter the font size, so "grab what you see" is exact instead of
+// approximate.
+const HANDLE_PAD_FRAC = 0.012; // ~1.2% of the shorter canvas dimension, added on all sides for an easier grab
+function syncHandleGeometry() {
+  const padX = W * HANDLE_PAD_FRAC, padY = H * HANDLE_PAD_FRAC;
+  document.querySelectorAll('.handle').forEach(h => {
+    const box = elementBoxes[h.dataset.key];
+    if (!box) return;
+    const left = box.x - padX, top = box.y - padY;
+    const w = box.w + padX * 2, h2 = box.h + padY * 2;
+    h.style.left = (left / W * 100) + '%';
+    h.style.top = (top / H * 100) + '%';
+    h.style.width = (w / W * 100) + '%';
+    h.style.height = (h2 / H * 100) + '%';
+  });
+}
+
+// Used only before the very first render (e.g. while web fonts are still
+// loading) so handles have *some* position — syncHandleGeometry() takes
+// over from here on out with exact boxes.
+function positionHandles() {
+  const layout = getLayout();
+  document.querySelectorAll('.handle').forEach(h => {
+    const key = h.dataset.key;
+    const pos = layout[key];
+    if (!pos) return;
+    h.style.left = (pos.x * 100) + '%';
+    h.style.top = (pos.y * 100) + '%';
+  });
+}
+
+function updateHandleVisibility() {
+  const vis = {
+    headline: document.getElementById('t-headline').checked,
+    brand: document.getElementById('t-brand').checked,
+    discount: document.getElementById('t-discount').checked,
+    rating: document.getElementById('t-rating').checked,
+    customtag: document.getElementById('t-customtag').checked,
+    coupon: document.getElementById('t-coupon').checked,
+    info: document.getElementById('t-info').checked,
+    cta: document.getElementById('t-cta').checked,
+    logo: !!logoImg && document.getElementById('t-logo').checked
+  };
+  document.querySelectorAll('.handle').forEach(h => {
+    h.classList.toggle('hidden-handle', !vis[h.dataset.key]);
+  });
+}
+
+// Delta-based dragging: nothing moves on the initial click — the element
+// only shifts by however far the pointer actually travels from where it was
+// grabbed. getPos() snapshots the element's position at drag-start; every
+// subsequent pointermove adds the pointer's movement (as a fraction of the
+// canvas box) on top of that snapshot, rather than snapping to the pointer's
+// absolute position.
+function makeDraggable(el, getPos, onMove, clampMin, clampMax) {
+  clampMin = clampMin === undefined ? 0 : clampMin;
+  clampMax = clampMax === undefined ? 1 : clampMax;
+  el.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    el.setPointerCapture(e.pointerId);
+    el.classList.add('dragging');
+    const rect = editLayer.getBoundingClientRect();
+    const start = getPos();
+    const startClientX = e.clientX, startClientY = e.clientY;
+    let moved = false;
+    const move = (ev) => {
+      const dxFrac = (ev.clientX - startClientX) / rect.width;
+      const dyFrac = (ev.clientY - startClientY) / rect.height;
+      if (!moved && Math.hypot(ev.clientX - startClientX, ev.clientY - startClientY) > 4) moved = true;
+      const fx = Math.max(clampMin, Math.min(clampMax, start.x + dxFrac));
+      const fy = Math.max(clampMin, Math.min(clampMax, start.y + dyFrac));
+      onMove(fx, fy);
+    };
+    const up = () => {
+      el.releasePointerCapture(e.pointerId);
+      el.classList.remove('dragging');
+      el.removeEventListener('pointermove', move);
+      el.removeEventListener('pointerup', up);
+      // A tap (no real drag) jumps the left-hand toolbar straight to that
+      // element's own settings panel, so clicking anything on the preview
+      // takes you right to its controls instead of scrolling to find them.
+      if (!moved) scrollToPanel(el.dataset.key);
+    };
+    el.addEventListener('pointermove', move);
+    el.addEventListener('pointerup', up);
+  });
+}
+
+// Scrolls the left form column to the clicked element's own settings panel
+// and briefly highlights it, so it's obvious which controls just appeared.
+function scrollToPanel(key) {
+  const panel = document.getElementById('panel-' + key);
+  if (!panel) return;
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  panel.classList.remove('panel-flash');
+  // Force reflow so re-adding the class restarts the flash animation even
+  // if the same element was just clicked a moment ago.
+  void panel.offsetWidth;
+  panel.classList.add('panel-flash');
+  clearTimeout(scrollToPanel._t);
+  scrollToPanel._t = setTimeout(() => panel.classList.remove('panel-flash'), 900);
+}
+
+document.querySelectorAll('.handle').forEach(h => {
+  makeDraggable(
+    h,
+    () => ({ x: getLayout()[h.dataset.key].x, y: getLayout()[h.dataset.key].y }),
+    (fx, fy) => {
+      const key = h.dataset.key;
+      getLayout()[key].x = fx;
+      getLayout()[key].y = fy;
+      markTemplateDirty();
+      // render() recomputes this handle's exact box via syncHandleGeometry —
+      // no need to touch h.style here, and doing so would briefly misplace
+      // it (layout.x/y is the element's draw anchor, not its box corner).
+      render();
+    }
+  );
+});
+
+// ── SCROLL-TO-RESIZE: each handle's text/badge grows or shrinks on wheel ──
+const scaleReadout = document.getElementById('scaleReadout');
+const HANDLE_SIZE_LABEL = {
+  headline: 'Headline Size', brand: 'Brand Text Size', discount: 'Badge Size',
+  rating: 'Rating Badge Size', customtag: 'Tag Size', coupon: 'Coupon Size',
+  info: 'Price Block Size', cta: 'Button Size', logo: 'Logo Size'
+};
+let scaleReadoutTimer = null;
+function flashScaleReadout(handleEl, key, pct) {
+  scaleReadout.textContent = (HANDLE_SIZE_LABEL[key] || 'Size') + ': ' + Math.round(pct * 100) + '%';
+  scaleReadout.style.left = handleEl.style.left;
+  scaleReadout.style.top = handleEl.style.top;
+  scaleReadout.classList.add('show');
+  clearTimeout(scaleReadoutTimer);
+  scaleReadoutTimer = setTimeout(() => scaleReadout.classList.remove('show'), 850);
+}
+
+document.querySelectorAll('.handle').forEach(h => {
+  h.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const key = h.dataset.key;
+    const entry = getLayout()[key];
+    if (!entry) return;
+    const current = entry.scale || 1;
+    const next = Math.max(0.4, Math.min(3, current + (e.deltaY < 0 ? 0.06 : -0.06)));
+    entry.scale = next;
+    flashScaleReadout(h, key, next);
+    syncSizeSliders();
+    markTemplateDirty();
+    render();
+  }, { passive: false });
+});
+
+// Dragging the photo itself pans it (image.x/y are the image's own center
+// point, not clamped to 0–1, so the photo can be pushed partly off-canvas
+// on purpose — full manual control rather than us guessing what fits).
+makeDraggable(
+  dragPan,
+  () => ({ x: getLayout().image.x, y: getLayout().image.y }),
+  (fx, fy) => {
+    getLayout().image.x = fx;
+    getLayout().image.y = fy;
+    markTemplateDirty();
+    render();
+  },
+  -0.4, 1.4
+);
+
+// ── LOGO UPLOAD (separate, draggable layer independent of the product photo) ──
+const logoUploadZone = document.getElementById('logoUploadZone');
+const logoFileInput = document.getElementById('logoFileInput');
+const logoActions = document.getElementById('logoActions');
+const removeLogoBtn = document.getElementById('removeLogoBtn');
+const logoHandle = document.querySelector('.handle[data-key="logo"]');
+
+function handleLogoFile(file) {
+  loadImageFromFile(file, (img) => {
+    logoImg = img;
+    logoActions.style.display = 'flex';
+    updateHandleVisibility();
+    positionHandles();
+    render();
+  });
+}
+
+logoUploadZone.addEventListener('click', () => logoFileInput.click());
+logoUploadZone.addEventListener('dragover', (e) => { e.preventDefault(); logoUploadZone.classList.add('dragover'); });
+logoUploadZone.addEventListener('dragleave', () => logoUploadZone.classList.remove('dragover'));
+logoUploadZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  logoUploadZone.classList.remove('dragover');
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) handleLogoFile(e.dataTransfer.files[0]);
+});
+logoFileInput.addEventListener('change', (e) => {
+  if (e.target.files && e.target.files[0]) handleLogoFile(e.target.files[0]);
+});
+document.getElementById('t-logo').addEventListener('change', () => { updateHandleVisibility(); render(); });
+
+// ── ALIGNMENT GRID TOGGLE (editor guide only — not part of the exported PNG) ──
+const gridOverlay = document.getElementById('gridOverlay');
+const gridToggleBtn = document.getElementById('gridToggleBtn');
+gridToggleBtn.addEventListener('click', () => {
+  const showing = gridOverlay.classList.toggle('show');
+  gridToggleBtn.textContent = showing ? 'Hide Grid' : 'Show Grid';
+  gridToggleBtn.classList.toggle('working', showing);
+});
+removeLogoBtn.addEventListener('click', () => {
+  logoImg = null;
+  logoFileInput.value = '';
+  logoActions.style.display = 'none';
+  updateHandleVisibility();
+  render();
+});
+
+// ── UPLOAD HANDLING ──
+// Sidebar upload zone (Step 01)
+uploadZone.addEventListener('click', () => fileInput.click());
+uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadZone.classList.remove('dragover');
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
+});
+
+// Upload directly onto the preview — click-to-upload overlay shown until a
+// photo exists, plus the whole canvas stage stays a drop target afterward so
+// dropping a new photo on top of the preview swaps it out.
+const canvasStage = document.getElementById('canvasStage');
+const canvasUploadOverlay = document.getElementById('canvasUploadOverlay');
+
+canvasUploadOverlay.addEventListener('click', () => fileInput.click());
+[canvasStage, canvasUploadOverlay].forEach(el => {
+  el.addEventListener('dragover', (e) => { e.preventDefault(); canvasUploadOverlay.classList.add('dragover'); });
+  el.addEventListener('dragleave', () => canvasUploadOverlay.classList.remove('dragover'));
+  el.addEventListener('drop', (e) => {
+    e.preventDefault();
+    canvasUploadOverlay.classList.remove('dragover');
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+});
+
+// ── AUTO-MATCH ASPECT RATIO ──
+// Picks whichever size tab's own ratio is numerically closest to the
+// uploaded image's own ratio (log-scale comparison so e.g. 2:1 and 1:2 are
+// equally "far" from 1:1), switching platform tab first if needed.
+function autoSelectClosestAspectRatio(img) {
+  if (!img.naturalWidth || !img.naturalHeight) return;
+  const imgRatio = img.naturalWidth / img.naturalHeight;
+  let best = null, bestDelta = Infinity;
+  document.querySelectorAll('.size-tab').forEach(tab => {
+    const tw = parseInt(tab.dataset.w, 10), th = parseInt(tab.dataset.h, 10);
+    if (!tw || !th) return;
+    const delta = Math.abs(Math.log(tw / th) - Math.log(imgRatio));
+    if (delta < bestDelta) { bestDelta = delta; best = tab; }
+  });
+  if (!best) return;
+  const platform = best.dataset.platform;
+  const activePlatformTab = document.querySelector('.platform-tab.active');
+  if (activePlatformTab && activePlatformTab.dataset.platform !== platform) {
+    const platformTab = document.querySelector(`.platform-tab[data-platform="${platform}"]`);
+    if (platformTab) platformTab.click(); // reveals the matching size tabs for that platform
+  }
+  selectSizeTab(best);
+}
+
+function setStatus(text, showBar) {
+  uploadStatus.textContent = text;
+  if (showBar) {
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.innerHTML = '<div class="bar-fill"></div>';
+    uploadStatus.appendChild(bar);
+  }
+  uploadStatus.classList.add('show');
+}
+
+function loadImageFromFile(file, onDone) {
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => onDone(img);
+  img.onerror = () => setStatus('Could not read that file — try a JPG or PNG.', false);
+  img.src = url;
+}
+
+// Upload just places the photo on the canvas as-is. Background removal is a
+// separate, explicit step (see removeBgBtn below) so the user is always in
+// control of when the heavier AI processing runs.
+function handleFile(file) {
+  rawFile = file;
+  cutoutImg = null; // a new photo invalidates any previously cached cutout
+  uploadStatus.classList.remove('show');
+  downloadBtn.disabled = true;
+  removeBgBtn.disabled = true;
+  undoBgBtn.classList.add('hidden-btn');
+  loadImageFromFile(file, (img) => {
+    plainImg = img;
+    productImg = img;
+    uploadStatus.classList.remove('show');
+    downloadBtn.disabled = false;
+    removeBgBtn.disabled = false;
+    removeBgBtn.classList.remove('working');
+    removeBgBtn.textContent = 'Remove Background (AI)';
+    removeBgHint.textContent = 'Cuts the product out onto a transparent layer — runs locally in your browser, nothing is uploaded.';
+    canvasUploadOverlay.classList.add('has-image');
+    autoSelectClosestAspectRatio(img); // also calls render() via selectSizeTab
+    render();
+  });
+}
+
+// Undo just swaps back to the original photo — instant, no reprocessing.
+// The cutout stays cached, so hitting "Remove Background" again doesn't
+// re-run the AI model, it just swaps back to the cached result.
+undoBgBtn.addEventListener('click', () => {
+  if (!plainImg) return;
+  productImg = plainImg;
+  undoBgBtn.classList.add('hidden-btn');
+  removeBgBtn.disabled = false;
+  removeBgBtn.classList.remove('working');
+  removeBgBtn.textContent = cutoutImg ? 'Redo Remove Background' : 'Remove Background (AI)';
+  setStatus('Reverted to your original photo.', false);
+  render();
+});
+
+// ── PROCESSING OVERLAY (spinner + bar shown directly over the preview
+// while background removal is running) ──
+const processingOverlay = document.getElementById('processingOverlay');
+const processingText = document.getElementById('processingText');
+const processingBarFill = document.getElementById('processingBarFill');
+
+function showProcessing(text) {
+  processingText.textContent = text;
+  processingBarFill.classList.add('indeterminate');
+  processingBarFill.style.width = '';
+  processingOverlay.classList.add('show');
+}
+function setProcessingProgress(text, pct) {
+  processingText.textContent = text;
+  processingBarFill.classList.remove('indeterminate');
+  processingBarFill.style.width = Math.max(0, Math.min(100, pct)) + '%';
+}
+function hideProcessing() {
+  processingOverlay.classList.remove('show');
+}
+
+removeBgBtn.addEventListener('click', async () => {
+  if (!rawFile) return;
+
+  // Already computed this session — just reapply it, no need to reprocess.
+  if (cutoutImg) {
+    productImg = cutoutImg;
+    removeBgBtn.textContent = '✓ Background Removed';
+    undoBgBtn.classList.remove('hidden-btn');
+    uploadStatus.classList.remove('show');
+    render();
+    return;
+  }
+
+  removeBgBtn.disabled = true;
+  removeBgBtn.classList.add('working');
+  removeBgBtn.textContent = 'Removing background…';
+  setStatus('Removing background — first run downloads a small AI model, can take a moment…', true);
+  showProcessing('Starting…');
+
+  try {
+    // Loaded lazily and defensively — CDN/network issues, ad blockers, or
+    // opening this file directly (file://) instead of via a server can all
+    // make this import fail. If it does, we tell the user and leave their
+    // uploaded photo untouched, instead of breaking the rest of the tool.
+    const mod = await import("https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/index.mjs");
+    // The docs say `export default`, but be defensive about exactly how the
+    // published bundle exposes it rather than assuming — if this ever
+    // changes upstream we want a clear error, not a silent "not a function".
+    const imglyRemoveBackground =
+      (typeof mod.default === 'function' && mod.default) ||
+      (typeof mod.removeBackground === 'function' && mod.removeBackground) ||
+      (typeof mod === 'function' && mod) ||
+      null;
+    if (!imglyRemoveBackground) {
+      throw new Error('removeBackground function not found on module. Exported keys: [' + Object.keys(mod).join(', ') + ']');
+    }
+    const blob = await imglyRemoveBackground(rawFile, {
+      // 'cpu' avoids relying on WebGPU, which is inconsistently supported
+      // across Safari versions and is a common silent-failure point.
+      device: 'cpu',
+      // smallest model — faster first-run download, less likely to stall
+      model: 'isnet_quint8',
+      output: { format: 'image/png' },
+      progress: (key, current, total) => {
+        if (total) {
+          const pct = Math.round((current / total) * 100);
+          const label = /model|fetch|download/i.test(String(key)) ? 'Downloading AI model' : 'Processing image';
+          setStatus(`Removing background — ${label.toLowerCase()} (${pct}%)…`, true);
+          setProcessingProgress(`${label}… ${pct}%`, pct);
+        } else {
+          // total unknown for this step — keep the indeterminate stripe going
+          showProcessing('Processing image…');
+        }
+      }
+    });
+    setProcessingProgress('Finishing…', 100);
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      cutoutImg = img;
+      productImg = img;
+      undoBgBtn.classList.remove('hidden-btn');
+      uploadStatus.classList.remove('show');
+      removeBgBtn.classList.remove('working');
+      removeBgBtn.textContent = '✓ Background Removed';
+      hideProcessing();
+      render();
+    };
+    img.onerror = () => { throw new Error('Cutout image failed to decode after processing.'); };
+    img.src = url;
+  } catch (err) {
+    console.error('Background removal failed:', err);
+    // Surface the real error instead of a generic message — this is what
+    // to screenshot/copy if it keeps failing, so the actual cause (network,
+    // CORS, unsupported browser feature, etc.) is visible instead of hidden.
+    const reason = (err && (err.message || err.toString())) || 'unknown error';
+    setStatus('Background removal failed: ' + reason + ' — your original photo is still in use.', false);
+    removeBgBtn.classList.remove('working');
+    removeBgBtn.textContent = 'Retry Remove Background';
+    hideProcessing();
+  } finally {
+    removeBgBtn.disabled = false;
+  }
+});
+
+// ── RENDER ──
+function val(id) { return document.getElementById(id).value; }
+
+function fitFont(ctx, text, family, weight, maxWidth, maxSize, minSize) {
+  let size = maxSize;
+  while (size > minSize) {
+    ctx.font = `${weight} ${size}px ${family}`;
+    if (ctx.measureText(text).width <= maxWidth) break;
+    size -= 2;
+  }
+  return size;
+}
+
+// Average luminance of a rectangular canvas region (sampled sparsely for
+// speed) — used to decide whether text sitting on this spot needs a dark
+// outline (because the patch under it is light) or a dark glow (because the
+// patch is already dark). Wrapped in try/catch since getImageData can throw
+// on some browsers if the canvas is unexpectedly tainted.
+function sampleLuminance(x, y, w, h) {
+  try {
+    // getImageData always reads actual device pixels and ignores the
+    // current transform — but x/y/w/h here are in the same logical W×H
+    // units everything else draws in. During normal on-screen rendering
+    // that transform is 1:1, but exportHiResCanvas() applies ctx.scale(3,3)
+    // first, so logical coordinates must be converted to device pixels
+    // here or this would sample the wrong (tiny, top-left) region of the
+    // 3x canvas instead of the area actually under the text.
+    const t = ctx.getTransform();
+    const sx = t.a || 1, sy = t.d || 1;
+    const canvasW = ctx.canvas.width, canvasH = ctx.canvas.height;
+    const px = Math.max(0, Math.round(x * sx));
+    const py = Math.max(0, Math.round(y * sy));
+    const pw = Math.max(1, Math.round(Math.min(w * sx, canvasW - px)));
+    const ph = Math.max(1, Math.round(Math.min(h * sy, canvasH - py)));
+    if (pw <= 0 || ph <= 0) return 128;
+    const data = ctx.getImageData(px, py, pw, ph).data;
+    let sum = 0, count = 0;
+    const stride = Math.max(4, Math.round(4 * 11 * Math.max(sx, 1))); // keep sampling density roughly constant regardless of resolution
+    for (let i = 0; i < data.length; i += stride) {
+      sum += 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
+      count++;
+    }
+    return count ? sum / count : 128;
+  } catch (e) {
+    return 128; // if sampling fails, fall back to "light background" behavior
+  }
+}
+
+// Draws text that automatically adapts to whatever is behind it — samples
+// the pixels already painted under the text's own bounding box (background
+// gradient, product photo, anything) and adds either a dark outline + soft
+// shadow (for light patches) or a dark glow (for dark patches), so headline,
+// brand, and price text stays readable no matter what image gets uploaded.
+// Global 0–2 multiplier on the adaptive outline/shadow strength, driven by
+// the "Text Outline Strength" slider — 1.0 matches the original fixed
+// look, 0 removes the outline/shadow entirely, up to 2.0 for a much
+// heavier comic-book-style outline. Read fresh each call so the slider
+// updates live.
+function outlineStrengthFactor(key) {
+  const slider = (key && document.getElementById('outline-' + key)) || document.getElementById('sz-outline');
+  if (!slider) return 1;
+  return (parseInt(slider.value, 10) || 50) / 50; // slider is 0–150, 50 = factor 1.0
+}
+
+function smartText(text, x, y, key) {
+  if (!text) return;
+  ctx.save();
+  const fontSizeMatch = /(\d+(?:\.\d+)?)px/.exec(ctx.font);
+  const fontSize = fontSizeMatch ? parseFloat(fontSizeMatch[1]) : 24;
+  const width = ctx.measureText(text).width;
+  let boxX = x;
+  if (ctx.textAlign === 'center') boxX = x - width / 2;
+  else if (ctx.textAlign === 'right') boxX = x - width;
+  let boxY = y - fontSize * 0.85;
+  if (ctx.textBaseline === 'middle') boxY = y - fontSize * 0.5;
+  const lum = sampleLuminance(boxX, boxY, Math.max(1, width), fontSize * 1.25);
+  const onLight = lum > 140;
+  const savedFill = ctx.fillStyle;
+  const strength = outlineStrengthFactor(key);
+  if (strength > 0.02) {
+    if (onLight) {
+      ctx.lineJoin = 'round';
+      ctx.miterLimit = 2;
+      ctx.lineWidth = Math.max(0.5, fontSize * 0.075 * strength);
+      ctx.strokeStyle = `rgba(0,0,0,${Math.min(0.85, 0.55 * strength)})`;
+      ctx.shadowColor = `rgba(0,0,0,${Math.min(0.75, 0.45 * strength)})`;
+      ctx.shadowBlur = fontSize * 0.16 * strength;
+      ctx.shadowOffsetY = fontSize * 0.03;
+      ctx.strokeText(text, x, y);
+    } else {
+      ctx.shadowColor = `rgba(0,0,0,${Math.min(0.9, 0.8 * strength)})`;
+      ctx.shadowBlur = fontSize * 0.3 * strength;
+      ctx.shadowOffsetY = fontSize * 0.05;
+    }
+  }
+  ctx.fillStyle = savedFill;
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+function fillRoundRect(x, y, w, h, r) {
+  if (ctx.roundRect) {
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, r);
+    ctx.fill();
+  } else {
+    ctx.fillRect(x, y, w, h);
+  }
+}
+
+// Draws a pill-shaped chip and returns its width. anchorRight=true positions
+// the chip so its right edge sits at x (used to right-align a row of chips).
+function drawPill(x, y, h, text, bg, fg, font, anchorRight) {
+  ctx.save();
+  ctx.font = font;
+  const padX = h * 0.42;
+  const textW = ctx.measureText(text).width;
+  const w = textW + padX * 2;
+  const drawX = anchorRight ? x - w : x;
+  ctx.fillStyle = bg;
+  fillRoundRect(drawX, y, w, h, h / 2);
+  ctx.fillStyle = fg;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, drawX + padX, y + h / 2 + h * 0.04);
+  ctx.restore();
+  return w;
+}
+
+function render() {
+  ctx.clearRect(0, 0, W, H);
+  // Best-quality resampling when the product photo gets scaled down onto
+  // the canvas — the browser default is often 'low', which visibly softens
+  // detail. Matters even more once exportHiResCanvas() draws onto a much
+  // larger offscreen canvas for the actual download.
+  ctx.imageSmoothingEnabled = true;
+  if ('imageSmoothingQuality' in ctx) ctx.imageSmoothingQuality = 'high';
+  elementBoxes = {};
+  const layout = getLayout();
+
+  const bg1 = val('f-bg1'), bg2 = val('f-bg2'), accent = val('f-accent'), textColor = val('f-text');
+  const barH = H * 0.155; // decorative bottom-bar height; the info/CTA text is independently draggable now
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, bg1);
+  grad.addColorStop(1, bg2);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle radial glow
+  const glow = ctx.createRadialGradient(W*0.7, H*0.25, 10, W*0.7, H*0.25, W*0.6);
+  glow.addColorStop(0, 'rgba(255,255,255,0.08)');
+  glow.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  const bigText = val('f-bigtext').toUpperCase() || 'SALE';
+  const brandText = (val('f-brand') || 'BRAND').toUpperCase();
+  const discount = val('f-discount');
+  const product = val('f-product');
+  const price = val('f-price');
+  const oldPrice = val('f-oldprice');
+  const cta = val('f-cta');
+
+  // Every text/badge/logo has a "Place Behind Photo" checkbox (layer-KEY) —
+  // checked means it draws BEFORE the photo (so the photo visually overlaps
+  // it, à la the classic "text peeking out from behind the product" look),
+  // unchecked (the default) means it draws after, on top, like before.
+  function isBehind(key) {
+    const box = document.getElementById('layer-' + key);
+    return !!box && box.checked;
+  }
+
+  // ── Each element's draw logic, unchanged from before except now wrapped
+  // in a function so it can be called in either the back-layer pass (before
+  // the photo) or the front-layer pass (after it) depending on isBehind(). ──
+
+  function drawHeadline() {
+    const showHeadline = document.getElementById('t-headline').checked && !!bigText;
+    if (!showHeadline) return;
+    ctx.save();
+    // Set once, right at the top, so it applies to EVERYTHING this function
+    // draws — including the optional backdrop panel below. Previously the
+    // alpha was only applied to the text fill itself, so with the backdrop
+    // panel on, the panel stayed fully opaque and made the opacity slider
+    // look like it was doing nothing.
+    const headlineOpacity = opacityOf('headline');
+    ctx.globalAlpha = headlineOpacity;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    const fontSelect = document.getElementById('f-headline-font');
+    const headlineFamily = fontSelect.value;
+    const headlineWeight = parseInt(fontSelect.selectedOptions[0].dataset.weight, 10) || 900;
+    const headSize = fitFont(ctx, bigText, headlineFamily, headlineWeight, W*0.9, Math.min(W,H)*0.24, 30) * sc('headline');
+    ctx.font = `${headlineWeight} ${headSize}px ${headlineFamily}`;
+    const hx = layout.headline.x * W, hy = layout.headline.y * H;
+    const hw = ctx.measureText(bigText).width;
+    const headlineRotDeg = parseFloat(document.getElementById('rot-headline').value) || 0;
+
+    // Optional soft blurred panel behind the headline for readability over
+    // busy photos — drawn with ctx.filter so only the panel blurs, not the
+    // text itself (filter is reset before smartText runs). Inherits
+    // headlineOpacity from the outer save, so it fades along with the text.
+    if (document.getElementById('t-textbackdrop').checked) {
+      ctx.save();
+      ctx.translate(hx, hy);
+      ctx.rotate(headlineRotDeg * Math.PI / 180);
+      const padX = headSize * 0.28, padTop = headSize * 0.95, padBottom = headSize * 0.28;
+      const blurPct = (parseInt(document.getElementById('sz-backdropblur').value, 10) || 0) / 100;
+      ctx.filter = `blur(${Math.max(0.5, headSize * 0.1 * blurPct)}px)`;
+      const bgGrad = ctx.createLinearGradient(-padX, 0, hw + padX, 0);
+      bgGrad.addColorStop(0, 'rgba(0,0,0,0.55)');
+      bgGrad.addColorStop(1, 'rgba(0,0,0,0.30)');
+      ctx.fillStyle = bgGrad;
+      fillRoundRect(-padX, -padTop, hw + padX * 2, padTop + padBottom, headSize * 0.12);
+      ctx.filter = 'none';
+      ctx.restore();
+    }
+
+    ctx.fillStyle = textColor;
+    ctx.globalAlpha = headlineOpacity;
+    ctx.translate(hx, hy);
+    ctx.rotate(headlineRotDeg * Math.PI / 180);
+    smartText(bigText, 0, 0, 'headline');
+    ctx.restore();
+    elementBoxes.headline = { x: hx, y: hy - headSize * 0.82, w: hw, h: headSize * 1.05 };
+  }
+
+  function drawBrand() {
+    const showBrand = document.getElementById('t-brand').checked && !!val('f-brand');
+    if (!showBrand) return;
+    ctx.save();
+    const brandSize = W*0.028 * sc('brand');
+    ctx.font = `700 ${brandSize}px 'Inter', sans-serif`;
+    ctx.fillStyle = textColor;
+    ctx.globalAlpha = 0.9 * opacityOf('brand');
+    const bx = layout.brand.x * W, by = layout.brand.y * H;
+    smartText(brandText, bx, by, 'brand');
+    const bw = ctx.measureText(brandText).width;
+    elementBoxes.brand = { x: bx, y: by - brandSize * 0.82, w: bw, h: brandSize * 1.05 };
+    ctx.restore();
+  }
+
+  function drawDiscount() {
+    const showDiscount = document.getElementById('t-discount').checked && !!discount;
+    if (!showDiscount) return;
+    ctx.save();
+    ctx.globalAlpha = opacityOf('discount');
+    const bx = layout.discount.x * W, by = layout.discount.y * H, r = Math.min(W,H)*0.105 * sc('discount');
+    ctx.translate(bx, by);
+    ctx.rotate(12 * Math.PI/180);
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI*2);
+    ctx.fillStyle = accent;
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const dSize = fitFont(ctx, discount, "'Barlow Condensed', sans-serif", 800, r*1.5, r*0.34, 10);
+    ctx.font = `800 ${dSize}px 'Barlow Condensed', sans-serif`;
+    const words = discount.split(' ');
+    if (words.length > 1) {
+      ctx.fillText(words[0], 0, -dSize*0.32);
+      ctx.font = `600 ${dSize*0.5}px 'Inter', sans-serif`;
+      ctx.fillText(words.slice(1).join(' '), 0, dSize*0.38);
+    } else {
+      ctx.fillText(discount, 0, 0);
+    }
+    ctx.restore();
+    elementBoxes.discount = { x: bx - r, y: by - r, w: r * 2, h: r * 2 };
+  }
+
+  function drawRating() {
+    if (!document.getElementById('t-rating').checked) return;
+    const stars = parseFloat(val('f-rating-stars')) || 5;
+    const count = val('f-rating-count');
+    const filled = Math.round(stars);
+    const starStr = '★'.repeat(filled) + '☆'.repeat(Math.max(0, 5 - filled));
+
+    const pillH = Math.min(W, H) * 0.05 * sc('rating');
+    const pillY = layout.rating.y * H;
+    const pillRightX = layout.rating.x * W;
+    const starFont = `700 ${pillH * 0.52}px Arial`;
+    const countFont = `600 ${pillH * 0.4}px 'Inter', sans-serif`;
+
+    ctx.save();
+    ctx.globalAlpha = opacityOf('rating');
+    ctx.font = countFont;
+    const countW = count ? ctx.measureText(count).width : 0;
+    ctx.font = starFont;
+    const starsW = ctx.measureText(starStr).width;
+    const padX = pillH * 0.38;
+    const gap = count ? pillH * 0.22 : 0;
+    const totalW = starsW + gap + countW + padX * 2;
+    const pillX = pillRightX - totalW;
+
+    ctx.fillStyle = 'rgba(255,255,255,0.94)';
+    fillRoundRect(pillX, pillY, totalW, pillH, pillH / 2);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#f5a623';
+    ctx.font = starFont;
+    ctx.fillText(starStr, pillX + padX, pillY + pillH / 2 + pillH * 0.04);
+    if (count) {
+      ctx.fillStyle = '#1a1410';
+      ctx.font = countFont;
+      ctx.fillText(count, pillX + padX + starsW + gap, pillY + pillH / 2 + pillH * 0.04);
+    }
+    ctx.restore();
+    elementBoxes.rating = { x: pillX, y: pillY, w: totalW, h: pillH };
+  }
+
+  function drawCustomTag() {
+    if (!(document.getElementById('t-customtag').checked && val('f-customtag'))) return;
+    ctx.save();
+    ctx.globalAlpha = opacityOf('customtag');
+    const tagH = H * 0.044 * sc('customtag');
+    const tagFont = `700 ${tagH * 0.4}px 'JetBrains Mono', monospace`;
+    const tagX = layout.customtag.x * W, tagY = layout.customtag.y * H;
+    const tagW = drawPill(tagX, tagY, tagH, val('f-customtag').toUpperCase(), accent, '#fff', tagFont, false);
+    elementBoxes.customtag = { x: tagX, y: tagY, w: tagW, h: tagH };
+    ctx.restore();
+  }
+
+  function drawCoupon() {
+    if (!(document.getElementById('t-coupon').checked && val('f-coupon'))) return;
+    ctx.save();
+    ctx.globalAlpha = opacityOf('coupon');
+    const couponH = H * 0.044 * sc('coupon');
+    const couponFont = `700 ${couponH * 0.4}px 'JetBrains Mono', monospace`;
+    const couponX = layout.coupon.x * W, couponY = layout.coupon.y * H;
+    const couponW = drawPill(couponX, couponY, couponH, 'CODE: ' + val('f-coupon').toUpperCase(), 'rgba(255,255,255,0.94)', '#1a1410', couponFont, true);
+    elementBoxes.coupon = { x: couponX - couponW, y: couponY, w: couponW, h: couponH };
+    ctx.restore();
+  }
+
+  function drawInfo() {
+    if (!document.getElementById('t-info').checked) return;
+    ctx.save();
+    ctx.textAlign = 'left';
+    const infoOpacity = opacityOf('info');
+    const infoX = layout.info.x * W;
+    const infoY = layout.info.y * H;
+    const infoScale = sc('info');
+    const productSize = W*0.028 * infoScale;
+    ctx.fillStyle = textColor;
+    ctx.globalAlpha = infoOpacity;
+    ctx.font = `700 ${productSize}px 'Inter', sans-serif`;
+    smartText(product, infoX, infoY, 'info');
+    const productW = ctx.measureText(product).width;
+
+    const priceY = infoY + barH * 0.38 * infoScale;
+    const priceSize = W*0.042 * infoScale;
+    ctx.font = `900 ${priceSize}px 'Barlow Condensed', sans-serif`;
+    ctx.fillStyle = accent;
+    ctx.globalAlpha = infoOpacity;
+    smartText(price, infoX, priceY, 'info');
+    const priceW = ctx.measureText(price).width;
+    let rowRight = infoX + Math.max(productW, priceW);
+
+    if (oldPrice && document.getElementById('t-oldprice').checked) {
+      const oldPriceY = infoY + barH * 0.34 * infoScale;
+      ctx.font = `500 ${W*0.024 * infoScale}px 'Inter', sans-serif`;
+      ctx.fillStyle = textColor;
+      ctx.globalAlpha = 0.55 * infoOpacity;
+      const ox = infoX + priceW + W*0.02;
+      smartText(oldPrice, ox, oldPriceY, 'info');
+      const ow = ctx.measureText(oldPrice).width;
+      ctx.beginPath();
+      ctx.moveTo(ox, oldPriceY - W*0.008);
+      ctx.lineTo(ox + ow, oldPriceY - W*0.008);
+      ctx.strokeStyle = textColor;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      rowRight = Math.max(rowRight, ox + ow);
+    }
+    ctx.restore();
+    elementBoxes.info = { x: infoX, y: infoY - productSize * 0.82, w: rowRight - infoX, h: (priceY - infoY) + priceSize * 1.05 };
+  }
+
+  function drawCta() {
+    if (!(cta && document.getElementById('t-cta').checked)) return;
+    ctx.save();
+    const ctaScale = sc('cta');
+    ctx.font = `700 ${W*0.024 * ctaScale}px 'Inter', sans-serif`;
+    const ctaW = ctx.measureText(cta).width + W*0.07 * ctaScale;
+    const ctaH = H*0.06 * ctaScale;
+    const ctaCenterX = layout.cta.x * W;
+    const ctaCenterY = layout.cta.y * H;
+    const ctaX = ctaCenterX - ctaW / 2;
+    const ctaY = ctaCenterY - ctaH / 2;
+    ctx.globalAlpha = opacityOf('cta');
+    ctx.fillStyle = accent;
+    ctx.fillRect(ctaX, ctaY, ctaW, ctaH);
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(cta + ' →', ctaCenterX, ctaCenterY + 1);
+    ctx.restore();
+    elementBoxes.cta = { x: ctaX, y: ctaY, w: ctaW, h: ctaH };
+  }
+
+  function drawLogo() {
+    const showLogo = logoImg && document.getElementById('t-logo').checked;
+    if (!showLogo) return;
+    ctx.save();
+    const logoScale = sc('logo');
+    const maxLogoDim = Math.min(W, H) * 0.16 * logoScale;
+    const logoRatio = Math.min(maxLogoDim / logoImg.width, maxLogoDim / logoImg.height);
+    const logoW = logoImg.width * logoRatio;
+    const logoH = logoImg.height * logoRatio;
+    const logoCenterX = layout.logo.x * W;
+    const logoCenterY = layout.logo.y * H;
+    const logoRotDeg = parseFloat(document.getElementById('rot-logo').value) || 0;
+    ctx.globalAlpha = opacityOf('logo');
+    ctx.shadowColor = 'rgba(0,0,0,0.35)';
+    ctx.shadowBlur = W * 0.015;
+    ctx.translate(logoCenterX, logoCenterY);
+    ctx.rotate(logoRotDeg * Math.PI / 180);
+    ctx.drawImage(logoImg, -logoW / 2, -logoH / 2, logoW, logoH);
+    ctx.restore();
+    elementBoxes.logo = { x: logoCenterX - logoW / 2, y: logoCenterY - logoH / 2, w: logoW, h: logoH };
+  }
+
+  // ── PASS 1: back-layer elements, drawn before the photo so it visually
+  // overlaps/sits on top of them ──
+  const LAYER_KEYS = ['headline','brand','discount','rating','customtag','coupon','info','cta','logo'];
+  const DRAW_FN = {
+    headline: drawHeadline, brand: drawBrand, discount: drawDiscount, rating: drawRating,
+    customtag: drawCustomTag, coupon: drawCoupon, info: drawInfo, cta: drawCta, logo: drawLogo
+  };
+  LAYER_KEYS.forEach(key => { if (isBehind(key)) DRAW_FN[key](); });
+
+  // Product image — position/scale come entirely from layout.image, set by
+  // dragging the photo + zoom bar.
+  if (productImg) {
+    const safeW = W * 0.94, safeH = H * 0.92;
+    const boxW = safeW * layout.image.scale;
+    const boxH = safeH * layout.image.scale;
+    const ratio = Math.min(boxW / productImg.width, boxH / productImg.height);
+    const drawW = productImg.width * ratio;
+    const drawH = productImg.height * ratio;
+    const centerX = layout.image.x * W;
+    const centerY = layout.image.y * H;
+    const imgRotDeg = parseFloat(document.getElementById('imgRotate').value) || 0;
+
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.45)';
+    ctx.shadowBlur = W * 0.03;
+    ctx.shadowOffsetY = H * 0.015;
+    ctx.translate(centerX, centerY);
+    ctx.rotate(imgRotDeg * Math.PI / 180);
+    ctx.drawImage(productImg, -drawW / 2, -drawH / 2, drawW, drawH);
+    ctx.restore();
+  }
+
+  // Gradient overlay (duotone tint) — a flat wash across the whole canvas
+  // over the background+photo, drawn before front-layer text so text stays
+  // crisp on top of it. Purely cosmetic; skipped entirely when off.
+  if (document.getElementById('t-overlay').checked) {
+    const ov1 = val('f-overlay1'), ov2 = val('f-overlay2');
+    const strength = (parseInt(document.getElementById('sz-overlay').value, 10) || 0) / 100;
+    if (strength > 0) {
+      ctx.save();
+      const ovGrad = ctx.createLinearGradient(0, 0, W, H);
+      ovGrad.addColorStop(0, ov1);
+      ovGrad.addColorStop(1, ov2);
+      ctx.globalAlpha = strength;
+      ctx.fillStyle = ovGrad;
+      ctx.fillRect(0, 0, W, H);
+      ctx.restore();
+    }
+  }
+
+  // Bottom bar — decorative translucent strip; the text on top of it moves
+  // independently. Always drawn here (not layer-togglable — it's a
+  // decorative backdrop, not a text/badge element).
+  ctx.save();
+  ctx.fillStyle = 'rgba(0,0,0,0.28)';
+  ctx.fillRect(0, H - barH, W, barH);
+  ctx.restore();
+
+  // ── PASS 2: front-layer elements (the default) — everything not sent
+  // behind the photo, drawn on top of it as usual ──
+  LAYER_KEYS.forEach(key => { if (!isBehind(key)) DRAW_FN[key](); });
+
+  // Sync every text/badge handle's on-screen hit box to exactly what was
+  // just drawn, so grabbing a handle grabs the actual visible element —
+  // no more fixed-size buttons that miss large or small text.
+  syncHandleGeometry();
+  positionUploadOverlay(layout);
+}
+
+// Before a photo is uploaded, the "click or drop a photo" prompt used to
+// always sit dead-center on the canvas — but layout templates can move the
+// photo's designated spot anywhere (e.g. Top Banner puts it lower-center,
+// Side Split puts it on the right half). Left dead-center, the prompt would
+// visually collide with whatever text a template placed through the middle
+// (this is exactly what caused "SALE" to overlap "CLICK OR DROP..." in
+// Top Banner/Badge Focus). This mirrors the same safeW/safeH/scale math
+// render() uses to place the real photo, so the prompt always sits exactly
+// where the photo will actually land.
+function positionUploadOverlay(layout) {
+  if (productImg) return; // overlay is hidden via CSS once a photo exists; no need to reposition it
+  const safeW = W * 0.94, safeH = H * 0.92;
+  const boxW = safeW * layout.image.scale, boxH = safeH * layout.image.scale;
+  const cx = layout.image.x * W, cy = layout.image.y * H;
+  const left = cx - boxW / 2, top = cy - boxH / 2;
+  canvasUploadOverlay.style.left = (left / W * 100) + '%';
+  canvasUploadOverlay.style.top = (top / H * 100) + '%';
+  canvasUploadOverlay.style.width = (boxW / W * 100) + '%';
+  canvasUploadOverlay.style.height = (boxH / H * 100) + '%';
+  canvasUploadOverlay.style.right = 'auto';
+  canvasUploadOverlay.style.bottom = 'auto';
+}
+
+// ── DOWNLOAD ──
+// Export resolution multiplier. The on-screen canvas is fixed at the ad
+// spec's nominal pixel size (e.g. 1080×1080), which is far lower than most
+// uploaded product photos — downloading straight from that canvas throws
+// away real detail from the source image. Instead of shipping the on-screen
+// canvas, we redraw the exact same creative onto an offscreen canvas at
+// EXPORT_SCALE× the resolution and download that, so the exported PNG
+// carries as much of the original photo's detail as the layout allows.
+const EXPORT_SCALE = 3;
+
+// Runs the normal render() pipeline unmodified, but temporarily redirects
+// the module-level `ctx` to a bigger offscreen canvas first. Every drawing
+// call in render() is written in logical W×H units, so scaling the context
+// before drawing is all that's needed — no separate "hi-res" render logic
+// to keep in sync with the real one.
+function exportHiResCanvas(scale) {
+  const off = document.createElement('canvas');
+  off.width = Math.round(W * scale);
+  off.height = Math.round(H * scale);
+  const offCtx = off.getContext('2d');
+  offCtx.imageSmoothingEnabled = true;
+  if ('imageSmoothingQuality' in offCtx) offCtx.imageSmoothingQuality = 'high';
+  offCtx.scale(scale, scale);
+
+  const savedCtx = ctx;
+  ctx = offCtx;
+  try {
+    render();
+  } finally {
+    ctx = savedCtx; // always restore, even if render() throws
+  }
+  return off;
+}
+
+// Uses toBlob() + an object URL instead of a data: URI — some browsers
+// (Safari in particular) will open a large data: URI in a new tab instead
+// of downloading it. A blob: URL on an <a download> that's actually
+// attached to the document reliably triggers a real file download instead.
+downloadBtn.addEventListener('click', () => {
+  const originalLabel = downloadBtn.textContent;
+  downloadBtn.disabled = true;
+  downloadBtn.textContent = 'Rendering full-quality PNG…';
+
+  // Deferred one tick so the "Rendering…" label actually paints before the
+  // (synchronous, can take a moment at 3x resolution) export work runs.
+  setTimeout(() => {
+    try {
+      const hiResCanvas = exportHiResCanvas(EXPORT_SCALE);
+      hiResCanvas.toBlob((blob) => {
+        downloadBtn.disabled = false;
+        downloadBtn.textContent = originalLabel;
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `frx-creative-studio-${hiResCanvas.width}x${hiResCanvas.height}.png`;
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        render(); // put the on-screen canvas's ctx state back to normal
+      }, 'image/png');
+    } catch (err) {
+      console.error('Export failed:', err);
+      downloadBtn.disabled = false;
+      downloadBtn.textContent = originalLabel;
+      render();
+    }
+  }, 20);
+});
+
+// ── FIT-TO-SCREEN LAYOUT ──
+// On screens wide enough for the two-column layout (matches the CSS
+// breakpoint at 901px), locks `main` to exactly whatever vertical space is
+// left below the hero, so the editing form and the live preview both fit
+// on screen without the page itself needing to scroll — the form scrolls
+// within its own column instead (see the CSS fit-to-screen media query).
+// Recomputed on load/resize/font-load since the hero's own height (and
+// therefore how much is left over) can shift with viewport width and font
+// rendering.
+const heroEl = document.querySelector('.tool-hero');
+const mainEl = document.querySelector('main');
+const canvasWrapEl = document.querySelector('.canvas-wrap');
+function fitAppHeight() {
+  if (window.innerWidth <= 900) {
+    // Below the breakpoint the CSS falls back to a normal stacked,
+    // page-scrolling layout — don't fight it with leftover inline styles.
+    mainEl.style.height = '';
+    canvas.style.maxHeight = '';
+    return;
+  }
+  const heroBottom = heroEl.getBoundingClientRect().bottom;
+  const available = window.innerHeight - heroBottom;
+  mainEl.style.height = Math.max(460, available) + 'px';
+  // Wait a frame for that height change to actually reflow canvas-wrap
+  // before measuring it — otherwise clientHeight would still reflect the
+  // pre-resize layout.
+  requestAnimationFrame(() => {
+    if (!canvasWrapEl) return;
+    const h = canvasWrapEl.clientHeight - 4; // small safety margin
+    if (h > 40) canvas.style.maxHeight = h + 'px';
+  });
+}
+window.addEventListener('resize', fitAppHeight);
+window.addEventListener('load', fitAppHeight);
+document.fonts.ready.then(fitAppHeight);
+
+// Initial render (waits for web fonts to avoid fallback-font flash)
+buildTemplateGrid();
+activeTemplatePerSize[sizeKey()] = 'classic'; // matches the default layout used on load
+syncZoomUI();
+updateHandleVisibility();
+positionHandles(); // rough placement before the first real render
+syncSizeSliders();
+syncTemplateActiveState();
+fitAppHeight();
+document.fonts.ready.then(render);
+render(); // render() finishes the job via syncHandleGeometry (exact boxes)
+</script>
+
+</body>
+</html>
