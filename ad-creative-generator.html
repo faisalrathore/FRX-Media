@@ -117,12 +117,19 @@
     .nav-links { display: none; }
   }
 
-  /* ── HERO ── */
+  /* ── HERO ──
+     Kept as a slim single-line strip (not a full-height banner) so the
+     editing panel and live preview below it can fit inside one screen —
+     the whole point is to minimize scrolling to reach/use the tool. */
   .tool-hero {
-    padding-top: 110px;
+    /* nav's own layout height is ~70px, but its logo is visually scaled up
+       4.5x via transform (which doesn't add to layout height) and can
+       overflow past nav's box — keep a generous buffer here so that
+       enlarged logo graphic never visually collides with the hero strip. */
+    padding-top: 100px;
     background: var(--dark);
     border-bottom: 2px solid var(--red);
-    padding-bottom: 52px;
+    padding-bottom: 10px;
     padding-left: 64px; padding-right: 64px;
     position: relative; overflow: hidden;
   }
@@ -140,11 +147,14 @@
     background: radial-gradient(circle, rgba(196,28,28,0.08) 0%, transparent 70%);
     pointer-events: none;
   }
-  .tool-hero-inner { max-width: 1200px; margin: 0 auto; }
+  .tool-hero-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+  }
   .tool-eyebrow {
     font-family: 'JetBrains Mono', monospace;
     font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--red); margin-bottom: 12px;
+    color: var(--red);
     display: flex; align-items: center; gap: 10px;
   }
   .tool-eyebrow::before {
@@ -153,23 +163,31 @@
   }
   .tool-hero h1 {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(40px, 7vw, 80px);
+    font-size: clamp(22px, 3vw, 30px);
     font-weight: 900; text-transform: uppercase;
     letter-spacing: 0.02em; color: #fff;
-    line-height: 1.0; margin-bottom: 12px;
+    line-height: 1.0;
   }
   .tool-hero h1 em { font-style: italic; color: var(--red); font-weight: 800; }
   .tool-hero-sub {
-    font-size: 14px; color: rgba(245,240,232,0.5);
+    font-size: 11px; color: rgba(245,240,232,0.45);
     font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.06em; margin-top: 8px;
+    letter-spacing: 0.04em;
   }
   @media(max-width:768px) { .tool-hero { padding-left: 24px; padding-right: 24px; } }
+  @media(max-width:900px) { .tool-hero-sub { display: none; } }
 
-  /* ── MAIN ── */
+  /* ── MAIN ──
+     On wide-enough screens, main is height-locked to exactly what's left of
+     the viewport below the hero (set by fitAppHeight() in the script), and
+     .grid/.form-card/.result-panel below are wired so the editing form
+     scrolls WITHIN its own column while the live preview never needs to
+     scroll at all — both stay fully visible without moving the page. Below
+     900px there isn't room for that, so it falls back to the normal
+     stacked, page-scrolling layout. */
   main {
     max-width: 1280px; margin: 0 auto;
-    padding: 48px 48px 100px;
+    padding: 20px 48px 100px;
   }
   @media(max-width:768px) { main { padding: 32px 20px 60px; } }
 
@@ -685,6 +703,34 @@
   @media(max-width:640px) {
     footer { padding: 28px 20px; flex-direction: column; align-items: center; text-align: center; }
     .footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+  }
+
+  /* ── FIT-TO-SCREEN MODE ──
+     Placed last so it wins the cascade over the earlier base rules for
+     .result-panel/.canvas-wrap/#adCanvas above (same specificity, later
+     source order). On screens wide enough for the two-column layout, main
+     is height-locked by fitAppHeight() (see the page script) to exactly
+     fill the viewport below the slim hero strip. The form column then
+     scrolls WITHIN itself; the live preview column never needs to scroll —
+     both stay fully visible without moving the page. Below 901px there's
+     no room for that, so it falls back to the normal stacked, page-
+     scrolling layout untouched. */
+  @media(min-width: 901px) {
+    main { display: flex; flex-direction: column; padding-top: 14px; padding-bottom: 14px; overflow: hidden; }
+    .grid { flex: 1; min-height: 0; align-items: stretch; }
+    .form-card { height: 100%; overflow-y: auto; }
+    .result-panel { height: 100%; display: flex; flex-direction: column; position: static; overflow: hidden; }
+    /* canvas-stage stays inline-block/shrink-to-fit (untouched) so it keeps
+       hugging the canvas exactly — the drag handles, grid overlay, and
+       upload overlay are all positioned absolutely against canvas-stage's
+       own box, and that alignment breaks if this box ever gets bigger than
+       the canvas itself. #adCanvas's actual max-height is set as an inline
+       px style by fitAppHeight() in the script instead of in CSS, because a
+       percentage max-height can't resolve through a shrink-to-fit ancestor
+       (canvas-stage's own height is defined BY its content, i.e. circular) —
+       this is the standard CSS height-percentage limitation, not a bug. */
+    .canvas-wrap { flex: 1; min-height: 0; padding: 14px; overflow: hidden; }
+    .rules-block { display: none; } /* least-essential content — dropped first to give the preview room to breathe */
   }
 </style>
 </head>
@@ -2239,6 +2285,42 @@ downloadBtn.addEventListener('click', () => {
   }, 20);
 });
 
+// ── FIT-TO-SCREEN LAYOUT ──
+// On screens wide enough for the two-column layout (matches the CSS
+// breakpoint at 901px), locks `main` to exactly whatever vertical space is
+// left below the hero, so the editing form and the live preview both fit
+// on screen without the page itself needing to scroll — the form scrolls
+// within its own column instead (see the CSS fit-to-screen media query).
+// Recomputed on load/resize/font-load since the hero's own height (and
+// therefore how much is left over) can shift with viewport width and font
+// rendering.
+const heroEl = document.querySelector('.tool-hero');
+const mainEl = document.querySelector('main');
+const canvasWrapEl = document.querySelector('.canvas-wrap');
+function fitAppHeight() {
+  if (window.innerWidth <= 900) {
+    // Below the breakpoint the CSS falls back to a normal stacked,
+    // page-scrolling layout — don't fight it with leftover inline styles.
+    mainEl.style.height = '';
+    canvas.style.maxHeight = '';
+    return;
+  }
+  const heroBottom = heroEl.getBoundingClientRect().bottom;
+  const available = window.innerHeight - heroBottom;
+  mainEl.style.height = Math.max(460, available) + 'px';
+  // Wait a frame for that height change to actually reflow canvas-wrap
+  // before measuring it — otherwise clientHeight would still reflect the
+  // pre-resize layout.
+  requestAnimationFrame(() => {
+    if (!canvasWrapEl) return;
+    const h = canvasWrapEl.clientHeight - 4; // small safety margin
+    if (h > 40) canvas.style.maxHeight = h + 'px';
+  });
+}
+window.addEventListener('resize', fitAppHeight);
+window.addEventListener('load', fitAppHeight);
+document.fonts.ready.then(fitAppHeight);
+
 // Initial render (waits for web fonts to avoid fallback-font flash)
 buildTemplateGrid();
 activeTemplatePerSize[sizeKey()] = 'classic'; // matches the default layout used on load
@@ -2247,6 +2329,7 @@ updateHandleVisibility();
 positionHandles(); // rough placement before the first real render
 syncSizeSliders();
 syncTemplateActiveState();
+fitAppHeight();
 document.fonts.ready.then(render);
 render(); // render() finishes the job via syncHandleGeometry (exact boxes)
 </script>
