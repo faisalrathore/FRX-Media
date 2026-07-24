@@ -864,6 +864,11 @@
           <input type="range" id="rot-logo" min="-180" max="180" value="0">
           <span class="size-val" id="rotv-logo">0°</span>
         </div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-logo" min="10" max="100" value="100">
+          <span class="size-val" id="opv-logo">100%</span>
+        </div>
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-logo"><span>Place behind photo</span></label>
       </div>
 
@@ -918,6 +923,11 @@
             <label>Size</label>
             <input type="range" id="sz-discount" min="40" max="300" value="100">
             <span class="size-val" id="szv-discount">100%</span>
+          </div>
+          <div class="size-row">
+            <label>Opacity</label>
+            <input type="range" id="op-discount" min="10" max="100" value="100">
+            <span class="size-val" id="opv-discount">100%</span>
           </div>
           <label class="toggle-label" style="margin-top:6px; font-size:10px;"><input type="checkbox" id="layer-discount"><span>Behind photo</span></label>
         </div>
@@ -1010,6 +1020,11 @@
           <input type="range" id="sz-rating" min="40" max="300" value="100">
           <span class="size-val" id="szv-rating">100%</span>
         </div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-rating" min="10" max="100" value="100">
+          <span class="size-val" id="opv-rating">100%</span>
+        </div>
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-rating"><span>Place behind photo</span></label>
       </div>
 
@@ -1021,6 +1036,11 @@
           <input type="range" id="sz-coupon" min="40" max="300" value="100">
           <span class="size-val" id="szv-coupon">100%</span>
         </div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-coupon" min="10" max="100" value="100">
+          <span class="size-val" id="opv-coupon">100%</span>
+        </div>
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-coupon"><span>Place behind photo</span></label>
       </div>
 
@@ -1031,6 +1051,11 @@
           <label>Size</label>
           <input type="range" id="sz-customtag" min="40" max="300" value="100">
           <span class="size-val" id="szv-customtag">100%</span>
+        </div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-customtag" min="10" max="100" value="100">
+          <span class="size-val" id="opv-customtag">100%</span>
         </div>
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-customtag"><span>Place behind photo</span></label>
       </div>
@@ -1561,7 +1586,7 @@ document.getElementById('sz-outline').addEventListener('input', () => {
   document.getElementById('szv-outline').textContent = Math.round(v / 50 * 100) + '%';
   render();
 });
-['op-headline','op-brand','op-info','op-cta'].forEach(id => {
+['op-headline','op-brand','op-info','op-cta','op-discount','op-rating','op-coupon','op-customtag','op-logo'].forEach(id => {
   const slider = document.getElementById(id);
   const label = document.getElementById(id.replace('op-', 'opv-'));
   slider.addEventListener('input', () => {
@@ -2302,6 +2327,7 @@ function render() {
     const showDiscount = document.getElementById('t-discount').checked && !!discount;
     if (!showDiscount) return;
     ctx.save();
+    ctx.globalAlpha = opacityOf('discount');
     const bx = layout.discount.x * W, by = layout.discount.y * H, r = Math.min(W,H)*0.105 * sc('discount');
     ctx.translate(bx, by);
     ctx.rotate(12 * Math.PI/180);
@@ -2340,6 +2366,7 @@ function render() {
     const countFont = `600 ${pillH * 0.4}px 'Inter', sans-serif`;
 
     ctx.save();
+    ctx.globalAlpha = opacityOf('rating');
     ctx.font = countFont;
     const countW = count ? ctx.measureText(count).width : 0;
     ctx.font = starFont;
@@ -2367,20 +2394,26 @@ function render() {
 
   function drawCustomTag() {
     if (!(document.getElementById('t-customtag').checked && val('f-customtag'))) return;
+    ctx.save();
+    ctx.globalAlpha = opacityOf('customtag');
     const tagH = H * 0.044 * sc('customtag');
     const tagFont = `700 ${tagH * 0.4}px 'JetBrains Mono', monospace`;
     const tagX = layout.customtag.x * W, tagY = layout.customtag.y * H;
     const tagW = drawPill(tagX, tagY, tagH, val('f-customtag').toUpperCase(), accent, '#fff', tagFont, false);
     elementBoxes.customtag = { x: tagX, y: tagY, w: tagW, h: tagH };
+    ctx.restore();
   }
 
   function drawCoupon() {
     if (!(document.getElementById('t-coupon').checked && val('f-coupon'))) return;
+    ctx.save();
+    ctx.globalAlpha = opacityOf('coupon');
     const couponH = H * 0.044 * sc('coupon');
     const couponFont = `700 ${couponH * 0.4}px 'JetBrains Mono', monospace`;
     const couponX = layout.coupon.x * W, couponY = layout.coupon.y * H;
     const couponW = drawPill(couponX, couponY, couponH, 'CODE: ' + val('f-coupon').toUpperCase(), 'rgba(255,255,255,0.94)', '#1a1410', couponFont, true);
     elementBoxes.coupon = { x: couponX - couponW, y: couponY, w: couponW, h: couponH };
+    ctx.restore();
   }
 
   function drawInfo() {
@@ -2462,6 +2495,7 @@ function render() {
     const logoCenterX = layout.logo.x * W;
     const logoCenterY = layout.logo.y * H;
     const logoRotDeg = parseFloat(document.getElementById('rot-logo').value) || 0;
+    ctx.globalAlpha = opacityOf('logo');
     ctx.shadowColor = 'rgba(0,0,0,0.35)';
     ctx.shadowBlur = W * 0.015;
     ctx.translate(logoCenterX, logoCenterY);
