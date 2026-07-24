@@ -912,6 +912,11 @@
           <input type="range" id="op-headline" min="10" max="100" value="100">
           <span class="size-val" id="opv-headline">100%</span>
         </div>
+        <div class="size-row">
+          <label>Outline</label>
+          <input type="range" id="outline-headline" min="0" max="150" value="50">
+          <span class="size-val" id="outlinev-headline">100%</span>
+        </div>
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-headline"><span>Place behind photo</span></label>
       </div>
 
@@ -961,6 +966,11 @@
           <input type="range" id="op-brand" min="10" max="100" value="100">
           <span class="size-val" id="opv-brand">100%</span>
         </div>
+        <div class="size-row">
+          <label>Outline</label>
+          <input type="range" id="outline-brand" min="0" max="150" value="50">
+          <span class="size-val" id="outlinev-brand">100%</span>
+        </div>
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-brand"><span>Place behind photo</span></label>
       </div>
 
@@ -991,6 +1001,11 @@
           <label>Opacity</label>
           <input type="range" id="op-info" min="10" max="100" value="100">
           <span class="size-val" id="opv-info">100%</span>
+        </div>
+        <div class="size-row">
+          <label>Outline</label>
+          <input type="range" id="outline-info" min="0" max="150" value="50">
+          <span class="size-val" id="outlinev-info">100%</span>
         </div>
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-info"><span>Place behind photo</span></label>
       </div>
@@ -1586,6 +1601,14 @@ document.getElementById('sz-outline').addEventListener('input', () => {
   document.getElementById('szv-outline').textContent = Math.round(v / 50 * 100) + '%';
   render();
 });
+['outline-headline','outline-brand','outline-info'].forEach(id => {
+  const slider = document.getElementById(id);
+  const label = document.getElementById(id.replace('outline-', 'outlinev-'));
+  slider.addEventListener('input', () => {
+    if (label) label.textContent = Math.round(slider.value / 50 * 100) + '%';
+    render();
+  });
+});
 ['op-headline','op-brand','op-info','op-cta','op-discount','op-rating','op-coupon','op-customtag','op-logo'].forEach(id => {
   const slider = document.getElementById(id);
   const label = document.getElementById(id.replace('op-', 'opv-'));
@@ -2145,13 +2168,13 @@ function sampleLuminance(x, y, w, h) {
 // look, 0 removes the outline/shadow entirely, up to 2.0 for a much
 // heavier comic-book-style outline. Read fresh each call so the slider
 // updates live.
-function outlineStrengthFactor() {
-  const slider = document.getElementById('sz-outline');
+function outlineStrengthFactor(key) {
+  const slider = (key && document.getElementById('outline-' + key)) || document.getElementById('sz-outline');
   if (!slider) return 1;
-  return (parseInt(slider.value, 10) || 50) / 50; // slider is 0–100, 50 = factor 1.0
+  return (parseInt(slider.value, 10) || 50) / 50; // slider is 0–150, 50 = factor 1.0
 }
 
-function smartText(text, x, y) {
+function smartText(text, x, y, key) {
   if (!text) return;
   ctx.save();
   const fontSizeMatch = /(\d+(?:\.\d+)?)px/.exec(ctx.font);
@@ -2165,7 +2188,7 @@ function smartText(text, x, y) {
   const lum = sampleLuminance(boxX, boxY, Math.max(1, width), fontSize * 1.25);
   const onLight = lum > 140;
   const savedFill = ctx.fillStyle;
-  const strength = outlineStrengthFactor();
+  const strength = outlineStrengthFactor(key);
   if (strength > 0.02) {
     if (onLight) {
       ctx.lineJoin = 'round';
@@ -2269,6 +2292,13 @@ function render() {
     const showHeadline = document.getElementById('t-headline').checked && !!bigText;
     if (!showHeadline) return;
     ctx.save();
+    // Set once, right at the top, so it applies to EVERYTHING this function
+    // draws — including the optional backdrop panel below. Previously the
+    // alpha was only applied to the text fill itself, so with the backdrop
+    // panel on, the panel stayed fully opaque and made the opacity slider
+    // look like it was doing nothing.
+    const headlineOpacity = opacityOf('headline');
+    ctx.globalAlpha = headlineOpacity;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
     const fontSelect = document.getElementById('f-headline-font');
@@ -2282,7 +2312,8 @@ function render() {
 
     // Optional soft blurred panel behind the headline for readability over
     // busy photos — drawn with ctx.filter so only the panel blurs, not the
-    // text itself (filter is reset before smartText runs).
+    // text itself (filter is reset before smartText runs). Inherits
+    // headlineOpacity from the outer save, so it fades along with the text.
     if (document.getElementById('t-textbackdrop').checked) {
       ctx.save();
       ctx.translate(hx, hy);
@@ -2300,10 +2331,10 @@ function render() {
     }
 
     ctx.fillStyle = textColor;
-    ctx.globalAlpha = opacityOf('headline');
+    ctx.globalAlpha = headlineOpacity;
     ctx.translate(hx, hy);
     ctx.rotate(headlineRotDeg * Math.PI / 180);
-    smartText(bigText, 0, 0);
+    smartText(bigText, 0, 0, 'headline');
     ctx.restore();
     elementBoxes.headline = { x: hx, y: hy - headSize * 0.82, w: hw, h: headSize * 1.05 };
   }
@@ -2317,7 +2348,7 @@ function render() {
     ctx.fillStyle = textColor;
     ctx.globalAlpha = 0.9 * opacityOf('brand');
     const bx = layout.brand.x * W, by = layout.brand.y * H;
-    smartText(brandText, bx, by);
+    smartText(brandText, bx, by, 'brand');
     const bw = ctx.measureText(brandText).width;
     elementBoxes.brand = { x: bx, y: by - brandSize * 0.82, w: bw, h: brandSize * 1.05 };
     ctx.restore();
@@ -2428,7 +2459,7 @@ function render() {
     ctx.fillStyle = textColor;
     ctx.globalAlpha = infoOpacity;
     ctx.font = `700 ${productSize}px 'Inter', sans-serif`;
-    smartText(product, infoX, infoY);
+    smartText(product, infoX, infoY, 'info');
     const productW = ctx.measureText(product).width;
 
     const priceY = infoY + barH * 0.38 * infoScale;
@@ -2436,7 +2467,7 @@ function render() {
     ctx.font = `900 ${priceSize}px 'Barlow Condensed', sans-serif`;
     ctx.fillStyle = accent;
     ctx.globalAlpha = infoOpacity;
-    smartText(price, infoX, priceY);
+    smartText(price, infoX, priceY, 'info');
     const priceW = ctx.measureText(price).width;
     let rowRight = infoX + Math.max(productW, priceW);
 
@@ -2446,7 +2477,7 @@ function render() {
       ctx.fillStyle = textColor;
       ctx.globalAlpha = 0.55 * infoOpacity;
       const ox = infoX + priceW + W*0.02;
-      smartText(oldPrice, ox, oldPriceY);
+      smartText(oldPrice, ox, oldPriceY, 'info');
       const ow = ctx.measureText(oldPrice).width;
       ctx.beginPath();
       ctx.moveTo(ox, oldPriceY - W*0.008);
