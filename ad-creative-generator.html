@@ -19,7 +19,7 @@
   }
 }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,600;1,700;1,800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,600;1,700;1,800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Anton&family=Bebas+Neue&family=Oswald:wght@500;700&family=Montserrat:wght@700;900&family=Poppins:wght@700;800&family=Playfair+Display:wght@700;900&family=Archivo+Black&display=swap" rel="stylesheet">
 <style>
   :root {
     --cream:    #f5f0e8;
@@ -824,6 +824,11 @@
           <input type="range" id="sz-logo" min="20" max="300" value="100">
           <span class="size-val" id="szv-logo">100%</span>
         </div>
+        <div class="size-row">
+          <label>Rotate</label>
+          <input type="range" id="rot-logo" min="-180" max="180" value="0">
+          <span class="size-val" id="rotv-logo">0°</span>
+        </div>
       </div>
 
       <div class="form-head">
@@ -840,10 +845,26 @@
       <div class="field">
         <label class="toggle-label"><input type="checkbox" id="t-headline" checked><span>Big Background Text</span></label>
         <input type="text" id="f-bigtext" placeholder="e.g. SALE" value="SALE" maxlength="14">
+        <select id="f-headline-font" style="margin-top:8px;">
+          <option value="'Barlow Condensed', sans-serif" data-weight="900" selected>Barlow Condensed (Classic)</option>
+          <option value="'Anton', sans-serif" data-weight="400">Anton</option>
+          <option value="'Bebas Neue', sans-serif" data-weight="400">Bebas Neue</option>
+          <option value="'Oswald', sans-serif" data-weight="700">Oswald</option>
+          <option value="'Montserrat', sans-serif" data-weight="900">Montserrat</option>
+          <option value="'Poppins', sans-serif" data-weight="800">Poppins</option>
+          <option value="'Playfair Display', serif" data-weight="900">Playfair Display</option>
+          <option value="'Archivo Black', sans-serif" data-weight="400">Archivo Black</option>
+          <option value="'JetBrains Mono', monospace" data-weight="700">JetBrains Mono</option>
+        </select>
         <div class="size-row">
           <label>Size</label>
           <input type="range" id="sz-headline" min="40" max="300" value="100">
           <span class="size-val" id="szv-headline">100%</span>
+        </div>
+        <div class="size-row">
+          <label>Rotate</label>
+          <input type="range" id="rot-headline" min="-45" max="45" value="0">
+          <span class="size-val" id="rotv-headline">0°</span>
         </div>
       </div>
 
@@ -986,6 +1007,35 @@
         </div>
       </div>
 
+      <div class="field toggle-field">
+        <label class="toggle-label"><input type="checkbox" id="t-overlay"><span>Gradient Overlay (duotone tint over the whole creative)</span></label>
+        <div class="field-row" style="margin-top:8px;">
+          <div class="field" style="margin-bottom:0;">
+            <label>Overlay Color 1</label>
+            <div class="color-field">
+              <input type="color" id="f-overlay1" value="#c41c1c">
+              <input type="text" id="f-overlay1-hex" value="#c41c1c">
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Overlay Color 2</label>
+            <div class="color-field">
+              <input type="color" id="f-overlay2" value="#1a1410">
+              <input type="text" id="f-overlay2-hex" value="#1a1410">
+            </div>
+          </div>
+        </div>
+        <div class="size-row">
+          <label>Strength</label>
+          <input type="range" id="sz-overlay" min="0" max="70" value="25">
+          <span class="size-val" id="szv-overlay">25%</span>
+        </div>
+      </div>
+
+      <div class="field toggle-field">
+        <label class="toggle-label"><input type="checkbox" id="t-textbackdrop"><span>Text Backdrop (soft blurred panel behind the headline for readability)</span></label>
+      </div>
+
       <div class="field" style="margin-bottom:0;">
         <div style="font-size:10.5px; color:var(--muted); font-family:'JetBrains Mono',monospace; line-height:1.6; padding:10px 12px; background:var(--parchment); border-left:2px solid var(--red);">
           Positioning &amp; zoom moved next to the preview — drag any dot on the creative to move it, scroll on a dot to resize that text/badge, drag the photo itself to pan, use the zoom bar under the preview to scale it.
@@ -1036,7 +1086,7 @@
             <div class="handle" data-key="cta" title="Drag: CTA button"></div>
             <div class="handle hidden-handle" data-key="logo" title="Drag: logo"></div>
           </div>
-          <div class="grid-overlay" id="gridOverlay"></div>
+          <div class="grid-overlay show" id="gridOverlay"></div>
           <div class="processing-overlay" id="processingOverlay">
             <div class="spinner"></div>
             <div class="processing-text" id="processingText">Removing background…</div>
@@ -1048,7 +1098,7 @@
       <div class="photo-toolbar">
         <button type="button" class="toolbar-btn" id="removeBgBtn" disabled>Remove Background (AI)</button>
         <button type="button" class="toolbar-btn undo-btn hidden-btn" id="undoBgBtn">↺ Undo</button>
-        <button type="button" class="toolbar-btn" id="gridToggleBtn">Show Grid</button>
+        <button type="button" class="toolbar-btn working" id="gridToggleBtn">Hide Grid</button>
       </div>
 
       <div class="zoom-bar">
@@ -1058,6 +1108,11 @@
         <button type="button" class="zoom-btn" id="zoomInBtn">+</button>
         <span class="zoom-val" id="zoomVal">100%</span>
         <button type="button" class="zoom-reset" id="resetLayoutBtn">Reset Layout</button>
+      </div>
+      <div class="zoom-bar">
+        <span class="zoom-bar-label">Photo Rotate</span>
+        <input type="range" id="imgRotate" min="-45" max="45" value="0">
+        <span class="zoom-val" id="rotateVal">0°</span>
       </div>
 
       <button class="download-btn" id="downloadBtn">Download PNG</button>
@@ -1179,67 +1234,82 @@ const LAYOUT_TEMPLATES = [
     build: defaultLayoutFor
   },
   {
+    // Headline sits well clear of brand above and the badge/rating column
+    // stays clear on the right; photo is a mid-size backdrop behind the
+    // bottom info row (that's intentional layering — smartText's adaptive
+    // shadow keeps it readable — only foreground-vs-foreground text/badge
+    // collisions are treated as real overlap here).
     key: 'topBanner', name: 'Top Banner',
-    dots: { headline:[0.2,0.16], brand:[0.2,0.06], discount:[0.8,0.18], rating:[0.86,0.32], customtag:[0.2,0.78], coupon:[0.8,0.78], info:[0.2,0.88], cta:[0.5,0.93], image:[0.5,0.6] },
+    dots: { headline:[0.2,0.24], brand:[0.2,0.06], discount:[0.86,0.13], rating:[0.9,0.28], customtag:[0.2,0.78], coupon:[0.8,0.78], info:[0.2,0.885], cta:[0.5,0.945], image:[0.5,0.62] },
     build: (w, h) => ({
-      headline:  { x: 0.055, y: 0.145, scale: 1.1 },
-      brand:     { x: 0.055, y: 0.055, scale: 0.9 },
-      discount:  { x: 0.85,  y: 0.155, scale: 1.0 },
-      rating:    { x: 0.945, y: 0.30,  scale: 0.9 },
-      customtag: { x: 0.055, y: 0.80,  scale: 0.95 },
-      coupon:    { x: 0.945, y: 0.80,  scale: 0.95 },
-      info:      { x: 0.055, y: 0.905, scale: 1.0 },
-      cta:       { x: 0.5,   y: 0.945, scale: 1.05 },
-      image:     { x: 0.5,   y: 0.62,  scale: 0.82 },
-      logo:      { x: 0.92,  y: 0.055, scale: 0.9 }
+      headline:  { x: 0.055, y: 0.235, scale: 0.78 },
+      brand:     { x: 0.055, y: 0.055, scale: 0.8  },
+      discount:  { x: 0.86,  y: 0.135, scale: 0.68 },
+      rating:    { x: 0.945, y: 0.285, scale: 0.75 },
+      customtag: { x: 0.055, y: 0.775, scale: 0.85 },
+      coupon:    { x: 0.945, y: 0.775, scale: 0.85 },
+      info:      { x: 0.055, y: 0.885, scale: 0.9  },
+      cta:       { x: 0.5,   y: 0.945, scale: 0.85 },
+      image:     { x: 0.5,   y: 0.64,  scale: 0.85 },
+      logo:      { x: 0.92,  y: 0.055, scale: 0.7  }
     })
   },
   {
+    // Text column occupies roughly the left 42% of the canvas, stacked
+    // top-to-bottom with generous gaps; photo takes the right ~55%. Every
+    // left-column element is scaled down (≤0.85) specifically so it fits
+    // that narrower width without wrapping into the photo half.
     key: 'sideSplit', name: 'Side Split',
-    dots: { headline:[0.1,0.3], brand:[0.1,0.1], discount:[0.1,0.5], rating:[0.35,0.9], customtag:[0.1,0.64], coupon:[0.36,0.64], info:[0.1,0.78], cta:[0.2,0.9], image:[0.74,0.5] },
+    dots: { brand:[0.1,0.08], headline:[0.1,0.24], discount:[0.16,0.4], customtag:[0.1,0.5], coupon:[0.36,0.6], info:[0.1,0.72], rating:[0.36,0.86], cta:[0.2,0.9], image:[0.74,0.5] },
     build: (w, h) => ({
-      headline:  { x: 0.045, y: 0.30, scale: 0.75 },
-      brand:     { x: 0.045, y: 0.10, scale: 1.0 },
-      discount:  { x: 0.20,  y: 0.52, scale: 0.55 },
-      rating:    { x: 0.42,  y: 0.90, scale: 0.75 },
-      customtag: { x: 0.045, y: 0.635, scale: 0.8 },
-      coupon:    { x: 0.40,  y: 0.635, scale: 0.8 },
-      info:      { x: 0.045, y: 0.78, scale: 0.85 },
-      cta:       { x: 0.21,  y: 0.905, scale: 0.9 },
-      image:     { x: 0.74,  y: 0.5,  scale: 1.2 },
-      logo:      { x: 0.045, y: 0.905, scale: 0.55 }
+      brand:     { x: 0.045, y: 0.08,  scale: 0.8  },
+      headline:  { x: 0.045, y: 0.245, scale: 0.55 },
+      discount:  { x: 0.155, y: 0.42,  scale: 0.36 },
+      customtag: { x: 0.045, y: 0.535, scale: 0.6  },
+      coupon:    { x: 0.40,  y: 0.535, scale: 0.5  },
+      info:      { x: 0.045, y: 0.70,  scale: 0.62 },
+      rating:    { x: 0.40,  y: 0.855, scale: 0.5  },
+      cta:       { x: 0.20,  y: 0.925, scale: 0.7  },
+      image:     { x: 0.74,  y: 0.5,   scale: 1.05 },
+      logo:      { x: 0.045, y: 0.925, scale: 0.4  }
     })
   },
   {
+    // Every text/badge element lives in its own corner or edge slot with no
+    // two elements sharing a row; the photo is the dominant full-bleed
+    // backdrop behind all of it.
     key: 'minimalCorner', name: 'Minimal Corner',
-    dots: { headline:[0.2,0.9], brand:[0.2,0.08], discount:[0.84,0.14], rating:[0.9,0.06], customtag:[0.2,0.2], coupon:[0.8,0.2], info:[0.2,0.965], cta:[0.84,0.92], image:[0.5,0.46] },
+    dots: { brand:[0.2,0.07], discount:[0.86,0.12], rating:[0.9,0.26], customtag:[0.2,0.2], coupon:[0.9,0.4], logo:[0.82,0.82], headline:[0.2,0.87], info:[0.2,0.965], cta:[0.82,0.925], image:[0.5,0.46] },
     build: (w, h) => ({
-      headline:  { x: 0.055, y: 0.895, scale: 0.6 },
-      brand:     { x: 0.055, y: 0.075, scale: 0.85 },
-      discount:  { x: 0.855, y: 0.135, scale: 0.75 },
-      rating:    { x: 0.945, y: 0.075, scale: 0.65 },
-      customtag: { x: 0.055, y: 0.19,  scale: 0.75 },
-      coupon:    { x: 0.945, y: 0.19,  scale: 0.75 },
-      info:      { x: 0.055, y: 0.965, scale: 0.65 },
-      cta:       { x: 0.865, y: 0.925, scale: 0.9 },
-      image:     { x: 0.5,   y: 0.47,  scale: 1.32 },
-      logo:      { x: 0.895, y: 0.925, scale: 0.55 }
+      brand:     { x: 0.055, y: 0.065, scale: 0.7  },
+      discount:  { x: 0.90,  y: 0.115, scale: 0.5  },
+      rating:    { x: 0.945, y: 0.255, scale: 0.5  },
+      customtag: { x: 0.055, y: 0.19,  scale: 0.6  },
+      coupon:    { x: 0.945, y: 0.395, scale: 0.55 },
+      logo:      { x: 0.865, y: 0.82,  scale: 0.45 },
+      headline:  { x: 0.055, y: 0.87,  scale: 0.5  },
+      info:      { x: 0.055, y: 0.965, scale: 0.5  },
+      cta:       { x: 0.865, y: 0.925, scale: 0.7  },
+      image:     { x: 0.5,   y: 0.46,  scale: 1.05 }
     })
   },
   {
+    // Big centered badge up top with clear air around it, headline/brand
+    // stacked below-left, rating balances it top-right, photo fills the
+    // lower half as a backdrop behind the bottom info row.
     key: 'badgeFocus', name: 'Badge Focus',
-    dots: { headline:[0.2,0.55], brand:[0.2,0.42], discount:[0.5,0.2], rating:[0.86,0.62], customtag:[0.2,0.8], coupon:[0.8,0.8], info:[0.2,0.9], cta:[0.78,0.92], image:[0.5,0.8] },
+    dots: { discount:[0.5,0.17], brand:[0.2,0.38], headline:[0.2,0.5], rating:[0.86,0.38], customtag:[0.2,0.78], coupon:[0.8,0.78], info:[0.2,0.885], cta:[0.78,0.9225], image:[0.5,0.72] },
     build: (w, h) => ({
-      headline:  { x: 0.055, y: 0.555, scale: 1.05 },
-      brand:     { x: 0.055, y: 0.42,  scale: 0.9 },
-      discount:  { x: 0.5,   y: 0.205, scale: 1.55 },
-      rating:    { x: 0.945, y: 0.615, scale: 0.9 },
-      customtag: { x: 0.055, y: 0.80,  scale: 0.9 },
-      coupon:    { x: 0.945, y: 0.80,  scale: 0.9 },
-      info:      { x: 0.055, y: 0.905, scale: 1.0 },
-      cta:       { x: 0.895, y: 0.9225,scale: 1.0 },
-      image:     { x: 0.5,   y: 0.80,  scale: 0.55 },
-      logo:      { x: 0.9,   y: 0.075, scale: 0.9 }
+      discount:  { x: 0.5,   y: 0.175, scale: 0.85 },
+      brand:     { x: 0.055, y: 0.375, scale: 0.75 },
+      headline:  { x: 0.055, y: 0.50,  scale: 0.65 },
+      rating:    { x: 0.945, y: 0.375, scale: 0.7  },
+      customtag: { x: 0.055, y: 0.775, scale: 0.85 },
+      coupon:    { x: 0.945, y: 0.775, scale: 0.85 },
+      info:      { x: 0.055, y: 0.885, scale: 0.9  },
+      cta:       { x: 0.895, y: 0.9225,scale: 0.9  },
+      image:     { x: 0.5,   y: 0.72,  scale: 0.9  },
+      logo:      { x: 0.9,   y: 0.075, scale: 0.7  }
     })
   }
 ];
@@ -1257,6 +1327,13 @@ function markTemplateDirty() {
 function applyTemplate(tpl) {
   layoutStore[sizeKey()] = tpl.build(W, H);
   activeTemplatePerSize[sizeKey()] = tpl.key;
+  // Templates define a clean, deliberate arrangement — clear any manual
+  // tilt on the headline/logo so switching templates doesn't leave a
+  // leftover rotation that no longer matches the new layout.
+  const rotHeadline = document.getElementById('rot-headline');
+  const rotLogo = document.getElementById('rot-logo');
+  rotHeadline.value = 0; document.getElementById('rotv-headline').textContent = '0°';
+  rotLogo.value = 0; document.getElementById('rotv-logo').textContent = '0°';
   syncZoomUI();
   positionHandles();
   syncSizeSliders();
@@ -1340,11 +1417,13 @@ syncColor('f-bg1','f-bg1-hex');
 syncColor('f-bg2','f-bg2-hex');
 syncColor('f-accent','f-accent-hex');
 syncColor('f-text','f-text-hex');
+syncColor('f-overlay1','f-overlay1-hex');
+syncColor('f-overlay2','f-overlay2-hex');
 
 // ── LIVE FIELDS ──
 [
   'f-bigtext','f-discount','f-cta','f-brand','f-product','f-price','f-oldprice',
-  'f-rating-stars','f-rating-count','f-coupon','f-customtag'
+  'f-rating-stars','f-rating-count','f-coupon','f-customtag','f-headline-font'
 ].forEach(id => {
   document.getElementById(id).addEventListener('input', render);
   document.getElementById(id).addEventListener('change', render);
@@ -1352,6 +1431,28 @@ syncColor('f-text','f-text-hex');
 ['t-headline','t-brand','t-info','t-discount','t-cta','t-oldprice','t-rating','t-coupon','t-customtag'].forEach(id => {
   document.getElementById(id).addEventListener('change', () => { updateHandleVisibility(); render(); });
 });
+['t-overlay','t-textbackdrop'].forEach(id => {
+  document.getElementById(id).addEventListener('change', render);
+});
+document.getElementById('sz-overlay').addEventListener('input', () => {
+  document.getElementById('szv-overlay').textContent = document.getElementById('sz-overlay').value + '%';
+  render();
+});
+
+// ── ROTATION SLIDERS (headline text, logo, product photo) ──
+function wireRotationSlider(sliderId, labelId, onChange) {
+  const slider = document.getElementById(sliderId);
+  const label = document.getElementById(labelId);
+  slider.addEventListener('input', () => {
+    if (label) label.textContent = slider.value + '°';
+    if (onChange) onChange();
+    markTemplateDirty();
+    render();
+  });
+}
+wireRotationSlider('rot-headline', 'rotv-headline');
+wireRotationSlider('rot-logo', 'rotv-logo');
+wireRotationSlider('imgRotate', 'rotateVal');
 
 // ── ZOOM BAR (lives next to the preview, drives layout.image.scale) ──
 function syncZoomUI() {
@@ -1982,15 +2083,34 @@ function render() {
     const drawH = productImg.height * ratio;
     const centerX = layout.image.x * W;
     const centerY = layout.image.y * H;
-    const dx = centerX - drawW / 2;
-    const dy = centerY - drawH / 2;
+    const imgRotDeg = parseFloat(document.getElementById('imgRotate').value) || 0;
 
     ctx.save();
     ctx.shadowColor = 'rgba(0,0,0,0.45)';
     ctx.shadowBlur = W * 0.03;
     ctx.shadowOffsetY = H * 0.015;
-    ctx.drawImage(productImg, dx, dy, drawW, drawH);
+    ctx.translate(centerX, centerY);
+    ctx.rotate(imgRotDeg * Math.PI / 180);
+    ctx.drawImage(productImg, -drawW / 2, -drawH / 2, drawW, drawH);
     ctx.restore();
+  }
+
+  // Gradient overlay (duotone tint) — a flat wash across the whole canvas
+  // over the background+photo, drawn before any text so text stays crisp
+  // on top of it. Purely cosmetic; skipped entirely when off.
+  if (document.getElementById('t-overlay').checked) {
+    const ov1 = val('f-overlay1'), ov2 = val('f-overlay2');
+    const strength = (parseInt(document.getElementById('sz-overlay').value, 10) || 0) / 100;
+    if (strength > 0) {
+      ctx.save();
+      const ovGrad = ctx.createLinearGradient(0, 0, W, H);
+      ovGrad.addColorStop(0, ov1);
+      ovGrad.addColorStop(1, ov2);
+      ctx.globalAlpha = strength;
+      ctx.fillStyle = ovGrad;
+      ctx.fillRect(0, 0, W, H);
+      ctx.restore();
+    }
   }
 
   // Big headline text — anchor is left/baseline, position from layout.headline
@@ -1999,14 +2119,39 @@ function render() {
     ctx.save();
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
-    const headSize = fitFont(ctx, bigText, "'Barlow Condensed', sans-serif", 900, W*0.9, Math.min(W,H)*0.24, 30) * sc('headline');
-    ctx.font = `900 ${headSize}px 'Barlow Condensed', sans-serif`;
-    ctx.fillStyle = textColor;
+    const fontSelect = document.getElementById('f-headline-font');
+    const headlineFamily = fontSelect.value;
+    const headlineWeight = parseInt(fontSelect.selectedOptions[0].dataset.weight, 10) || 900;
+    const headSize = fitFont(ctx, bigText, headlineFamily, headlineWeight, W*0.9, Math.min(W,H)*0.24, 30) * sc('headline');
+    ctx.font = `${headlineWeight} ${headSize}px ${headlineFamily}`;
     const hx = layout.headline.x * W, hy = layout.headline.y * H;
-    smartText(bigText, hx, hy);
     const hw = ctx.measureText(bigText).width;
-    elementBoxes.headline = { x: hx, y: hy - headSize * 0.82, w: hw, h: headSize * 1.05 };
+    const headlineRotDeg = parseFloat(document.getElementById('rot-headline').value) || 0;
+
+    // Optional soft blurred panel behind the headline for readability over
+    // busy photos — drawn with ctx.filter so only the panel blurs, not the
+    // text itself (filter is reset before smartText runs).
+    if (document.getElementById('t-textbackdrop').checked) {
+      ctx.save();
+      ctx.translate(hx, hy);
+      ctx.rotate(headlineRotDeg * Math.PI / 180);
+      const padX = headSize * 0.28, padTop = headSize * 0.95, padBottom = headSize * 0.28;
+      ctx.filter = `blur(${Math.max(2, headSize * 0.05)}px)`;
+      const bgGrad = ctx.createLinearGradient(-padX, 0, hw + padX, 0);
+      bgGrad.addColorStop(0, 'rgba(0,0,0,0.55)');
+      bgGrad.addColorStop(1, 'rgba(0,0,0,0.30)');
+      ctx.fillStyle = bgGrad;
+      fillRoundRect(-padX, -padTop, hw + padX * 2, padTop + padBottom, headSize * 0.12);
+      ctx.filter = 'none';
+      ctx.restore();
+    }
+
+    ctx.fillStyle = textColor;
+    ctx.translate(hx, hy);
+    ctx.rotate(headlineRotDeg * Math.PI / 180);
+    smartText(bigText, 0, 0);
     ctx.restore();
+    elementBoxes.headline = { x: hx, y: hy - headSize * 0.82, w: hw, h: headSize * 1.05 };
   }
 
   // Brand mark — anchor left/baseline, position from layout.brand
@@ -2201,9 +2346,12 @@ function render() {
     const logoH = logoImg.height * logoRatio;
     const logoCenterX = layout.logo.x * W;
     const logoCenterY = layout.logo.y * H;
+    const logoRotDeg = parseFloat(document.getElementById('rot-logo').value) || 0;
     ctx.shadowColor = 'rgba(0,0,0,0.35)';
     ctx.shadowBlur = W * 0.015;
-    ctx.drawImage(logoImg, logoCenterX - logoW / 2, logoCenterY - logoH / 2, logoW, logoH);
+    ctx.translate(logoCenterX, logoCenterY);
+    ctx.rotate(logoRotDeg * Math.PI / 180);
+    ctx.drawImage(logoImg, -logoW / 2, -logoH / 2, logoW, logoH);
     ctx.restore();
     elementBoxes.logo = { x: logoCenterX - logoW / 2, y: logoCenterY - logoH / 2, w: logoW, h: logoH };
   }
@@ -2212,6 +2360,30 @@ function render() {
   // just drawn, so grabbing a handle grabs the actual visible element —
   // no more fixed-size buttons that miss large or small text.
   syncHandleGeometry();
+  positionUploadOverlay(layout);
+}
+
+// Before a photo is uploaded, the "click or drop a photo" prompt used to
+// always sit dead-center on the canvas — but layout templates can move the
+// photo's designated spot anywhere (e.g. Top Banner puts it lower-center,
+// Side Split puts it on the right half). Left dead-center, the prompt would
+// visually collide with whatever text a template placed through the middle
+// (this is exactly what caused "SALE" to overlap "CLICK OR DROP..." in
+// Top Banner/Badge Focus). This mirrors the same safeW/safeH/scale math
+// render() uses to place the real photo, so the prompt always sits exactly
+// where the photo will actually land.
+function positionUploadOverlay(layout) {
+  if (productImg) return; // overlay is hidden via CSS once a photo exists; no need to reposition it
+  const safeW = W * 0.94, safeH = H * 0.92;
+  const boxW = safeW * layout.image.scale, boxH = safeH * layout.image.scale;
+  const cx = layout.image.x * W, cy = layout.image.y * H;
+  const left = cx - boxW / 2, top = cy - boxH / 2;
+  canvasUploadOverlay.style.left = (left / W * 100) + '%';
+  canvasUploadOverlay.style.top = (top / H * 100) + '%';
+  canvasUploadOverlay.style.width = (boxW / W * 100) + '%';
+  canvasUploadOverlay.style.height = (boxH / H * 100) + '%';
+  canvasUploadOverlay.style.right = 'auto';
+  canvasUploadOverlay.style.bottom = 'auto';
 }
 
 // ── DOWNLOAD ──
