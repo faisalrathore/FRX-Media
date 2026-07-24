@@ -829,6 +829,7 @@
           <input type="range" id="rot-logo" min="-180" max="180" value="0">
           <span class="size-val" id="rotv-logo">0°</span>
         </div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-logo"><span>Place behind photo</span></label>
       </div>
 
       <div class="form-head">
@@ -866,6 +867,7 @@
           <input type="range" id="rot-headline" min="-45" max="45" value="0">
           <span class="size-val" id="rotv-headline">0°</span>
         </div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-headline"><span>Place behind photo</span></label>
       </div>
 
       <div class="field-row">
@@ -877,6 +879,7 @@
             <input type="range" id="sz-discount" min="40" max="300" value="100">
             <span class="size-val" id="szv-discount">100%</span>
           </div>
+          <label class="toggle-label" style="margin-top:6px; font-size:10px;"><input type="checkbox" id="layer-discount"><span>Behind photo</span></label>
         </div>
         <div class="field">
           <label class="toggle-label"><input type="checkbox" id="t-cta" checked><span>CTA Button</span></label>
@@ -886,6 +889,7 @@
             <input type="range" id="sz-cta" min="40" max="300" value="100">
             <span class="size-val" id="szv-cta">100%</span>
           </div>
+          <label class="toggle-label" style="margin-top:6px; font-size:10px;"><input type="checkbox" id="layer-cta"><span>Behind photo</span></label>
         </div>
       </div>
 
@@ -897,6 +901,7 @@
           <input type="range" id="sz-brand" min="40" max="300" value="100">
           <span class="size-val" id="szv-brand">100%</span>
         </div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-brand"><span>Place behind photo</span></label>
       </div>
 
       <div class="field toggle-field">
@@ -922,6 +927,7 @@
           <span class="size-val" id="szv-info">100%</span>
         </div>
         <div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-top:4px;">Sizes the whole product name / price block together</div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-info"><span>Place behind photo</span></label>
       </div>
 
       <div class="section-divider">Extra Overlays</div>
@@ -949,6 +955,7 @@
           <input type="range" id="sz-rating" min="40" max="300" value="100">
           <span class="size-val" id="szv-rating">100%</span>
         </div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-rating"><span>Place behind photo</span></label>
       </div>
 
       <div class="field toggle-field">
@@ -959,6 +966,7 @@
           <input type="range" id="sz-coupon" min="40" max="300" value="100">
           <span class="size-val" id="szv-coupon">100%</span>
         </div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-coupon"><span>Place behind photo</span></label>
       </div>
 
       <div class="field toggle-field">
@@ -969,6 +977,7 @@
           <input type="range" id="sz-customtag" min="40" max="300" value="100">
           <span class="size-val" id="szv-customtag">100%</span>
         </div>
+        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-customtag"><span>Place behind photo</span></label>
       </div>
 
       <div class="section-divider">Style</div>
@@ -1432,6 +1441,12 @@ syncColor('f-overlay2','f-overlay2-hex');
   document.getElementById(id).addEventListener('change', () => { updateHandleVisibility(); render(); });
 });
 ['t-overlay','t-textbackdrop'].forEach(id => {
+  document.getElementById(id).addEventListener('change', render);
+});
+[
+  'layer-headline','layer-brand','layer-discount','layer-rating',
+  'layer-customtag','layer-coupon','layer-info','layer-cta','layer-logo'
+].forEach(id => {
   document.getElementById(id).addEventListener('change', render);
 });
 document.getElementById('sz-overlay').addEventListener('input', () => {
@@ -2071,51 +2086,29 @@ function render() {
   ctx.fillRect(0, 0, W, H);
 
   const bigText = val('f-bigtext').toUpperCase() || 'SALE';
+  const brandText = (val('f-brand') || 'BRAND').toUpperCase();
+  const discount = val('f-discount');
+  const product = val('f-product');
+  const price = val('f-price');
+  const oldPrice = val('f-oldprice');
+  const cta = val('f-cta');
 
-  // Product image — drawn early (behind text/badges) but its position/scale
-  // come entirely from layout.image, set by dragging the photo + zoom bar.
-  if (productImg) {
-    const safeW = W * 0.94, safeH = H * 0.92;
-    const boxW = safeW * layout.image.scale;
-    const boxH = safeH * layout.image.scale;
-    const ratio = Math.min(boxW / productImg.width, boxH / productImg.height);
-    const drawW = productImg.width * ratio;
-    const drawH = productImg.height * ratio;
-    const centerX = layout.image.x * W;
-    const centerY = layout.image.y * H;
-    const imgRotDeg = parseFloat(document.getElementById('imgRotate').value) || 0;
-
-    ctx.save();
-    ctx.shadowColor = 'rgba(0,0,0,0.45)';
-    ctx.shadowBlur = W * 0.03;
-    ctx.shadowOffsetY = H * 0.015;
-    ctx.translate(centerX, centerY);
-    ctx.rotate(imgRotDeg * Math.PI / 180);
-    ctx.drawImage(productImg, -drawW / 2, -drawH / 2, drawW, drawH);
-    ctx.restore();
+  // Every text/badge/logo has a "Place Behind Photo" checkbox (layer-KEY) —
+  // checked means it draws BEFORE the photo (so the photo visually overlaps
+  // it, à la the classic "text peeking out from behind the product" look),
+  // unchecked (the default) means it draws after, on top, like before.
+  function isBehind(key) {
+    const box = document.getElementById('layer-' + key);
+    return !!box && box.checked;
   }
 
-  // Gradient overlay (duotone tint) — a flat wash across the whole canvas
-  // over the background+photo, drawn before any text so text stays crisp
-  // on top of it. Purely cosmetic; skipped entirely when off.
-  if (document.getElementById('t-overlay').checked) {
-    const ov1 = val('f-overlay1'), ov2 = val('f-overlay2');
-    const strength = (parseInt(document.getElementById('sz-overlay').value, 10) || 0) / 100;
-    if (strength > 0) {
-      ctx.save();
-      const ovGrad = ctx.createLinearGradient(0, 0, W, H);
-      ovGrad.addColorStop(0, ov1);
-      ovGrad.addColorStop(1, ov2);
-      ctx.globalAlpha = strength;
-      ctx.fillStyle = ovGrad;
-      ctx.fillRect(0, 0, W, H);
-      ctx.restore();
-    }
-  }
+  // ── Each element's draw logic, unchanged from before except now wrapped
+  // in a function so it can be called in either the back-layer pass (before
+  // the photo) or the front-layer pass (after it) depending on isBehind(). ──
 
-  // Big headline text — anchor is left/baseline, position from layout.headline
-  const showHeadline = document.getElementById('t-headline').checked && !!bigText;
-  if (showHeadline) {
+  function drawHeadline() {
+    const showHeadline = document.getElementById('t-headline').checked && !!bigText;
+    if (!showHeadline) return;
     ctx.save();
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
@@ -2154,10 +2147,9 @@ function render() {
     elementBoxes.headline = { x: hx, y: hy - headSize * 0.82, w: hw, h: headSize * 1.05 };
   }
 
-  // Brand mark — anchor left/baseline, position from layout.brand
-  const brandText = (val('f-brand') || 'BRAND').toUpperCase();
-  const showBrand = document.getElementById('t-brand').checked && !!val('f-brand');
-  if (showBrand) {
+  function drawBrand() {
+    const showBrand = document.getElementById('t-brand').checked && !!val('f-brand');
+    if (!showBrand) return;
     ctx.save();
     const brandSize = W*0.028 * sc('brand');
     ctx.font = `700 ${brandSize}px 'Inter', sans-serif`;
@@ -2170,10 +2162,9 @@ function render() {
     ctx.restore();
   }
 
-  // Discount badge — anchor is the circle's center, position from layout.discount
-  const discount = val('f-discount');
-  const showDiscount = document.getElementById('t-discount').checked && !!discount;
-  if (showDiscount) {
+  function drawDiscount() {
+    const showDiscount = document.getElementById('t-discount').checked && !!discount;
+    if (!showDiscount) return;
     ctx.save();
     const bx = layout.discount.x * W, by = layout.discount.y * H, r = Math.min(W,H)*0.105 * sc('discount');
     ctx.translate(bx, by);
@@ -2199,8 +2190,8 @@ function render() {
     elementBoxes.discount = { x: bx - r, y: by - r, w: r * 2, h: r * 2 };
   }
 
-  // Rating badge — anchor is the pill's top-right corner, position from layout.rating
-  if (document.getElementById('t-rating').checked) {
+  function drawRating() {
+    if (!document.getElementById('t-rating').checked) return;
     const stars = parseFloat(val('f-rating-stars')) || 5;
     const count = val('f-rating-count');
     const filled = Math.round(stars);
@@ -2238,41 +2229,26 @@ function render() {
     elementBoxes.rating = { x: pillX, y: pillY, w: totalW, h: pillH };
   }
 
-  // Custom text tile + coupon chip — each independently draggable AND
-  // independently resizable now, so each gets its own chip height.
-  {
-    if (document.getElementById('t-customtag').checked && val('f-customtag')) {
-      const tagH = H * 0.044 * sc('customtag');
-      const tagFont = `700 ${tagH * 0.4}px 'JetBrains Mono', monospace`;
-      const tagX = layout.customtag.x * W, tagY = layout.customtag.y * H;
-      const tagW = drawPill(tagX, tagY, tagH, val('f-customtag').toUpperCase(), accent, '#fff', tagFont, false);
-      elementBoxes.customtag = { x: tagX, y: tagY, w: tagW, h: tagH };
-    }
-    if (document.getElementById('t-coupon').checked && val('f-coupon')) {
-      const couponH = H * 0.044 * sc('coupon');
-      const couponFont = `700 ${couponH * 0.4}px 'JetBrains Mono', monospace`;
-      const couponX = layout.coupon.x * W, couponY = layout.coupon.y * H;
-      const couponW = drawPill(couponX, couponY, couponH, 'CODE: ' + val('f-coupon').toUpperCase(), 'rgba(255,255,255,0.94)', '#1a1410', couponFont, true);
-      elementBoxes.coupon = { x: couponX - couponW, y: couponY, w: couponW, h: couponH };
-    }
+  function drawCustomTag() {
+    if (!(document.getElementById('t-customtag').checked && val('f-customtag'))) return;
+    const tagH = H * 0.044 * sc('customtag');
+    const tagFont = `700 ${tagH * 0.4}px 'JetBrains Mono', monospace`;
+    const tagX = layout.customtag.x * W, tagY = layout.customtag.y * H;
+    const tagW = drawPill(tagX, tagY, tagH, val('f-customtag').toUpperCase(), accent, '#fff', tagFont, false);
+    elementBoxes.customtag = { x: tagX, y: tagY, w: tagW, h: tagH };
   }
 
-  // Bottom bar — decorative translucent strip; the text on top of it moves independently
-  ctx.save();
-  ctx.fillStyle = 'rgba(0,0,0,0.28)';
-  ctx.fillRect(0, H - barH, W, barH);
-  ctx.restore();
+  function drawCoupon() {
+    if (!(document.getElementById('t-coupon').checked && val('f-coupon'))) return;
+    const couponH = H * 0.044 * sc('coupon');
+    const couponFont = `700 ${couponH * 0.4}px 'JetBrains Mono', monospace`;
+    const couponX = layout.coupon.x * W, couponY = layout.coupon.y * H;
+    const couponW = drawPill(couponX, couponY, couponH, 'CODE: ' + val('f-coupon').toUpperCase(), 'rgba(255,255,255,0.94)', '#1a1410', couponFont, true);
+    elementBoxes.coupon = { x: couponX - couponW, y: couponY, w: couponW, h: couponH };
+  }
 
-  const product = val('f-product');
-  const price = val('f-price');
-  const oldPrice = val('f-oldprice');
-  const cta = val('f-cta');
-
-  // Product name / price / original price — one draggable group, anchored
-  // at the product-name baseline (layout.info); price and old-price are
-  // offset from that same anchor so the group always moves together.
-  const showInfo = document.getElementById('t-info').checked;
-  if (showInfo) {
+  function drawInfo() {
+    if (!document.getElementById('t-info').checked) return;
     ctx.save();
     ctx.textAlign = 'left';
     const infoX = layout.info.x * W;
@@ -2313,8 +2289,8 @@ function render() {
     elementBoxes.info = { x: infoX, y: infoY - productSize * 0.82, w: rowRight - infoX, h: (priceY - infoY) + priceSize * 1.05 };
   }
 
-  // CTA button — anchor is its own center, position from layout.cta
-  if (cta && document.getElementById('t-cta').checked) {
+  function drawCta() {
+    if (!(cta && document.getElementById('t-cta').checked)) return;
     ctx.save();
     const ctaScale = sc('cta');
     ctx.font = `700 ${W*0.024 * ctaScale}px 'Inter', sans-serif`;
@@ -2334,10 +2310,9 @@ function render() {
     elementBoxes.cta = { x: ctaX, y: ctaY, w: ctaW, h: ctaH };
   }
 
-  // Brand logo — drawn last so it sits on top of everything else, anchor is
-  // its own center, position/scale come from layout.logo (drag + scroll-resize).
-  const showLogo = logoImg && document.getElementById('t-logo').checked;
-  if (showLogo) {
+  function drawLogo() {
+    const showLogo = logoImg && document.getElementById('t-logo').checked;
+    if (!showLogo) return;
     ctx.save();
     const logoScale = sc('logo');
     const maxLogoDim = Math.min(W, H) * 0.16 * logoScale;
@@ -2355,6 +2330,68 @@ function render() {
     ctx.restore();
     elementBoxes.logo = { x: logoCenterX - logoW / 2, y: logoCenterY - logoH / 2, w: logoW, h: logoH };
   }
+
+  // ── PASS 1: back-layer elements, drawn before the photo so it visually
+  // overlaps/sits on top of them ──
+  const LAYER_KEYS = ['headline','brand','discount','rating','customtag','coupon','info','cta','logo'];
+  const DRAW_FN = {
+    headline: drawHeadline, brand: drawBrand, discount: drawDiscount, rating: drawRating,
+    customtag: drawCustomTag, coupon: drawCoupon, info: drawInfo, cta: drawCta, logo: drawLogo
+  };
+  LAYER_KEYS.forEach(key => { if (isBehind(key)) DRAW_FN[key](); });
+
+  // Product image — position/scale come entirely from layout.image, set by
+  // dragging the photo + zoom bar.
+  if (productImg) {
+    const safeW = W * 0.94, safeH = H * 0.92;
+    const boxW = safeW * layout.image.scale;
+    const boxH = safeH * layout.image.scale;
+    const ratio = Math.min(boxW / productImg.width, boxH / productImg.height);
+    const drawW = productImg.width * ratio;
+    const drawH = productImg.height * ratio;
+    const centerX = layout.image.x * W;
+    const centerY = layout.image.y * H;
+    const imgRotDeg = parseFloat(document.getElementById('imgRotate').value) || 0;
+
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.45)';
+    ctx.shadowBlur = W * 0.03;
+    ctx.shadowOffsetY = H * 0.015;
+    ctx.translate(centerX, centerY);
+    ctx.rotate(imgRotDeg * Math.PI / 180);
+    ctx.drawImage(productImg, -drawW / 2, -drawH / 2, drawW, drawH);
+    ctx.restore();
+  }
+
+  // Gradient overlay (duotone tint) — a flat wash across the whole canvas
+  // over the background+photo, drawn before front-layer text so text stays
+  // crisp on top of it. Purely cosmetic; skipped entirely when off.
+  if (document.getElementById('t-overlay').checked) {
+    const ov1 = val('f-overlay1'), ov2 = val('f-overlay2');
+    const strength = (parseInt(document.getElementById('sz-overlay').value, 10) || 0) / 100;
+    if (strength > 0) {
+      ctx.save();
+      const ovGrad = ctx.createLinearGradient(0, 0, W, H);
+      ovGrad.addColorStop(0, ov1);
+      ovGrad.addColorStop(1, ov2);
+      ctx.globalAlpha = strength;
+      ctx.fillStyle = ovGrad;
+      ctx.fillRect(0, 0, W, H);
+      ctx.restore();
+    }
+  }
+
+  // Bottom bar — decorative translucent strip; the text on top of it moves
+  // independently. Always drawn here (not layer-togglable — it's a
+  // decorative backdrop, not a text/badge element).
+  ctx.save();
+  ctx.fillStyle = 'rgba(0,0,0,0.28)';
+  ctx.fillRect(0, H - barH, W, barH);
+  ctx.restore();
+
+  // ── PASS 2: front-layer elements (the default) — everything not sent
+  // behind the photo, drawn on top of it as usual ──
+  LAYER_KEYS.forEach(key => { if (!isBehind(key)) DRAW_FN[key](); });
 
   // Sync every text/badge handle's on-screen hit box to exactly what was
   // just drawn, so grabbing a handle grabs the actual visible element —
