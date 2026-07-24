@@ -961,7 +961,10 @@
 // own try/catch, so a failure there can never take down the rest of the tool.
 
 const canvas = document.getElementById('adCanvas');
-const ctx = canvas.getContext('2d');
+// `let`, not `const` — exportHiResCanvas() temporarily points this at an
+// offscreen higher-resolution context so the exact same render() code can
+// draw the full-quality export without ever touching the on-screen canvas.
+let ctx = canvas.getContext('2d');
 const uploadZone = document.getElementById('uploadZone');
 const fileInput = document.getElementById('fileInput');
 const uploadStatus = document.getElementById('uploadStatus');
@@ -1545,13 +1548,25 @@ function fitFont(ctx, text, family, weight, maxWidth, maxSize, minSize) {
 // on some browsers if the canvas is unexpectedly tainted.
 function sampleLuminance(x, y, w, h) {
   try {
-    x = Math.max(0, Math.round(x)); y = Math.max(0, Math.round(y));
-    w = Math.max(1, Math.round(Math.min(w, W - x)));
-    h = Math.max(1, Math.round(Math.min(h, H - y)));
-    if (w <= 0 || h <= 0) return 128;
-    const data = ctx.getImageData(x, y, w, h).data;
+    // getImageData always reads actual device pixels and ignores the
+    // current transform — but x/y/w/h here are in the same logical W×H
+    // units everything else draws in. During normal on-screen rendering
+    // that transform is 1:1, but exportHiResCanvas() applies ctx.scale(3,3)
+    // first, so logical coordinates must be converted to device pixels
+    // here or this would sample the wrong (tiny, top-left) region of the
+    // 3x canvas instead of the area actually under the text.
+    const t = ctx.getTransform();
+    const sx = t.a || 1, sy = t.d || 1;
+    const canvasW = ctx.canvas.width, canvasH = ctx.canvas.height;
+    const px = Math.max(0, Math.round(x * sx));
+    const py = Math.max(0, Math.round(y * sy));
+    const pw = Math.max(1, Math.round(Math.min(w * sx, canvasW - px)));
+    const ph = Math.max(1, Math.round(Math.min(h * sy, canvasH - py)));
+    if (pw <= 0 || ph <= 0) return 128;
+    const data = ctx.getImageData(px, py, pw, ph).data;
     let sum = 0, count = 0;
-    for (let i = 0; i < data.length; i += 4 * 11) { // sample every ~11th pixel
+    const stride = Math.max(4, Math.round(4 * 11 * Math.max(sx, 1))); // keep sampling density roughly constant regardless of resolution
+    for (let i = 0; i < data.length; i += stride) {
       sum += 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
       count++;
     }
@@ -1630,6 +1645,12 @@ function drawPill(x, y, h, text, bg, fg, font, anchorRight) {
 
 function render() {
   ctx.clearRect(0, 0, W, H);
+  // Best-quality resampling when the product photo gets scaled down onto
+  // the canvas — the browser default is often 'low', which visibly softens
+  // detail. Matters even more once exportHiResCanvas() draws onto a much
+  // larger offscreen canvas for the actual download.
+  ctx.imageSmoothingEnabled = true;
+  if ('imageSmoothingQuality' in ctx) ctx.imageSmoothingQuality = 'high';
   elementBoxes = {};
   const layout = getLayout();
 
@@ -1896,22 +1917,74 @@ function render() {
 }
 
 // ── DOWNLOAD ──
+// Export resolution multiplier. The on-screen canvas is fixed at the ad
+// spec's nominal pixel size (e.g. 1080×1080), which is far lower than most
+// uploaded product photos — downloading straight from that canvas throws
+// away real detail from the source image. Instead of shipping the on-screen
+// canvas, we redraw the exact same creative onto an offscreen canvas at
+// EXPORT_SCALE× the resolution and download that, so the exported PNG
+// carries as much of the original photo's detail as the layout allows.
+const EXPORT_SCALE = 3;
+
+// Runs the normal render() pipeline unmodified, but temporarily redirects
+// the module-level `ctx` to a bigger offscreen canvas first. Every drawing
+// call in render() is written in logical W×H units, so scaling the context
+// before drawing is all that's needed — no separate "hi-res" render logic
+// to keep in sync with the real one.
+function exportHiResCanvas(scale) {
+  const off = document.createElement('canvas');
+  off.width = Math.round(W * scale);
+  off.height = Math.round(H * scale);
+  const offCtx = off.getContext('2d');
+  offCtx.imageSmoothingEnabled = true;
+  if ('imageSmoothingQuality' in offCtx) offCtx.imageSmoothingQuality = 'high';
+  offCtx.scale(scale, scale);
+
+  const savedCtx = ctx;
+  ctx = offCtx;
+  try {
+    render();
+  } finally {
+    ctx = savedCtx; // always restore, even if render() throws
+  }
+  return off;
+}
+
 // Uses toBlob() + an object URL instead of a data: URI — some browsers
 // (Safari in particular) will open a large data: URI in a new tab instead
 // of downloading it. A blob: URL on an <a download> that's actually
 // attached to the document reliably triggers a real file download instead.
 downloadBtn.addEventListener('click', () => {
-  canvas.toBlob((blob) => {
-    if (!blob) return;
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.download = `frx-creative-studio-${W}x${H}.png`;
-    link.href = url;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 4000);
-  }, 'image/png');
+  const originalLabel = downloadBtn.textContent;
+  downloadBtn.disabled = true;
+  downloadBtn.textContent = 'Rendering full-quality PNG…';
+
+  // Deferred one tick so the "Rendering…" label actually paints before the
+  // (synchronous, can take a moment at 3x resolution) export work runs.
+  setTimeout(() => {
+    try {
+      const hiResCanvas = exportHiResCanvas(EXPORT_SCALE);
+      hiResCanvas.toBlob((blob) => {
+        downloadBtn.disabled = false;
+        downloadBtn.textContent = originalLabel;
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `frx-creative-studio-${hiResCanvas.width}x${hiResCanvas.height}.png`;
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        render(); // put the on-screen canvas's ctx state back to normal
+      }, 'image/png');
+    } catch (err) {
+      console.error('Export failed:', err);
+      downloadBtn.disabled = false;
+      downloadBtn.textContent = originalLabel;
+      render();
+    }
+  }, 20);
 });
 
 // Initial render (waits for web fonts to avoid fallback-font flash)
