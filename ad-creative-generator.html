@@ -305,35 +305,42 @@
   .color-field input[type=text] { flex: 1; }
   input[type=range] { padding: 0; height: 4px; accent-color: var(--red); cursor: pointer; }
 
-  /* ── STYLE PRESETS ── */
-  .preset-grid {
+  /* ── LAYOUT TEMPLATES ── */
+  .template-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
     margin-top: 8px;
   }
-  .preset-swatch {
+  .template-swatch {
     position: relative;
-    height: 56px;
+    aspect-ratio: 1 / 1;
     cursor: pointer;
     border: 2px solid var(--border-strong);
+    background: var(--charcoal);
     overflow: hidden;
     transition: border-color 0.2s, transform 0.15s;
   }
-  .preset-swatch:hover { transform: translateY(-1px); border-color: var(--mid); }
-  .preset-swatch.active { border-color: var(--red); box-shadow: 0 0 0 1px var(--red); }
-  .preset-swatch .preset-fill {
-    position: absolute; inset: 0;
+  .template-swatch:hover { transform: translateY(-1px); border-color: var(--mid); }
+  .template-swatch.active { border-color: var(--red); box-shadow: 0 0 0 1px var(--red); }
+  .template-swatch .tpl-dot {
+    position: absolute;
+    border-radius: 2px;
+    background: rgba(245,240,232,0.8);
+    transform: translate(-50%, -50%);
   }
-  .preset-swatch .preset-accent-dot {
-    position: absolute; right: 6px; bottom: 6px;
-    width: 12px; height: 12px; border-radius: 50%;
-    box-shadow: 0 0 0 1.5px rgba(255,255,255,0.7);
+  .template-swatch .tpl-photo {
+    position: absolute;
+    border: 1px dashed rgba(245,240,232,0.35);
+    border-radius: 2px;
+    transform: translate(-50%, -50%);
   }
-  .preset-swatch .preset-name {
-    position: absolute; left: 6px; bottom: 5px; right: 22px;
+  .template-swatch .tpl-name {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 3px 4px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 8.5px; font-weight: 600; letter-spacing: 0.03em;
-    line-height: 1.2;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    font-size: 7.5px; font-weight: 600; letter-spacing: 0.02em;
+    text-transform: uppercase; color: #fff;
+    background: rgba(0,0,0,0.55);
+    text-align: center;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
 
@@ -439,6 +446,47 @@
     box-shadow: inset 0 0 0 2px rgba(196,28,28,0.6);
   }
   .grid-overlay.show { opacity: 1; }
+
+  /* ── BACKGROUND-REMOVAL PROCESSING OVERLAY ── */
+  .processing-overlay {
+    position: absolute; inset: 0; z-index: 6;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px;
+    background: rgba(10,8,6,0.68);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .processing-overlay.show { opacity: 1; pointer-events: auto; }
+  .spinner {
+    width: 42px; height: 42px;
+    border: 4px solid rgba(255,255,255,0.22);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spinnerRotate 0.85s linear infinite;
+  }
+  @keyframes spinnerRotate { to { transform: rotate(360deg); } }
+  .processing-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #fff; text-align: center;
+    max-width: 80%;
+  }
+  .processing-bar-track {
+    width: 180px; height: 4px;
+    background: rgba(255,255,255,0.18);
+    overflow: hidden;
+  }
+  .processing-bar-fill {
+    height: 100%; width: 0%;
+    background: var(--red2);
+    transition: width 0.25s ease-out;
+  }
+  /* indeterminate state (no known percentage yet) — sliding stripe instead of a fixed %  */
+  .processing-bar-fill.indeterminate {
+    width: 30% !important;
+    animation: processingSlide 1.1s ease-in-out infinite;
+  }
+  @keyframes processingSlide { 0%{transform:translateX(-100%);} 100%{transform:translateX(400%);} }
 
   /* ── DRAG-TO-EDIT LAYER ── */
   .edit-layer { position: absolute; inset: 0; }
@@ -738,6 +786,12 @@
       </div>
 
       <div class="field">
+        <label>Layout Templates</label>
+        <div class="template-grid" id="templateGrid"></div>
+        <div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-top:6px;">Repositions every element for this aspect ratio in one click. Colors, text, and photo stay as they are — drag anything afterward to fine-tune.</div>
+      </div>
+
+      <div class="field">
         <label class="toggle-label"><input type="checkbox" id="t-headline" checked><span>Big Background Text</span></label>
         <input type="text" id="f-bigtext" placeholder="e.g. SALE" value="SALE" maxlength="14">
         <div class="size-row">
@@ -852,12 +906,6 @@
 
       <div class="section-divider">Style</div>
 
-      <div class="field">
-        <label>Style Presets</label>
-        <div class="preset-grid" id="presetGrid"></div>
-        <div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-top:6px;">One click sets background, accent, text color, and headline font — your text and photo stay exactly as they are.</div>
-      </div>
-
       <div class="field-row">
         <div class="field">
           <label>Background Color</label>
@@ -943,6 +991,11 @@
             <div class="handle hidden-handle" data-key="logo" title="Drag: logo"></div>
           </div>
           <div class="grid-overlay" id="gridOverlay"></div>
+          <div class="processing-overlay" id="processingOverlay">
+            <div class="spinner"></div>
+            <div class="processing-text" id="processingText">Removing background…</div>
+            <div class="processing-bar-track"><div class="processing-bar-fill" id="processingBarFill"></div></div>
+          </div>
         </div>
       </div>
 
@@ -1065,6 +1118,135 @@ function getLayout() {
   return layoutStore[key];
 }
 
+// ── LAYOUT TEMPLATES ──
+// Full-arrangement presets, à la Canva's template gallery — each one
+// repositions every draggable element (not just colors). Everything stays
+// fraction-based (0–1 of W/H) exactly like defaultLayoutFor, so a template
+// applies cleanly to whatever aspect ratio is currently selected. Text
+// content, photo, and colors are untouched; only x/y/scale change, and the
+// result lands in the normal layoutStore so it's still fully draggable
+// afterward.
+const LAYOUT_TEMPLATES = [
+  {
+    key: 'classic', name: 'Classic',
+    dots: { headline:[0.2,0.28], brand:[0.2,0.1], discount:[0.78,0.16], rating:[0.86,0.28], customtag:[0.2,0.76], coupon:[0.8,0.76], info:[0.2,0.88], cta:[0.78,0.9], image:[0.5,0.5] },
+    build: defaultLayoutFor
+  },
+  {
+    key: 'topBanner', name: 'Top Banner',
+    dots: { headline:[0.2,0.16], brand:[0.2,0.06], discount:[0.8,0.18], rating:[0.86,0.32], customtag:[0.2,0.78], coupon:[0.8,0.78], info:[0.2,0.88], cta:[0.5,0.93], image:[0.5,0.6] },
+    build: (w, h) => ({
+      headline:  { x: 0.055, y: 0.145, scale: 1.1 },
+      brand:     { x: 0.055, y: 0.055, scale: 0.9 },
+      discount:  { x: 0.85,  y: 0.155, scale: 1.0 },
+      rating:    { x: 0.945, y: 0.30,  scale: 0.9 },
+      customtag: { x: 0.055, y: 0.80,  scale: 0.95 },
+      coupon:    { x: 0.945, y: 0.80,  scale: 0.95 },
+      info:      { x: 0.055, y: 0.905, scale: 1.0 },
+      cta:       { x: 0.5,   y: 0.945, scale: 1.05 },
+      image:     { x: 0.5,   y: 0.62,  scale: 0.82 },
+      logo:      { x: 0.92,  y: 0.055, scale: 0.9 }
+    })
+  },
+  {
+    key: 'sideSplit', name: 'Side Split',
+    dots: { headline:[0.1,0.3], brand:[0.1,0.1], discount:[0.1,0.5], rating:[0.35,0.9], customtag:[0.1,0.64], coupon:[0.36,0.64], info:[0.1,0.78], cta:[0.2,0.9], image:[0.74,0.5] },
+    build: (w, h) => ({
+      headline:  { x: 0.045, y: 0.30, scale: 0.75 },
+      brand:     { x: 0.045, y: 0.10, scale: 1.0 },
+      discount:  { x: 0.20,  y: 0.52, scale: 0.55 },
+      rating:    { x: 0.42,  y: 0.90, scale: 0.75 },
+      customtag: { x: 0.045, y: 0.635, scale: 0.8 },
+      coupon:    { x: 0.40,  y: 0.635, scale: 0.8 },
+      info:      { x: 0.045, y: 0.78, scale: 0.85 },
+      cta:       { x: 0.21,  y: 0.905, scale: 0.9 },
+      image:     { x: 0.74,  y: 0.5,  scale: 1.2 },
+      logo:      { x: 0.045, y: 0.905, scale: 0.55 }
+    })
+  },
+  {
+    key: 'minimalCorner', name: 'Minimal Corner',
+    dots: { headline:[0.2,0.9], brand:[0.2,0.08], discount:[0.84,0.14], rating:[0.9,0.06], customtag:[0.2,0.2], coupon:[0.8,0.2], info:[0.2,0.965], cta:[0.84,0.92], image:[0.5,0.46] },
+    build: (w, h) => ({
+      headline:  { x: 0.055, y: 0.895, scale: 0.6 },
+      brand:     { x: 0.055, y: 0.075, scale: 0.85 },
+      discount:  { x: 0.855, y: 0.135, scale: 0.75 },
+      rating:    { x: 0.945, y: 0.075, scale: 0.65 },
+      customtag: { x: 0.055, y: 0.19,  scale: 0.75 },
+      coupon:    { x: 0.945, y: 0.19,  scale: 0.75 },
+      info:      { x: 0.055, y: 0.965, scale: 0.65 },
+      cta:       { x: 0.865, y: 0.925, scale: 0.9 },
+      image:     { x: 0.5,   y: 0.47,  scale: 1.32 },
+      logo:      { x: 0.895, y: 0.925, scale: 0.55 }
+    })
+  },
+  {
+    key: 'badgeFocus', name: 'Badge Focus',
+    dots: { headline:[0.2,0.55], brand:[0.2,0.42], discount:[0.5,0.2], rating:[0.86,0.62], customtag:[0.2,0.8], coupon:[0.8,0.8], info:[0.2,0.9], cta:[0.78,0.92], image:[0.5,0.8] },
+    build: (w, h) => ({
+      headline:  { x: 0.055, y: 0.555, scale: 1.05 },
+      brand:     { x: 0.055, y: 0.42,  scale: 0.9 },
+      discount:  { x: 0.5,   y: 0.205, scale: 1.55 },
+      rating:    { x: 0.945, y: 0.615, scale: 0.9 },
+      customtag: { x: 0.055, y: 0.80,  scale: 0.9 },
+      coupon:    { x: 0.945, y: 0.80,  scale: 0.9 },
+      info:      { x: 0.055, y: 0.905, scale: 1.0 },
+      cta:       { x: 0.895, y: 0.9225,scale: 1.0 },
+      image:     { x: 0.5,   y: 0.80,  scale: 0.55 },
+      logo:      { x: 0.9,   y: 0.075, scale: 0.9 }
+    })
+  }
+];
+
+// Tracks which template (if any) currently matches each aspect ratio's
+// layout, purely for the "active" highlight — cleared by markTemplateDirty()
+// whenever the user drags/resizes/scales anything by hand, since at that
+// point the layout no longer matches the template exactly.
+let activeTemplatePerSize = {};
+function markTemplateDirty() {
+  activeTemplatePerSize[sizeKey()] = null;
+  syncTemplateActiveState();
+}
+
+function applyTemplate(tpl) {
+  layoutStore[sizeKey()] = tpl.build(W, H);
+  activeTemplatePerSize[sizeKey()] = tpl.key;
+  syncZoomUI();
+  positionHandles();
+  syncSizeSliders();
+  syncTemplateActiveState();
+  render();
+}
+
+function syncTemplateActiveState() {
+  const active = activeTemplatePerSize[sizeKey()];
+  document.querySelectorAll('.template-swatch').forEach(el => {
+    el.classList.toggle('active', el.dataset.key === active);
+  });
+}
+
+function buildTemplateGrid() {
+  const grid = document.getElementById('templateGrid');
+  grid.innerHTML = '';
+  LAYOUT_TEMPLATES.forEach(tpl => {
+    const el = document.createElement('div');
+    el.className = 'template-swatch';
+    el.dataset.key = tpl.key;
+    el.title = tpl.name;
+    let dotsHtml = `<div class="tpl-photo" style="left:${tpl.dots.image[0]*100}%; top:${tpl.dots.image[1]*100}%; width:46%; height:46%;"></div>`;
+    Object.keys(tpl.dots).forEach(k => {
+      if (k === 'image') return;
+      const [dx, dy] = tpl.dots[k];
+      dotsHtml += `<div class="tpl-dot" style="left:${dx*100}%; top:${dy*100}%; width:${k==='headline'?16:9}px; height:${k==='headline'?6:5}px;"></div>`;
+    });
+    dotsHtml += `<div class="tpl-name">${tpl.name}</div>`;
+    el.innerHTML = dotsHtml;
+    el.addEventListener('click', () => applyTemplate(tpl));
+    grid.appendChild(el);
+  });
+  syncTemplateActiveState();
+}
+
 // ── SIZE TABS ──
 function selectSizeTab(tab) {
   document.querySelectorAll('.size-tab').forEach(t => t.classList.remove('active'));
@@ -1075,6 +1257,7 @@ function selectSizeTab(tab) {
   syncZoomUI();
   updateHandleVisibility();
   syncSizeSliders();
+  syncTemplateActiveState();
   render();
 }
 document.querySelectorAll('.size-tab').forEach(tab => {
@@ -1112,80 +1295,6 @@ syncColor('f-bg2','f-bg2-hex');
 syncColor('f-accent','f-accent-hex');
 syncColor('f-text','f-text-hex');
 
-// ── STYLE PRESETS ──
-// One-click color + font-pairing swaps, à la Big Atom / Canva's style
-// gallery — only touches colors and the headline's font, never the text
-// content, photo, or layout positions, so re-applying a preset is safe at
-// any point.
-const STYLE_PRESETS = [
-  { name: 'Bold Red Sale',   bg1: '#1c3b3a', bg2: '#0c1e1d', accent: '#e0342a', text: '#ffffff', headlineFont: "'Barlow Condensed', sans-serif" },
-  { name: 'Midnight Luxury', bg1: '#0d0d0d', bg2: '#1f1a10', accent: '#c9a227', text: '#f5f0e8', headlineFont: "'Barlow Condensed', sans-serif" },
-  { name: 'Ocean Blue',      bg1: '#123b5c', bg2: '#0a2338', accent: '#2fb6d9', text: '#ffffff', headlineFont: "'Barlow Condensed', sans-serif" },
-  { name: 'Pastel Soft',     bg1: '#f7d9e3', bg2: '#f2b6c9', accent: '#d6336c', text: '#2c2420', headlineFont: "'Barlow Condensed', sans-serif" },
-  { name: 'Neon Pop',        bg1: '#1a0b2e', bg2: '#0d0417', accent: '#39ff14', text: '#ffffff', headlineFont: "'JetBrains Mono', monospace" },
-  { name: 'Minimal Mono',    bg1: '#f5f0e8', bg2: '#e5dfd3', accent: '#1a1410', text: '#1a1410', headlineFont: "'JetBrains Mono', monospace" },
-  { name: 'Forest Sale',     bg1: '#1b3a1f', bg2: '#0d1f10', accent: '#e8b93a', text: '#ffffff', headlineFont: "'Barlow Condensed', sans-serif" },
-  { name: 'Sunset Warm',     bg1: '#7a2a1c', bg2: '#3d130c', accent: '#ffb347', text: '#fff4e6', headlineFont: "'Barlow Condensed', sans-serif" },
-  { name: 'Clean White',     bg1: '#ffffff', bg2: '#eceae4', accent: '#c41c1c', text: '#1a1410', headlineFont: "'Barlow Condensed', sans-serif" }
-];
-
-// Applied by render() for the headline (and only the headline) — everything
-// else keeps the same font pairing regardless of preset.
-let headlineFont = STYLE_PRESETS[0].headlineFont;
-let activePresetName = STYLE_PRESETS[0].name;
-
-function setHexField(colorId, hexId, hex) {
-  document.getElementById(colorId).value = hex;
-  document.getElementById(hexId).value = hex;
-}
-
-function applyPreset(preset) {
-  setHexField('f-bg1', 'f-bg1-hex', preset.bg1);
-  setHexField('f-bg2', 'f-bg2-hex', preset.bg2);
-  setHexField('f-accent', 'f-accent-hex', preset.accent);
-  setHexField('f-text', 'f-text-hex', preset.text);
-  headlineFont = preset.headlineFont;
-  activePresetName = preset.name;
-  syncPresetActiveState();
-  render();
-}
-
-function syncPresetActiveState() {
-  document.querySelectorAll('.preset-swatch').forEach(el => {
-    el.classList.toggle('active', el.dataset.name === activePresetName);
-  });
-}
-
-function buildPresetGrid() {
-  const grid = document.getElementById('presetGrid');
-  grid.innerHTML = '';
-  STYLE_PRESETS.forEach(preset => {
-    const el = document.createElement('div');
-    el.className = 'preset-swatch';
-    el.dataset.name = preset.name;
-    el.title = preset.name;
-    el.innerHTML = `
-      <div class="preset-fill" style="background:linear-gradient(135deg, ${preset.bg1}, ${preset.bg2});"></div>
-      <div class="preset-accent-dot" style="background:${preset.accent};"></div>
-      <div class="preset-name" style="color:${preset.text};">${preset.name}</div>
-    `;
-    el.addEventListener('click', () => applyPreset(preset));
-    grid.appendChild(el);
-  });
-  syncPresetActiveState();
-}
-buildPresetGrid();
-
-// Manually editing any color field means the current look no longer matches
-// a named preset exactly — clear the active highlight rather than leave a
-// stale one selected.
-['f-bg1','f-bg2','f-accent','f-text','f-bg1-hex','f-bg2-hex','f-accent-hex','f-text-hex'].forEach(id => {
-  document.getElementById(id).addEventListener('input', () => {
-    activePresetName = null;
-    syncPresetActiveState();
-  });
-});
-
 // ── LIVE FIELDS ──
 [
   'f-bigtext','f-discount','f-cta','f-brand','f-product','f-price','f-oldprice',
@@ -1208,17 +1317,14 @@ function setZoom(pct) {
   pct = Math.max(parseInt(imgZoom.min, 10), Math.min(parseInt(imgZoom.max, 10), pct));
   getLayout().image.scale = pct / 100;
   syncZoomUI();
+  markTemplateDirty();
   render();
 }
 imgZoom.addEventListener('input', () => setZoom(parseInt(imgZoom.value, 10)));
 document.getElementById('zoomOutBtn').addEventListener('click', () => setZoom(parseInt(imgZoom.value, 10) - 10));
 document.getElementById('zoomInBtn').addEventListener('click', () => setZoom(parseInt(imgZoom.value, 10) + 10));
 document.getElementById('resetLayoutBtn').addEventListener('click', () => {
-  layoutStore[sizeKey()] = defaultLayoutFor(W, H);
-  syncZoomUI();
-  positionHandles();
-  syncSizeSliders();
-  render();
+  applyTemplate(LAYOUT_TEMPLATES[0]); // "Classic" is the original default layout
 });
 
 // ── SIDEBAR SIZE SLIDERS ──
@@ -1247,6 +1353,7 @@ SIZE_SLIDER_KEYS.forEach(key => {
     const pct = parseInt(slider.value, 10);
     getLayout()[key].scale = pct / 100;
     if (label) label.textContent = pct + '%';
+    markTemplateDirty();
     render();
   });
 });
@@ -1351,6 +1458,7 @@ document.querySelectorAll('.handle').forEach(h => {
       const key = h.dataset.key;
       getLayout()[key].x = fx;
       getLayout()[key].y = fy;
+      markTemplateDirty();
       // render() recomputes this handle's exact box via syncHandleGeometry —
       // no need to touch h.style here, and doing so would briefly misplace
       // it (layout.x/y is the element's draw anchor, not its box corner).
@@ -1387,6 +1495,7 @@ document.querySelectorAll('.handle').forEach(h => {
     entry.scale = next;
     flashScaleReadout(h, key, next);
     syncSizeSliders();
+    markTemplateDirty();
     render();
   }, { passive: false });
 });
@@ -1400,6 +1509,7 @@ makeDraggable(
   (fx, fy) => {
     getLayout().image.x = fx;
     getLayout().image.y = fy;
+    markTemplateDirty();
     render();
   },
   -0.4, 1.4
@@ -1564,6 +1674,27 @@ undoBgBtn.addEventListener('click', () => {
   render();
 });
 
+// ── PROCESSING OVERLAY (spinner + bar shown directly over the preview
+// while background removal is running) ──
+const processingOverlay = document.getElementById('processingOverlay');
+const processingText = document.getElementById('processingText');
+const processingBarFill = document.getElementById('processingBarFill');
+
+function showProcessing(text) {
+  processingText.textContent = text;
+  processingBarFill.classList.add('indeterminate');
+  processingBarFill.style.width = '';
+  processingOverlay.classList.add('show');
+}
+function setProcessingProgress(text, pct) {
+  processingText.textContent = text;
+  processingBarFill.classList.remove('indeterminate');
+  processingBarFill.style.width = Math.max(0, Math.min(100, pct)) + '%';
+}
+function hideProcessing() {
+  processingOverlay.classList.remove('show');
+}
+
 removeBgBtn.addEventListener('click', async () => {
   if (!rawFile) return;
 
@@ -1581,6 +1712,7 @@ removeBgBtn.addEventListener('click', async () => {
   removeBgBtn.classList.add('working');
   removeBgBtn.textContent = 'Removing background…';
   setStatus('Removing background — first run downloads a small AI model, can take a moment…', true);
+  showProcessing('Starting…');
 
   try {
     // Loaded lazily and defensively — CDN/network issues, ad blockers, or
@@ -1609,10 +1741,16 @@ removeBgBtn.addEventListener('click', async () => {
       progress: (key, current, total) => {
         if (total) {
           const pct = Math.round((current / total) * 100);
-          setStatus(`Removing background — downloading model (${pct}%)…`, true);
+          const label = /model|fetch|download/i.test(String(key)) ? 'Downloading AI model' : 'Processing image';
+          setStatus(`Removing background — ${label.toLowerCase()} (${pct}%)…`, true);
+          setProcessingProgress(`${label}… ${pct}%`, pct);
+        } else {
+          // total unknown for this step — keep the indeterminate stripe going
+          showProcessing('Processing image…');
         }
       }
     });
+    setProcessingProgress('Finishing…', 100);
     const url = URL.createObjectURL(blob);
     const img = new Image();
     img.onload = () => {
@@ -1622,6 +1760,7 @@ removeBgBtn.addEventListener('click', async () => {
       uploadStatus.classList.remove('show');
       removeBgBtn.classList.remove('working');
       removeBgBtn.textContent = '✓ Background Removed';
+      hideProcessing();
       render();
     };
     img.onerror = () => { throw new Error('Cutout image failed to decode after processing.'); };
@@ -1635,6 +1774,7 @@ removeBgBtn.addEventListener('click', async () => {
     setStatus('Background removal failed: ' + reason + ' — your original photo is still in use.', false);
     removeBgBtn.classList.remove('working');
     removeBgBtn.textContent = 'Retry Remove Background';
+    hideProcessing();
   } finally {
     removeBgBtn.disabled = false;
   }
@@ -1813,9 +1953,8 @@ function render() {
     ctx.save();
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
-    const headWeight = headlineFont.indexOf('JetBrains') !== -1 ? 700 : 900;
-    const headSize = fitFont(ctx, bigText, headlineFont, headWeight, W*0.9, Math.min(W,H)*0.24, 30) * sc('headline');
-    ctx.font = `${headWeight} ${headSize}px ${headlineFont}`;
+    const headSize = fitFont(ctx, bigText, "'Barlow Condensed', sans-serif", 900, W*0.9, Math.min(W,H)*0.24, 30) * sc('headline');
+    ctx.font = `900 ${headSize}px 'Barlow Condensed', sans-serif`;
     ctx.fillStyle = textColor;
     const hx = layout.headline.x * W, hy = layout.headline.y * H;
     smartText(bigText, hx, hy);
@@ -2101,10 +2240,13 @@ downloadBtn.addEventListener('click', () => {
 });
 
 // Initial render (waits for web fonts to avoid fallback-font flash)
+buildTemplateGrid();
+activeTemplatePerSize[sizeKey()] = 'classic'; // matches the default layout used on load
 syncZoomUI();
 updateHandleVisibility();
 positionHandles(); // rough placement before the first real render
 syncSizeSliders();
+syncTemplateActiveState();
 document.fonts.ready.then(render);
 render(); // render() finishes the job via syncHandleGeometry (exact boxes)
 </script>
