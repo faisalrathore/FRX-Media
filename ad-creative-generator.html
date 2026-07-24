@@ -401,9 +401,42 @@
   }
   @keyframes statusPulse { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
 
+  /* ── CANVAS AREA + SIDE TOOLBAR ──
+     Canvas-wrap and the controls (remove bg, grid, zoom, rotate, download)
+     sit side by side instead of stacked, so the preview itself gets all the
+     vertical space that used to be eaten by full-width toolbar rows below
+     it — the canvas ends up meaningfully bigger without needing more
+     overall panel height. Falls back to stacked (toolbar below canvas) on
+     narrow screens where a fixed side column would be too cramped. */
+  .canvas-area {
+    display: flex; flex-direction: column;
+  }
+  @media(min-width: 640px) {
+    .canvas-area { flex-direction: row; align-items: stretch; }
+  }
+  .side-toolbar {
+    display: flex; flex-direction: column; gap: 14px;
+    padding: 20px 20px 24px;
+    flex-shrink: 0;
+  }
+  @media(min-width: 640px) {
+    .side-toolbar {
+      width: 208px;
+      border-left: 1px solid rgba(255,255,255,0.07);
+      overflow-y: auto;
+    }
+  }
+  .side-toolbar-group {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .side-toolbar-group .toolbar-btn { width: 100%; }
+  .side-zoom-row { display: flex; align-items: center; gap: 8px; }
+  .side-zoom-row input[type=range] { flex: 1; }
+
   .canvas-wrap {
     padding: 24px; display: flex; justify-content: center; align-items: center;
     min-height: 320px;
+    flex: 1; min-width: 0;
   }
   .canvas-stage {
     position: relative; display: inline-block; line-height: 0;
@@ -644,8 +677,8 @@
   .size-tab.platform-hidden { display: none; }
 
   .download-btn {
-    display: block; width: calc(100% - 48px);
-    margin: 4px 24px 0;
+    display: block; width: 100%;
+    margin: auto 0 0; /* pinned to the bottom of the side toolbar */
     padding: 14px 20px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px; font-weight: 600;
@@ -729,7 +762,9 @@
        percentage max-height can't resolve through a shrink-to-fit ancestor
        (canvas-stage's own height is defined BY its content, i.e. circular) —
        this is the standard CSS height-percentage limitation, not a bug. */
+    .canvas-area { flex: 1; min-height: 0; }
     .canvas-wrap { flex: 1; min-height: 0; padding: 14px; overflow: hidden; }
+    .side-toolbar { max-height: 100%; }
     .rules-block { display: none; } /* least-essential content — dropped first to give the preview room to breathe */
   }
 </style>
@@ -867,6 +902,11 @@
           <input type="range" id="rot-headline" min="-45" max="45" value="0">
           <span class="size-val" id="rotv-headline">0°</span>
         </div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-headline" min="10" max="100" value="100">
+          <span class="size-val" id="opv-headline">100%</span>
+        </div>
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-headline"><span>Place behind photo</span></label>
       </div>
 
@@ -889,6 +929,11 @@
             <input type="range" id="sz-cta" min="40" max="300" value="100">
             <span class="size-val" id="szv-cta">100%</span>
           </div>
+          <div class="size-row">
+            <label>Opacity</label>
+            <input type="range" id="op-cta" min="10" max="100" value="100">
+            <span class="size-val" id="opv-cta">100%</span>
+          </div>
           <label class="toggle-label" style="margin-top:6px; font-size:10px;"><input type="checkbox" id="layer-cta"><span>Behind photo</span></label>
         </div>
       </div>
@@ -900,6 +945,11 @@
           <label>Size</label>
           <input type="range" id="sz-brand" min="40" max="300" value="100">
           <span class="size-val" id="szv-brand">100%</span>
+        </div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-brand" min="10" max="100" value="100">
+          <span class="size-val" id="opv-brand">100%</span>
         </div>
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-brand"><span>Place behind photo</span></label>
       </div>
@@ -927,6 +977,11 @@
           <span class="size-val" id="szv-info">100%</span>
         </div>
         <div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-top:4px;">Sizes the whole product name / price block together</div>
+        <div class="size-row">
+          <label>Opacity</label>
+          <input type="range" id="op-info" min="10" max="100" value="100">
+          <span class="size-val" id="opv-info">100%</span>
+        </div>
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-info"><span>Place behind photo</span></label>
       </div>
 
@@ -980,7 +1035,10 @@
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-customtag"><span>Place behind photo</span></label>
       </div>
 
-      <div class="section-divider">Style</div>
+      <div class="section-divider" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <span>Style</span>
+        <button type="button" id="resetColorsBtn" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:var(--mid); background:var(--parchment); border:1px solid var(--border-strong); padding:5px 10px; cursor:pointer;">Reset Colors</button>
+      </div>
 
       <div class="field-row">
         <div class="field">
@@ -1043,6 +1101,21 @@
 
       <div class="field toggle-field">
         <label class="toggle-label"><input type="checkbox" id="t-textbackdrop"><span>Text Backdrop (soft blurred panel behind the headline for readability)</span></label>
+        <div class="size-row">
+          <label>Blur</label>
+          <input type="range" id="sz-backdropblur" min="0" max="100" value="50">
+          <span class="size-val" id="szv-backdropblur">50%</span>
+        </div>
+      </div>
+
+      <div class="field toggle-field">
+        <label>Text Outline Strength</label>
+        <div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-bottom:6px;">Controls the dark outline/shadow every text element auto-adds for readability — turn it down if it looks too heavy, or off entirely at 0%.</div>
+        <div class="size-row">
+          <label>Strength</label>
+          <input type="range" id="sz-outline" min="0" max="150" value="50">
+          <span class="size-val" id="szv-outline">100%</span>
+        </div>
       </div>
 
       <div class="field" style="margin-bottom:0;">
@@ -1074,57 +1147,67 @@
         <div class="size-tab platform-hidden" data-platform="linkedin" data-w="1200" data-h="1200">Square 1:1</div>
       </div>
 
-      <div class="canvas-wrap">
-        <div class="canvas-stage" id="canvasStage">
-          <canvas id="adCanvas" width="1080" height="1080"></canvas>
-          <div class="canvas-upload-overlay" id="canvasUploadOverlay">
-            <div class="canvas-upload-icon">⇧</div>
-            <div class="canvas-upload-text">Click or drop a product photo here</div>
-            <div class="canvas-upload-sub">The creative's aspect ratio will auto-match your image</div>
-          </div>
-          <div class="edit-layer" id="editLayer">
-            <div class="drag-pan" id="dragPan" title="Drag to reposition the photo — drop a new photo here anytime"></div>
-            <div class="scale-readout" id="scaleReadout"></div>
-            <div class="handle" data-key="headline" title="Drag: headline text"></div>
-            <div class="handle" data-key="brand" title="Drag: brand name"></div>
-            <div class="handle" data-key="discount" title="Drag: discount badge"></div>
-            <div class="handle" data-key="rating" title="Drag: rating badge"></div>
-            <div class="handle" data-key="customtag" title="Drag: custom text tile"></div>
-            <div class="handle" data-key="coupon" title="Drag: coupon chip"></div>
-            <div class="handle" data-key="info" title="Drag: product name / price block"></div>
-            <div class="handle" data-key="cta" title="Drag: CTA button"></div>
-            <div class="handle hidden-handle" data-key="logo" title="Drag: logo"></div>
-          </div>
-          <div class="grid-overlay show" id="gridOverlay"></div>
-          <div class="processing-overlay" id="processingOverlay">
-            <div class="spinner"></div>
-            <div class="processing-text" id="processingText">Removing background…</div>
-            <div class="processing-bar-track"><div class="processing-bar-fill" id="processingBarFill"></div></div>
+      <div class="canvas-area">
+        <div class="canvas-wrap">
+          <div class="canvas-stage" id="canvasStage">
+            <canvas id="adCanvas" width="1080" height="1080"></canvas>
+            <div class="canvas-upload-overlay" id="canvasUploadOverlay">
+              <div class="canvas-upload-icon">⇧</div>
+              <div class="canvas-upload-text">Click or drop a product photo here</div>
+              <div class="canvas-upload-sub">The creative's aspect ratio will auto-match your image</div>
+            </div>
+            <div class="edit-layer" id="editLayer">
+              <div class="drag-pan" id="dragPan" title="Drag to reposition the photo — drop a new photo here anytime"></div>
+              <div class="scale-readout" id="scaleReadout"></div>
+              <div class="handle" data-key="headline" title="Drag: headline text"></div>
+              <div class="handle" data-key="brand" title="Drag: brand name"></div>
+              <div class="handle" data-key="discount" title="Drag: discount badge"></div>
+              <div class="handle" data-key="rating" title="Drag: rating badge"></div>
+              <div class="handle" data-key="customtag" title="Drag: custom text tile"></div>
+              <div class="handle" data-key="coupon" title="Drag: coupon chip"></div>
+              <div class="handle" data-key="info" title="Drag: product name / price block"></div>
+              <div class="handle" data-key="cta" title="Drag: CTA button"></div>
+              <div class="handle hidden-handle" data-key="logo" title="Drag: logo"></div>
+            </div>
+            <div class="grid-overlay show" id="gridOverlay"></div>
+            <div class="processing-overlay" id="processingOverlay">
+              <div class="spinner"></div>
+              <div class="processing-text" id="processingText">Removing background…</div>
+              <div class="processing-bar-track"><div class="processing-bar-fill" id="processingBarFill"></div></div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="photo-toolbar">
-        <button type="button" class="toolbar-btn" id="removeBgBtn" disabled>Remove Background (AI)</button>
-        <button type="button" class="toolbar-btn undo-btn hidden-btn" id="undoBgBtn">↺ Undo</button>
-        <button type="button" class="toolbar-btn working" id="gridToggleBtn">Hide Grid</button>
-      </div>
+        <div class="side-toolbar">
+          <div class="side-toolbar-group">
+            <button type="button" class="toolbar-btn" id="removeBgBtn" disabled>Remove Background (AI)</button>
+            <button type="button" class="toolbar-btn undo-btn hidden-btn" id="undoBgBtn">↺ Undo</button>
+            <button type="button" class="toolbar-btn working" id="gridToggleBtn">Hide Grid</button>
+          </div>
 
-      <div class="zoom-bar">
-        <span class="zoom-bar-label">Photo Zoom</span>
-        <button type="button" class="zoom-btn" id="zoomOutBtn">−</button>
-        <input type="range" id="imgZoom" min="40" max="220" value="100">
-        <button type="button" class="zoom-btn" id="zoomInBtn">+</button>
-        <span class="zoom-val" id="zoomVal">100%</span>
-        <button type="button" class="zoom-reset" id="resetLayoutBtn">Reset Layout</button>
-      </div>
-      <div class="zoom-bar">
-        <span class="zoom-bar-label">Photo Rotate</span>
-        <input type="range" id="imgRotate" min="-45" max="45" value="0">
-        <span class="zoom-val" id="rotateVal">0°</span>
-      </div>
+          <div class="side-toolbar-group">
+            <span class="zoom-bar-label">Photo Zoom</span>
+            <div class="side-zoom-row">
+              <button type="button" class="zoom-btn" id="zoomOutBtn">−</button>
+              <input type="range" id="imgZoom" min="40" max="220" value="100">
+              <button type="button" class="zoom-btn" id="zoomInBtn">+</button>
+            </div>
+            <span class="zoom-val" id="zoomVal">100%</span>
+          </div>
 
-      <button class="download-btn" id="downloadBtn">Download PNG</button>
+          <div class="side-toolbar-group">
+            <span class="zoom-bar-label">Photo Rotate</span>
+            <input type="range" id="imgRotate" min="-45" max="45" value="0">
+            <span class="zoom-val" id="rotateVal">0°</span>
+          </div>
+
+          <div class="side-toolbar-group">
+            <button type="button" class="zoom-reset" id="resetLayoutBtn" style="width:100%;">Reset Layout</button>
+          </div>
+
+          <button class="download-btn" id="downloadBtn">Download PNG</button>
+        </div>
+      </div>
 
       <div class="rules-block">
         <div class="rules-title">How It Works</div>
@@ -1429,6 +1512,22 @@ syncColor('f-text','f-text-hex');
 syncColor('f-overlay1','f-overlay1-hex');
 syncColor('f-overlay2','f-overlay2-hex');
 
+// Restores the tool's original color scheme (dark teal background, red
+// accent, white text) — an easy way back if colors get changed into an
+// unreadable combo like white text on a white background.
+const DEFAULT_COLORS = { bg1: '#1c3b3a', bg2: '#0c1e1d', accent: '#e0342a', text: '#ffffff' };
+document.getElementById('resetColorsBtn').addEventListener('click', () => {
+  document.getElementById('f-bg1').value = DEFAULT_COLORS.bg1;
+  document.getElementById('f-bg1-hex').value = DEFAULT_COLORS.bg1;
+  document.getElementById('f-bg2').value = DEFAULT_COLORS.bg2;
+  document.getElementById('f-bg2-hex').value = DEFAULT_COLORS.bg2;
+  document.getElementById('f-accent').value = DEFAULT_COLORS.accent;
+  document.getElementById('f-accent-hex').value = DEFAULT_COLORS.accent;
+  document.getElementById('f-text').value = DEFAULT_COLORS.text;
+  document.getElementById('f-text-hex').value = DEFAULT_COLORS.text;
+  render();
+});
+
 // ── LIVE FIELDS ──
 [
   'f-bigtext','f-discount','f-cta','f-brand','f-product','f-price','f-oldprice',
@@ -1453,6 +1552,27 @@ document.getElementById('sz-overlay').addEventListener('input', () => {
   document.getElementById('szv-overlay').textContent = document.getElementById('sz-overlay').value + '%';
   render();
 });
+document.getElementById('sz-backdropblur').addEventListener('input', () => {
+  document.getElementById('szv-backdropblur').textContent = document.getElementById('sz-backdropblur').value + '%';
+  render();
+});
+document.getElementById('sz-outline').addEventListener('input', () => {
+  const v = document.getElementById('sz-outline').value;
+  document.getElementById('szv-outline').textContent = Math.round(v / 50 * 100) + '%';
+  render();
+});
+['op-headline','op-brand','op-info','op-cta'].forEach(id => {
+  const slider = document.getElementById(id);
+  const label = document.getElementById(id.replace('op-', 'opv-'));
+  slider.addEventListener('input', () => {
+    if (label) label.textContent = slider.value + '%';
+    render();
+  });
+});
+function opacityOf(key) {
+  const slider = document.getElementById('op-' + key);
+  return slider ? (parseInt(slider.value, 10) || 100) / 100 : 1;
+}
 
 // ── ROTATION SLIDERS (headline text, logo, product photo) ──
 function wireRotationSlider(sliderId, labelId, onChange) {
@@ -1995,6 +2115,17 @@ function sampleLuminance(x, y, w, h) {
 // gradient, product photo, anything) and adds either a dark outline + soft
 // shadow (for light patches) or a dark glow (for dark patches), so headline,
 // brand, and price text stays readable no matter what image gets uploaded.
+// Global 0–2 multiplier on the adaptive outline/shadow strength, driven by
+// the "Text Outline Strength" slider — 1.0 matches the original fixed
+// look, 0 removes the outline/shadow entirely, up to 2.0 for a much
+// heavier comic-book-style outline. Read fresh each call so the slider
+// updates live.
+function outlineStrengthFactor() {
+  const slider = document.getElementById('sz-outline');
+  if (!slider) return 1;
+  return (parseInt(slider.value, 10) || 50) / 50; // slider is 0–100, 50 = factor 1.0
+}
+
 function smartText(text, x, y) {
   if (!text) return;
   ctx.save();
@@ -2009,19 +2140,22 @@ function smartText(text, x, y) {
   const lum = sampleLuminance(boxX, boxY, Math.max(1, width), fontSize * 1.25);
   const onLight = lum > 140;
   const savedFill = ctx.fillStyle;
-  if (onLight) {
-    ctx.lineJoin = 'round';
-    ctx.miterLimit = 2;
-    ctx.lineWidth = Math.max(1.5, fontSize * 0.075);
-    ctx.strokeStyle = 'rgba(0,0,0,0.55)';
-    ctx.shadowColor = 'rgba(0,0,0,0.45)';
-    ctx.shadowBlur = fontSize * 0.16;
-    ctx.shadowOffsetY = fontSize * 0.03;
-    ctx.strokeText(text, x, y);
-  } else {
-    ctx.shadowColor = 'rgba(0,0,0,0.8)';
-    ctx.shadowBlur = fontSize * 0.3;
-    ctx.shadowOffsetY = fontSize * 0.05;
+  const strength = outlineStrengthFactor();
+  if (strength > 0.02) {
+    if (onLight) {
+      ctx.lineJoin = 'round';
+      ctx.miterLimit = 2;
+      ctx.lineWidth = Math.max(0.5, fontSize * 0.075 * strength);
+      ctx.strokeStyle = `rgba(0,0,0,${Math.min(0.85, 0.55 * strength)})`;
+      ctx.shadowColor = `rgba(0,0,0,${Math.min(0.75, 0.45 * strength)})`;
+      ctx.shadowBlur = fontSize * 0.16 * strength;
+      ctx.shadowOffsetY = fontSize * 0.03;
+      ctx.strokeText(text, x, y);
+    } else {
+      ctx.shadowColor = `rgba(0,0,0,${Math.min(0.9, 0.8 * strength)})`;
+      ctx.shadowBlur = fontSize * 0.3 * strength;
+      ctx.shadowOffsetY = fontSize * 0.05;
+    }
   }
   ctx.fillStyle = savedFill;
   ctx.fillText(text, x, y);
@@ -2129,7 +2263,8 @@ function render() {
       ctx.translate(hx, hy);
       ctx.rotate(headlineRotDeg * Math.PI / 180);
       const padX = headSize * 0.28, padTop = headSize * 0.95, padBottom = headSize * 0.28;
-      ctx.filter = `blur(${Math.max(2, headSize * 0.05)}px)`;
+      const blurPct = (parseInt(document.getElementById('sz-backdropblur').value, 10) || 0) / 100;
+      ctx.filter = `blur(${Math.max(0.5, headSize * 0.1 * blurPct)}px)`;
       const bgGrad = ctx.createLinearGradient(-padX, 0, hw + padX, 0);
       bgGrad.addColorStop(0, 'rgba(0,0,0,0.55)');
       bgGrad.addColorStop(1, 'rgba(0,0,0,0.30)');
@@ -2140,6 +2275,7 @@ function render() {
     }
 
     ctx.fillStyle = textColor;
+    ctx.globalAlpha = opacityOf('headline');
     ctx.translate(hx, hy);
     ctx.rotate(headlineRotDeg * Math.PI / 180);
     smartText(bigText, 0, 0);
@@ -2154,7 +2290,7 @@ function render() {
     const brandSize = W*0.028 * sc('brand');
     ctx.font = `700 ${brandSize}px 'Inter', sans-serif`;
     ctx.fillStyle = textColor;
-    ctx.globalAlpha = 0.9;
+    ctx.globalAlpha = 0.9 * opacityOf('brand');
     const bx = layout.brand.x * W, by = layout.brand.y * H;
     smartText(brandText, bx, by);
     const bw = ctx.measureText(brandText).width;
@@ -2251,11 +2387,13 @@ function render() {
     if (!document.getElementById('t-info').checked) return;
     ctx.save();
     ctx.textAlign = 'left';
+    const infoOpacity = opacityOf('info');
     const infoX = layout.info.x * W;
     const infoY = layout.info.y * H;
     const infoScale = sc('info');
     const productSize = W*0.028 * infoScale;
     ctx.fillStyle = textColor;
+    ctx.globalAlpha = infoOpacity;
     ctx.font = `700 ${productSize}px 'Inter', sans-serif`;
     smartText(product, infoX, infoY);
     const productW = ctx.measureText(product).width;
@@ -2264,6 +2402,7 @@ function render() {
     const priceSize = W*0.042 * infoScale;
     ctx.font = `900 ${priceSize}px 'Barlow Condensed', sans-serif`;
     ctx.fillStyle = accent;
+    ctx.globalAlpha = infoOpacity;
     smartText(price, infoX, priceY);
     const priceW = ctx.measureText(price).width;
     let rowRight = infoX + Math.max(productW, priceW);
@@ -2272,7 +2411,7 @@ function render() {
       const oldPriceY = infoY + barH * 0.34 * infoScale;
       ctx.font = `500 ${W*0.024 * infoScale}px 'Inter', sans-serif`;
       ctx.fillStyle = textColor;
-      ctx.globalAlpha = 0.55;
+      ctx.globalAlpha = 0.55 * infoOpacity;
       const ox = infoX + priceW + W*0.02;
       smartText(oldPrice, ox, oldPriceY);
       const ow = ctx.measureText(oldPrice).width;
@@ -2300,6 +2439,7 @@ function render() {
     const ctaCenterY = layout.cta.y * H;
     const ctaX = ctaCenterX - ctaW / 2;
     const ctaY = ctaCenterY - ctaH / 2;
+    ctx.globalAlpha = opacityOf('cta');
     ctx.fillStyle = accent;
     ctx.fillRect(ctaX, ctaY, ctaW, ctaH);
     ctx.fillStyle = '#fff';
