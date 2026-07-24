@@ -1610,17 +1610,26 @@ syncColor('f-overlay2','f-overlay2-hex');
 // ── BACKGROUND GRADIENT: two simple circles, one per stop. Each has its
 // own eyedropper so colors can be picked straight off the uploaded photo
 // instead of hunting for a hex code. ──
-function setBgColor(key, hex) {
+function setBgColorLabel(key, hex) {
   document.getElementById('f-' + key).value = hex;
   document.getElementById('f-' + key + '-hex').value = hex;
   const label = document.getElementById('f-' + key + '-hexlabel');
   if (label) label.textContent = hex.toUpperCase();
+}
+// NOTE: this must NOT call render() here — at this point in the script,
+// consts declared further down (e.g. HANDLE_PAD_FRAC used inside render's
+// syncHandleGeometry) haven't been initialized yet, so an early render()
+// call throws and silently kills every listener wired after it, including
+// the upload buttons. render() runs on its own once the page finishes
+// initializing, so these just need to set the label/value, not redraw.
+function setBgColor(key, hex) {
+  setBgColorLabel(key, hex);
   render();
 }
 document.getElementById('f-bg1').addEventListener('input', (e) => setBgColor('bg1', e.target.value));
 document.getElementById('f-bg2').addEventListener('input', (e) => setBgColor('bg2', e.target.value));
-setBgColor('bg1', document.getElementById('f-bg1').value);
-setBgColor('bg2', document.getElementById('f-bg2').value);
+setBgColorLabel('bg1', document.getElementById('f-bg1').value);
+setBgColorLabel('bg2', document.getElementById('f-bg2').value);
 
 // Eyedropper buttons: pick a gradient stop straight off the screen (photo
 // included). Falls back to a disabled button with an explanatory tooltip
