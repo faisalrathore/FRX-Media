@@ -323,6 +323,47 @@
   .color-field input[type=text] { flex: 1; }
   input[type=range] { padding: 0; height: 4px; accent-color: var(--red); cursor: pointer; }
 
+  /* ── SIMPLE CIRCLE COLOR PICKER (background color + eyedropper) ── */
+  .color-circle-row { display: flex; align-items: center; gap: 14px; }
+  .color-circle-wrap { position: relative; width: 52px; height: 52px; flex-shrink: 0; }
+  .color-circle-wrap input[type=color] {
+    width: 52px; height: 52px; padding: 0; border: none; border-radius: 50%;
+    background: none; cursor: pointer; box-shadow: 0 0 0 3px var(--parchment), 0 0 0 4px var(--border-strong);
+  }
+  .color-circle-wrap input[type=color]::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
+  .color-circle-wrap input[type=color]::-webkit-color-swatch { border: none; border-radius: 50%; }
+  .color-circle-wrap input[type=color]::-moz-color-swatch { border: none; border-radius: 50%; }
+  .eyedropper-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    background: var(--parchment); border: 1px solid var(--border-strong);
+    cursor: pointer; font-size: 14px; transition: border-color 0.2s, transform 0.15s;
+  }
+  .eyedropper-btn:hover { border-color: var(--red); transform: translateY(-1px); }
+  .eyedropper-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .color-circle-info { flex: 1; }
+  .color-circle-hex {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mid);
+    letter-spacing: 0.04em; margin-top: 2px;
+  }
+
+  /* ── PER-ELEMENT PANEL SEPARATION ── */
+  .element-panel {
+    border: 1px solid var(--border); border-left: 3px solid var(--border-strong);
+    background: #fff; padding: 16px 16px 14px; margin-bottom: 16px;
+    border-radius: 2px; transition: border-left-color 0.25s, box-shadow 0.25s;
+    scroll-margin-top: 90px;
+  }
+  .element-panel.panel-flash {
+    border-left-color: var(--red);
+    box-shadow: 0 0 0 2px rgba(224,52,42,0.18);
+    animation: panelFlashPulse 0.9s ease;
+  }
+  @keyframes panelFlashPulse {
+    0% { background: rgba(224,52,42,0.08); }
+    100% { background: #fff; }
+  }
+
   /* ── LAYOUT TEMPLATES ── */
   .template-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
@@ -842,7 +883,7 @@
       </div>
       <div class="removebg-hint" id="removeBgHint">Background removal, undo, and zoom now live in the photo toolbar right above the preview — scroll or look to the right →</div>
 
-      <div class="field toggle-field" style="margin-bottom:22px;">
+      <div class="field toggle-field element-panel" id="panel-logo" style="margin-bottom:22px;">
         <label>Brand Logo (optional)</label>
         <div class="upload-zone" id="logoUploadZone" style="padding:18px 14px; margin-bottom:0;">
           <input type="file" id="logoFileInput" accept="image/*">
@@ -883,7 +924,7 @@
         <div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-top:6px;">Repositions every element for this aspect ratio in one click. Colors, text, and photo stay as they are — drag anything afterward to fine-tune.</div>
       </div>
 
-      <div class="field">
+      <div class="field element-panel" id="panel-headline">
         <label class="toggle-label"><input type="checkbox" id="t-headline" checked><span>Big Background Text</span></label>
         <input type="text" id="f-bigtext" placeholder="e.g. SALE" value="SALE" maxlength="14">
         <select id="f-headline-font" style="margin-top:8px;">
@@ -921,7 +962,7 @@
       </div>
 
       <div class="field-row">
-        <div class="field">
+        <div class="field element-panel" id="panel-discount">
           <label class="toggle-label"><input type="checkbox" id="t-discount" checked><span>Discount Badge</span></label>
           <input type="text" id="f-discount" placeholder="e.g. 40% OFF" value="40% OFF" maxlength="12">
           <div class="size-row">
@@ -936,7 +977,7 @@
           </div>
           <label class="toggle-label" style="margin-top:6px; font-size:10px;"><input type="checkbox" id="layer-discount"><span>Behind photo</span></label>
         </div>
-        <div class="field">
+        <div class="field element-panel" id="panel-cta">
           <label class="toggle-label"><input type="checkbox" id="t-cta" checked><span>CTA Button</span></label>
           <input type="text" id="f-cta" placeholder="e.g. Shop Now" value="Shop Now" maxlength="16">
           <div class="size-row">
@@ -953,7 +994,7 @@
         </div>
       </div>
 
-      <div class="field">
+      <div class="field element-panel" id="panel-brand">
         <label class="toggle-label"><input type="checkbox" id="t-brand" checked><span>Brand Name</span></label>
         <input type="text" id="f-brand" placeholder="e.g. Nike" value="Your Brand" maxlength="20">
         <div class="size-row">
@@ -974,45 +1015,47 @@
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-brand"><span>Place behind photo</span></label>
       </div>
 
-      <div class="field toggle-field">
-        <label class="toggle-label"><input type="checkbox" id="t-info" checked><span>Product Name / Price Block</span></label>
-        <div class="field-row" style="margin-top:8px;">
-          <div class="field" style="margin-bottom:0;">
-            <label>Product Name</label>
-            <input type="text" id="f-product" placeholder="e.g. Joyride Run Flyknit" value="Product Name" maxlength="26">
-          </div>
-          <div class="field" style="margin-bottom:0;">
-            <label>Price</label>
-            <input type="text" id="f-price" placeholder="e.g. $49.00" value="$49.00" maxlength="12">
+      <div class="element-panel" id="panel-info">
+        <div class="field toggle-field" style="margin-bottom:14px;">
+          <label class="toggle-label"><input type="checkbox" id="t-info" checked><span>Product Name / Price Block</span></label>
+          <div class="field-row" style="margin-top:8px;">
+            <div class="field" style="margin-bottom:0;">
+              <label>Product Name</label>
+              <input type="text" id="f-product" placeholder="e.g. Joyride Run Flyknit" value="Product Name" maxlength="26">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label>Price</label>
+              <input type="text" id="f-price" placeholder="e.g. $49.00" value="$49.00" maxlength="12">
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="field">
-        <label class="toggle-label"><input type="checkbox" id="t-oldprice" checked><span>Original Price (shown struck-through)</span></label>
-        <input type="text" id="f-oldprice" placeholder="e.g. $79.00" value="$79.00" maxlength="12">
-        <div class="size-row">
-          <label>Size</label>
-          <input type="range" id="sz-info" min="40" max="300" value="100">
-          <span class="size-val" id="szv-info">100%</span>
+        <div class="field" style="margin-bottom:0;">
+          <label class="toggle-label"><input type="checkbox" id="t-oldprice" checked><span>Original Price (shown struck-through)</span></label>
+          <input type="text" id="f-oldprice" placeholder="e.g. $79.00" value="$79.00" maxlength="12">
+          <div class="size-row">
+            <label>Size</label>
+            <input type="range" id="sz-info" min="40" max="300" value="100">
+            <span class="size-val" id="szv-info">100%</span>
+          </div>
+          <div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-top:4px;">Sizes the whole product name / price block together</div>
+          <div class="size-row">
+            <label>Opacity</label>
+            <input type="range" id="op-info" min="10" max="100" value="100">
+            <span class="size-val" id="opv-info">100%</span>
+          </div>
+          <div class="size-row">
+            <label>Outline</label>
+            <input type="range" id="outline-info" min="0" max="150" value="50">
+            <span class="size-val" id="outlinev-info">100%</span>
+          </div>
+          <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-info"><span>Place behind photo</span></label>
         </div>
-        <div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-top:4px;">Sizes the whole product name / price block together</div>
-        <div class="size-row">
-          <label>Opacity</label>
-          <input type="range" id="op-info" min="10" max="100" value="100">
-          <span class="size-val" id="opv-info">100%</span>
-        </div>
-        <div class="size-row">
-          <label>Outline</label>
-          <input type="range" id="outline-info" min="0" max="150" value="50">
-          <span class="size-val" id="outlinev-info">100%</span>
-        </div>
-        <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-info"><span>Place behind photo</span></label>
       </div>
 
       <div class="section-divider">Extra Overlays</div>
 
-      <div class="field toggle-field">
+      <div class="field toggle-field element-panel" id="panel-rating">
         <label class="toggle-label"><input type="checkbox" id="t-rating" checked><span>Rating Badge</span></label>
         <div class="field-row" style="margin-top:8px;">
           <div class="field" style="margin-bottom:0;">
@@ -1043,7 +1086,7 @@
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-rating"><span>Place behind photo</span></label>
       </div>
 
-      <div class="field toggle-field">
+      <div class="field toggle-field element-panel" id="panel-coupon">
         <label class="toggle-label"><input type="checkbox" id="t-coupon"><span>Coupon Code</span></label>
         <input type="text" id="f-coupon" placeholder="e.g. SAVE40" value="SAVE40" maxlength="16" style="margin-top:8px;">
         <div class="size-row">
@@ -1059,7 +1102,7 @@
         <label class="toggle-label" style="margin-top:6px;"><input type="checkbox" id="layer-coupon"><span>Place behind photo</span></label>
       </div>
 
-      <div class="field toggle-field">
+      <div class="field toggle-field element-panel" id="panel-customtag">
         <label class="toggle-label"><input type="checkbox" id="t-customtag"><span>Custom Text Tile</span></label>
         <input type="text" id="f-customtag" placeholder="e.g. New Collection" value="New Collection" maxlength="24" style="margin-top:8px;">
         <div class="size-row">
@@ -1080,37 +1123,49 @@
         <button type="button" id="resetColorsBtn" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:var(--mid); background:var(--parchment); border:1px solid var(--border-strong); padding:5px 10px; cursor:pointer;">Reset Colors</button>
       </div>
 
-      <div class="field-row">
-        <div class="field">
-          <label>Background Color</label>
-          <div class="color-field">
-            <input type="color" id="f-bg1" value="#1c3b3a">
-            <input type="text" id="f-bg1-hex" value="#1c3b3a">
+      <div class="field">
+        <label>Background Gradient</label>
+        <div class="color-circle-row">
+          <div style="text-align:center;">
+            <div class="color-circle-wrap">
+              <input type="color" id="f-bg1" value="#1c3b3a">
+            </div>
+            <button type="button" class="eyedropper-btn" id="bg1EyedropperBtn" title="Pick color 1 from your photo or screen" style="margin:6px auto 0;">🎨</button>
+          </div>
+          <div style="font-size:16px; color:var(--muted);">→</div>
+          <div style="text-align:center;">
+            <div class="color-circle-wrap">
+              <input type="color" id="f-bg2" value="#0c1e1d">
+            </div>
+            <button type="button" class="eyedropper-btn" id="bg2EyedropperBtn" title="Pick color 2 from your photo or screen" style="margin:6px auto 0;">🎨</button>
+          </div>
+          <div class="color-circle-info">
+            <div class="color-circle-hex" id="f-bg1-hexlabel">#1C3B3A</div>
+            <div class="color-circle-hex" id="f-bg2-hexlabel" style="margin-top:2px;">#0C1E1D</div>
           </div>
         </div>
-        <div class="field">
-          <label>Background Color 2</label>
-          <div class="color-field">
-            <input type="color" id="f-bg2" value="#0c1e1d">
-            <input type="text" id="f-bg2-hex" value="#0c1e1d">
-          </div>
-        </div>
+        <input type="text" id="f-bg1-hex" value="#1c3b3a" style="display:none;">
+        <input type="text" id="f-bg2-hex" value="#0c1e1d" style="display:none;">
       </div>
 
       <div class="field-row">
         <div class="field">
           <label>Accent Color</label>
-          <div class="color-field">
-            <input type="color" id="f-accent" value="#e0342a">
-            <input type="text" id="f-accent-hex" value="#e0342a">
+          <div class="color-circle-row">
+            <div class="color-circle-wrap" style="width:38px; height:38px;">
+              <input type="color" id="f-accent" value="#e0342a" style="width:38px; height:38px;">
+            </div>
           </div>
+          <input type="text" id="f-accent-hex" value="#e0342a" style="display:none;">
         </div>
         <div class="field">
           <label>Text Color</label>
-          <div class="color-field">
-            <input type="color" id="f-text" value="#ffffff">
-            <input type="text" id="f-text-hex" value="#ffffff">
+          <div class="color-circle-row">
+            <div class="color-circle-wrap" style="width:38px; height:38px;">
+              <input type="color" id="f-text" value="#ffffff" style="width:38px; height:38px;">
+            </div>
           </div>
+          <input type="text" id="f-text-hex" value="#ffffff" style="display:none;">
         </div>
       </div>
 
@@ -1237,7 +1292,7 @@
 
           <div class="side-toolbar-group">
             <span class="zoom-bar-label">Photo Rotate</span>
-            <input type="range" id="imgRotate" min="-45" max="45" value="0">
+            <input type="range" id="imgRotate" min="-180" max="180" value="0">
             <span class="zoom-val" id="rotateVal">0°</span>
           </div>
 
@@ -1552,15 +1607,48 @@ syncColor('f-text','f-text-hex');
 syncColor('f-overlay1','f-overlay1-hex');
 syncColor('f-overlay2','f-overlay2-hex');
 
+// ── BACKGROUND GRADIENT: two simple circles, one per stop. Each has its
+// own eyedropper so colors can be picked straight off the uploaded photo
+// instead of hunting for a hex code. ──
+function setBgColor(key, hex) {
+  document.getElementById('f-' + key).value = hex;
+  document.getElementById('f-' + key + '-hex').value = hex;
+  const label = document.getElementById('f-' + key + '-hexlabel');
+  if (label) label.textContent = hex.toUpperCase();
+  render();
+}
+document.getElementById('f-bg1').addEventListener('input', (e) => setBgColor('bg1', e.target.value));
+document.getElementById('f-bg2').addEventListener('input', (e) => setBgColor('bg2', e.target.value));
+setBgColor('bg1', document.getElementById('f-bg1').value);
+setBgColor('bg2', document.getElementById('f-bg2').value);
+
+// Eyedropper buttons: pick a gradient stop straight off the screen (photo
+// included). Falls back to a disabled button with an explanatory tooltip
+// in browsers without the EyeDropper API (e.g. Firefox, Safari).
+function wireEyedropper(btnId, key) {
+  const btn = document.getElementById(btnId);
+  if (typeof window.EyeDropper === 'function') {
+    btn.addEventListener('click', async () => {
+      try {
+        const result = await new window.EyeDropper().open();
+        if (result && result.sRGBHex) setBgColor(key, result.sRGBHex);
+      } catch (e) { /* user cancelled the pick — nothing to do */ }
+    });
+  } else {
+    btn.disabled = true;
+    btn.title = 'Color picking from the image needs Chrome or Edge';
+  }
+}
+wireEyedropper('bg1EyedropperBtn', 'bg1');
+wireEyedropper('bg2EyedropperBtn', 'bg2');
+
 // Restores the tool's original color scheme (dark teal background, red
 // accent, white text) — an easy way back if colors get changed into an
 // unreadable combo like white text on a white background.
 const DEFAULT_COLORS = { bg1: '#1c3b3a', bg2: '#0c1e1d', accent: '#e0342a', text: '#ffffff' };
 document.getElementById('resetColorsBtn').addEventListener('click', () => {
-  document.getElementById('f-bg1').value = DEFAULT_COLORS.bg1;
-  document.getElementById('f-bg1-hex').value = DEFAULT_COLORS.bg1;
-  document.getElementById('f-bg2').value = DEFAULT_COLORS.bg2;
-  document.getElementById('f-bg2-hex').value = DEFAULT_COLORS.bg2;
+  setBgColor('bg1', DEFAULT_COLORS.bg1);
+  setBgColor('bg2', DEFAULT_COLORS.bg2);
   document.getElementById('f-accent').value = DEFAULT_COLORS.accent;
   document.getElementById('f-accent-hex').value = DEFAULT_COLORS.accent;
   document.getElementById('f-text').value = DEFAULT_COLORS.text;
@@ -1762,9 +1850,11 @@ function makeDraggable(el, getPos, onMove, clampMin, clampMax) {
     const rect = editLayer.getBoundingClientRect();
     const start = getPos();
     const startClientX = e.clientX, startClientY = e.clientY;
+    let moved = false;
     const move = (ev) => {
       const dxFrac = (ev.clientX - startClientX) / rect.width;
       const dyFrac = (ev.clientY - startClientY) / rect.height;
+      if (!moved && Math.hypot(ev.clientX - startClientX, ev.clientY - startClientY) > 4) moved = true;
       const fx = Math.max(clampMin, Math.min(clampMax, start.x + dxFrac));
       const fy = Math.max(clampMin, Math.min(clampMax, start.y + dyFrac));
       onMove(fx, fy);
@@ -1774,10 +1864,29 @@ function makeDraggable(el, getPos, onMove, clampMin, clampMax) {
       el.classList.remove('dragging');
       el.removeEventListener('pointermove', move);
       el.removeEventListener('pointerup', up);
+      // A tap (no real drag) jumps the left-hand toolbar straight to that
+      // element's own settings panel, so clicking anything on the preview
+      // takes you right to its controls instead of scrolling to find them.
+      if (!moved) scrollToPanel(el.dataset.key);
     };
     el.addEventListener('pointermove', move);
     el.addEventListener('pointerup', up);
   });
+}
+
+// Scrolls the left form column to the clicked element's own settings panel
+// and briefly highlights it, so it's obvious which controls just appeared.
+function scrollToPanel(key) {
+  const panel = document.getElementById('panel-' + key);
+  if (!panel) return;
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  panel.classList.remove('panel-flash');
+  // Force reflow so re-adding the class restarts the flash animation even
+  // if the same element was just clicked a moment ago.
+  void panel.offsetWidth;
+  panel.classList.add('panel-flash');
+  clearTimeout(scrollToPanel._t);
+  scrollToPanel._t = setTimeout(() => panel.classList.remove('panel-flash'), 900);
 }
 
 document.querySelectorAll('.handle').forEach(h => {
