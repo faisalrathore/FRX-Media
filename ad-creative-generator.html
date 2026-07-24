@@ -389,6 +389,25 @@
   }
   .canvas-upload-sub { font-size: 10.5px; color: rgba(255,255,255,0.55); }
 
+  /* ── ALIGNMENT GRID (editor-only guide, never exported to the PNG) ── */
+  .grid-overlay {
+    position: absolute; inset: 0; z-index: 4;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    /* rule-of-thirds lines (two evenly-spaced verticals + horizontals) plus
+       an outer safe-zone border */
+    background-image:
+      linear-gradient(90deg,
+        transparent calc(33.333% - 1px), rgba(255,255,255,0.55) calc(33.333% - 1px), rgba(255,255,255,0.55) 33.333%, transparent 33.333%,
+        transparent calc(66.666% - 1px), rgba(255,255,255,0.55) calc(66.666% - 1px), rgba(255,255,255,0.55) 66.666%, transparent 66.666%),
+      linear-gradient(0deg,
+        transparent calc(33.333% - 1px), rgba(255,255,255,0.55) calc(33.333% - 1px), rgba(255,255,255,0.55) 33.333%, transparent 33.333%,
+        transparent calc(66.666% - 1px), rgba(255,255,255,0.55) calc(66.666% - 1px), rgba(255,255,255,0.55) 66.666%, transparent 66.666%);
+    box-shadow: inset 0 0 0 2px rgba(196,28,28,0.6);
+  }
+  .grid-overlay.show { opacity: 1; }
+
   /* ── DRAG-TO-EDIT LAYER ── */
   .edit-layer { position: absolute; inset: 0; }
   .drag-pan {
@@ -397,14 +416,14 @@
   }
   .drag-pan:active { cursor: grabbing; }
   /* No floating button at all — each handle IS the text/badge's own hit
-     area, sized and positioned to sit directly over what it moves (like the
-     photo's drag-pan). Fully invisible by default; a faint dashed outline
-     only appears on hover/drag so it stays discoverable without a button
-     covering the artwork. anchor-left/right/center controls which edge of
-     the box lines up with the element's own draw anchor (set in JS). */
+     area. left/top/width/height are set exactly (in %) to the real pixel
+     box render() just drew for that element (see syncHandleGeometry in the
+     script), so the draggable area matches the visible text/badge exactly —
+     no transform offset needed, the box itself is already in the right
+     place. Fully invisible by default; a faint highlight appears on
+     hover/drag so it stays discoverable without a button covering the art. */
   .handle {
     position: absolute; z-index: 3;
-    transform: translate(-50%, -50%);
     background: transparent;
     border: none;
     cursor: grab; touch-action: none;
@@ -413,8 +432,6 @@
     box-shadow: 0 0 0 1px transparent;
     transition: background 0.15s, box-shadow 0.15s;
   }
-  .handle.anchor-left  { transform: translate(0, -50%); }
-  .handle.anchor-right { transform: translate(-100%, -50%); }
   .handle:hover, .handle:active, .handle.dragging {
     cursor: grabbing;
     background: rgba(196,28,28,0.10);
@@ -675,6 +692,7 @@
         <div id="logoActions" style="display:none; margin-top:10px; gap:8px;">
           <button type="button" class="toolbar-btn undo-btn" id="removeLogoBtn" style="flex:1; color: var(--mid); background: var(--parchment); border-color: var(--border-strong);">Remove Logo</button>
         </div>
+        <label class="toggle-label" style="margin-top:10px;"><input type="checkbox" id="t-logo" checked><span>Show Logo</span></label>
         <div class="size-row">
           <label>Size</label>
           <input type="range" id="sz-logo" min="20" max="300" value="100">
@@ -688,7 +706,7 @@
       </div>
 
       <div class="field">
-        <label>Big Background Text</label>
+        <label class="toggle-label"><input type="checkbox" id="t-headline" checked><span>Big Background Text</span></label>
         <input type="text" id="f-bigtext" placeholder="e.g. SALE" value="SALE" maxlength="14">
         <div class="size-row">
           <label>Size</label>
@@ -719,7 +737,7 @@
       </div>
 
       <div class="field">
-        <label>Brand Name</label>
+        <label class="toggle-label"><input type="checkbox" id="t-brand" checked><span>Brand Name</span></label>
         <input type="text" id="f-brand" placeholder="e.g. Nike" value="Your Brand" maxlength="20">
         <div class="size-row">
           <label>Size</label>
@@ -728,14 +746,17 @@
         </div>
       </div>
 
-      <div class="field-row">
-        <div class="field">
-          <label>Product Name</label>
-          <input type="text" id="f-product" placeholder="e.g. Joyride Run Flyknit" value="Product Name" maxlength="26">
-        </div>
-        <div class="field">
-          <label>Price</label>
-          <input type="text" id="f-price" placeholder="e.g. $49.00" value="$49.00" maxlength="12">
+      <div class="field toggle-field">
+        <label class="toggle-label"><input type="checkbox" id="t-info" checked><span>Product Name / Price Block</span></label>
+        <div class="field-row" style="margin-top:8px;">
+          <div class="field" style="margin-bottom:0;">
+            <label>Product Name</label>
+            <input type="text" id="f-product" placeholder="e.g. Joyride Run Flyknit" value="Product Name" maxlength="26">
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Price</label>
+            <input type="text" id="f-price" placeholder="e.g. $49.00" value="$49.00" maxlength="12">
+          </div>
         </div>
       </div>
 
@@ -883,12 +904,14 @@
             <div class="handle" data-key="cta" title="Drag: CTA button"></div>
             <div class="handle hidden-handle" data-key="logo" title="Drag: logo"></div>
           </div>
+          <div class="grid-overlay" id="gridOverlay"></div>
         </div>
       </div>
 
       <div class="photo-toolbar">
         <button type="button" class="toolbar-btn" id="removeBgBtn" disabled>Remove Background (AI)</button>
         <button type="button" class="toolbar-btn undo-btn hidden-btn" id="undoBgBtn">↺ Undo</button>
+        <button type="button" class="toolbar-btn" id="gridToggleBtn">Show Grid</button>
       </div>
 
       <div class="zoom-bar">
@@ -957,6 +980,13 @@ let plainImg = null;     // the original uploaded photo, untouched — what "Und
 let cutoutImg = null;    // cached background-removed result, so toggling back doesn't re-run the AI model
 let logoImg = null;      // HTMLImageElement for the uploaded brand logo, drawn + draggable independently of the photo
 let W = 1080, H = 1080;
+
+// Exact pixel bounding box (in canvas coordinate space) of whatever render()
+// just drew for each draggable key — refreshed every render() call, then
+// mirrored onto each handle's DOM box by syncHandleGeometry() so the
+// draggable area matches the actual visible text/badge 1:1, not a fixed-size
+// guess. Cleared at the top of render() so hidden elements report nothing.
+let elementBoxes = {};
 
 // ── LAYOUT (drag-to-position state) ──
 // Every draggable element is stored as a fraction (0–1) of the canvas's own
@@ -1049,7 +1079,7 @@ syncColor('f-text','f-text-hex');
   document.getElementById(id).addEventListener('input', render);
   document.getElementById(id).addEventListener('change', render);
 });
-['t-discount','t-cta','t-oldprice','t-rating','t-coupon','t-customtag'].forEach(id => {
+['t-headline','t-brand','t-info','t-discount','t-cta','t-oldprice','t-rating','t-coupon','t-customtag'].forEach(id => {
   document.getElementById(id).addEventListener('change', () => { updateHandleVisibility(); render(); });
 });
 
@@ -1109,36 +1139,33 @@ SIZE_SLIDER_KEYS.forEach(key => {
 // ── DRAG-TO-EDIT: text/badge handles ──
 // Each handle's data-key matches a key in the layout object. Dragging moves
 // that element's anchor point by the same fraction render() reads it from.
-// Each handle's hit box is sized/anchored to roughly match what it moves
-// (headline text, a badge, the CTA button, etc.) so dragging works directly
-// on top of the element itself, the same way panning works on the photo —
-// no separate floating button. w/h are CSS px against the canvas's own
-// display box (editLayer fills it 1:1), anchor picks which edge of the box
-// lines up with the element's own draw anchor from render().
-const HANDLE_BOX = {
-  headline:  { w: 320, h: 100, anchor: 'left'   },
-  brand:     { w: 220, h: 46,  anchor: 'left'   },
-  discount:  { w: 150, h: 150, anchor: 'center' },
-  rating:    { w: 240, h: 56,  anchor: 'right'  },
-  customtag: { w: 220, h: 52,  anchor: 'left'   },
-  coupon:    { w: 220, h: 52,  anchor: 'right'  },
-  info:      { w: 260, h: 100, anchor: 'left'   },
-  cta:       { w: 220, h: 66,  anchor: 'center' },
-  logo:      { w: 160, h: 160, anchor: 'center' }
-};
-
-function initHandleBoxes() {
+//
+// The handle's hit box is no longer a fixed guess — every render() call
+// records the exact pixel box it just drew for each element into
+// elementBoxes, and this function mirrors that box (plus a small grab
+// margin) onto the handle's left/top/width/height as percentages of the
+// canvas. Because the box is set as % of W/H — the same units the drawing
+// itself uses — it lines up pixel-for-pixel with the visible text/badge no
+// matter the font size, so "grab what you see" is exact instead of
+// approximate.
+const HANDLE_PAD_FRAC = 0.012; // ~1.2% of the shorter canvas dimension, added on all sides for an easier grab
+function syncHandleGeometry() {
+  const padX = W * HANDLE_PAD_FRAC, padY = H * HANDLE_PAD_FRAC;
   document.querySelectorAll('.handle').forEach(h => {
-    const box = HANDLE_BOX[h.dataset.key];
+    const box = elementBoxes[h.dataset.key];
     if (!box) return;
-    h.style.width = box.w + 'px';
-    h.style.height = box.h + 'px';
-    h.classList.remove('anchor-left', 'anchor-right');
-    if (box.anchor === 'left') h.classList.add('anchor-left');
-    else if (box.anchor === 'right') h.classList.add('anchor-right');
+    const left = box.x - padX, top = box.y - padY;
+    const w = box.w + padX * 2, h2 = box.h + padY * 2;
+    h.style.left = (left / W * 100) + '%';
+    h.style.top = (top / H * 100) + '%';
+    h.style.width = (w / W * 100) + '%';
+    h.style.height = (h2 / H * 100) + '%';
   });
 }
 
+// Used only before the very first render (e.g. while web fonts are still
+// loading) so handles have *some* position — syncHandleGeometry() takes
+// over from here on out with exact boxes.
 function positionHandles() {
   const layout = getLayout();
   document.querySelectorAll('.handle').forEach(h => {
@@ -1152,15 +1179,15 @@ function positionHandles() {
 
 function updateHandleVisibility() {
   const vis = {
-    headline: true,
-    brand: true,
+    headline: document.getElementById('t-headline').checked,
+    brand: document.getElementById('t-brand').checked,
     discount: document.getElementById('t-discount').checked,
     rating: document.getElementById('t-rating').checked,
     customtag: document.getElementById('t-customtag').checked,
     coupon: document.getElementById('t-coupon').checked,
-    info: true,
+    info: document.getElementById('t-info').checked,
     cta: document.getElementById('t-cta').checked,
-    logo: !!logoImg
+    logo: !!logoImg && document.getElementById('t-logo').checked
   };
   document.querySelectorAll('.handle').forEach(h => {
     h.classList.toggle('hidden-handle', !vis[h.dataset.key]);
@@ -1209,8 +1236,9 @@ document.querySelectorAll('.handle').forEach(h => {
       const key = h.dataset.key;
       getLayout()[key].x = fx;
       getLayout()[key].y = fy;
-      h.style.left = (fx * 100) + '%';
-      h.style.top = (fy * 100) + '%';
+      // render() recomputes this handle's exact box via syncHandleGeometry —
+      // no need to touch h.style here, and doing so would briefly misplace
+      // it (layout.x/y is the element's draw anchor, not its box corner).
       render();
     }
   );
@@ -1289,6 +1317,16 @@ logoUploadZone.addEventListener('drop', (e) => {
 });
 logoFileInput.addEventListener('change', (e) => {
   if (e.target.files && e.target.files[0]) handleLogoFile(e.target.files[0]);
+});
+document.getElementById('t-logo').addEventListener('change', () => { updateHandleVisibility(); render(); });
+
+// ── ALIGNMENT GRID TOGGLE (editor guide only — not part of the exported PNG) ──
+const gridOverlay = document.getElementById('gridOverlay');
+const gridToggleBtn = document.getElementById('gridToggleBtn');
+gridToggleBtn.addEventListener('click', () => {
+  const showing = gridOverlay.classList.toggle('show');
+  gridToggleBtn.textContent = showing ? 'Hide Grid' : 'Show Grid';
+  gridToggleBtn.classList.toggle('working', showing);
 });
 removeLogoBtn.addEventListener('click', () => {
   logoImg = null;
@@ -1592,6 +1630,7 @@ function drawPill(x, y, h, text, bg, fg, font, anchorRight) {
 
 function render() {
   ctx.clearRect(0, 0, W, H);
+  elementBoxes = {};
   const layout = getLayout();
 
   const bg1 = val('f-bg1'), bg2 = val('f-bg2'), accent = val('f-accent'), textColor = val('f-text');
@@ -1636,22 +1675,36 @@ function render() {
   }
 
   // Big headline text — anchor is left/baseline, position from layout.headline
-  ctx.save();
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'alphabetic';
-  const headSize = fitFont(ctx, bigText, "'Barlow Condensed', sans-serif", 900, W*0.9, Math.min(W,H)*0.24, 30) * sc('headline');
-  ctx.font = `900 ${headSize}px 'Barlow Condensed', sans-serif`;
-  ctx.fillStyle = textColor;
-  smartText(bigText, layout.headline.x * W, layout.headline.y * H);
-  ctx.restore();
+  const showHeadline = document.getElementById('t-headline').checked && !!bigText;
+  if (showHeadline) {
+    ctx.save();
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    const headSize = fitFont(ctx, bigText, "'Barlow Condensed', sans-serif", 900, W*0.9, Math.min(W,H)*0.24, 30) * sc('headline');
+    ctx.font = `900 ${headSize}px 'Barlow Condensed', sans-serif`;
+    ctx.fillStyle = textColor;
+    const hx = layout.headline.x * W, hy = layout.headline.y * H;
+    smartText(bigText, hx, hy);
+    const hw = ctx.measureText(bigText).width;
+    elementBoxes.headline = { x: hx, y: hy - headSize * 0.82, w: hw, h: headSize * 1.05 };
+    ctx.restore();
+  }
 
   // Brand mark — anchor left/baseline, position from layout.brand
-  ctx.save();
-  ctx.font = `700 ${W*0.028 * sc('brand')}px 'Inter', sans-serif`;
-  ctx.fillStyle = textColor;
-  ctx.globalAlpha = 0.9;
-  smartText((val('f-brand') || 'BRAND').toUpperCase(), layout.brand.x * W, layout.brand.y * H);
-  ctx.restore();
+  const brandText = (val('f-brand') || 'BRAND').toUpperCase();
+  const showBrand = document.getElementById('t-brand').checked && !!val('f-brand');
+  if (showBrand) {
+    ctx.save();
+    const brandSize = W*0.028 * sc('brand');
+    ctx.font = `700 ${brandSize}px 'Inter', sans-serif`;
+    ctx.fillStyle = textColor;
+    ctx.globalAlpha = 0.9;
+    const bx = layout.brand.x * W, by = layout.brand.y * H;
+    smartText(brandText, bx, by);
+    const bw = ctx.measureText(brandText).width;
+    elementBoxes.brand = { x: bx, y: by - brandSize * 0.82, w: bw, h: brandSize * 1.05 };
+    ctx.restore();
+  }
 
   // Discount badge — anchor is the circle's center, position from layout.discount
   const discount = val('f-discount');
@@ -1679,6 +1732,7 @@ function render() {
       ctx.fillText(discount, 0, 0);
     }
     ctx.restore();
+    elementBoxes.discount = { x: bx - r, y: by - r, w: r * 2, h: r * 2 };
   }
 
   // Rating badge — anchor is the pill's top-right corner, position from layout.rating
@@ -1717,6 +1771,7 @@ function render() {
       ctx.fillText(count, pillX + padX + starsW + gap, pillY + pillH / 2 + pillH * 0.04);
     }
     ctx.restore();
+    elementBoxes.rating = { x: pillX, y: pillY, w: totalW, h: pillH };
   }
 
   // Custom text tile + coupon chip — each independently draggable AND
@@ -1725,12 +1780,16 @@ function render() {
     if (document.getElementById('t-customtag').checked && val('f-customtag')) {
       const tagH = H * 0.044 * sc('customtag');
       const tagFont = `700 ${tagH * 0.4}px 'JetBrains Mono', monospace`;
-      drawPill(layout.customtag.x * W, layout.customtag.y * H, tagH, val('f-customtag').toUpperCase(), accent, '#fff', tagFont, false);
+      const tagX = layout.customtag.x * W, tagY = layout.customtag.y * H;
+      const tagW = drawPill(tagX, tagY, tagH, val('f-customtag').toUpperCase(), accent, '#fff', tagFont, false);
+      elementBoxes.customtag = { x: tagX, y: tagY, w: tagW, h: tagH };
     }
     if (document.getElementById('t-coupon').checked && val('f-coupon')) {
       const couponH = H * 0.044 * sc('coupon');
       const couponFont = `700 ${couponH * 0.4}px 'JetBrains Mono', monospace`;
-      drawPill(layout.coupon.x * W, layout.coupon.y * H, couponH, 'CODE: ' + val('f-coupon').toUpperCase(), 'rgba(255,255,255,0.94)', '#1a1410', couponFont, true);
+      const couponX = layout.coupon.x * W, couponY = layout.coupon.y * H;
+      const couponW = drawPill(couponX, couponY, couponH, 'CODE: ' + val('f-coupon').toUpperCase(), 'rgba(255,255,255,0.94)', '#1a1410', couponFont, true);
+      elementBoxes.coupon = { x: couponX - couponW, y: couponY, w: couponW, h: couponH };
     }
   }
 
@@ -1748,38 +1807,47 @@ function render() {
   // Product name / price / original price — one draggable group, anchored
   // at the product-name baseline (layout.info); price and old-price are
   // offset from that same anchor so the group always moves together.
-  ctx.save();
-  ctx.textAlign = 'left';
-  const infoX = layout.info.x * W;
-  const infoY = layout.info.y * H;
-  const infoScale = sc('info');
-  ctx.fillStyle = textColor;
-  ctx.font = `700 ${W*0.028 * infoScale}px 'Inter', sans-serif`;
-  smartText(product, infoX, infoY);
-
-  const priceY = infoY + barH * 0.38 * infoScale;
-  ctx.font = `900 ${W*0.042 * infoScale}px 'Barlow Condensed', sans-serif`;
-  ctx.fillStyle = accent;
-  smartText(price, infoX, priceY);
-  const priceW = ctx.measureText(price).width;
-
-  if (oldPrice && document.getElementById('t-oldprice').checked) {
-    const oldPriceY = infoY + barH * 0.34 * infoScale;
-    ctx.font = `500 ${W*0.024 * infoScale}px 'Inter', sans-serif`;
+  const showInfo = document.getElementById('t-info').checked;
+  if (showInfo) {
+    ctx.save();
+    ctx.textAlign = 'left';
+    const infoX = layout.info.x * W;
+    const infoY = layout.info.y * H;
+    const infoScale = sc('info');
+    const productSize = W*0.028 * infoScale;
     ctx.fillStyle = textColor;
-    ctx.globalAlpha = 0.55;
-    const ox = infoX + priceW + W*0.02;
-    smartText(oldPrice, ox, oldPriceY);
-    const ow = ctx.measureText(oldPrice).width;
-    ctx.beginPath();
-    ctx.moveTo(ox, oldPriceY - W*0.008);
-    ctx.lineTo(ox + ow, oldPriceY - W*0.008);
-    ctx.strokeStyle = textColor;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.globalAlpha = 1;
+    ctx.font = `700 ${productSize}px 'Inter', sans-serif`;
+    smartText(product, infoX, infoY);
+    const productW = ctx.measureText(product).width;
+
+    const priceY = infoY + barH * 0.38 * infoScale;
+    const priceSize = W*0.042 * infoScale;
+    ctx.font = `900 ${priceSize}px 'Barlow Condensed', sans-serif`;
+    ctx.fillStyle = accent;
+    smartText(price, infoX, priceY);
+    const priceW = ctx.measureText(price).width;
+    let rowRight = infoX + Math.max(productW, priceW);
+
+    if (oldPrice && document.getElementById('t-oldprice').checked) {
+      const oldPriceY = infoY + barH * 0.34 * infoScale;
+      ctx.font = `500 ${W*0.024 * infoScale}px 'Inter', sans-serif`;
+      ctx.fillStyle = textColor;
+      ctx.globalAlpha = 0.55;
+      const ox = infoX + priceW + W*0.02;
+      smartText(oldPrice, ox, oldPriceY);
+      const ow = ctx.measureText(oldPrice).width;
+      ctx.beginPath();
+      ctx.moveTo(ox, oldPriceY - W*0.008);
+      ctx.lineTo(ox + ow, oldPriceY - W*0.008);
+      ctx.strokeStyle = textColor;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      rowRight = Math.max(rowRight, ox + ow);
+    }
+    ctx.restore();
+    elementBoxes.info = { x: infoX, y: infoY - productSize * 0.82, w: rowRight - infoX, h: (priceY - infoY) + priceSize * 1.05 };
   }
-  ctx.restore();
 
   // CTA button — anchor is its own center, position from layout.cta
   if (cta && document.getElementById('t-cta').checked) {
@@ -1799,11 +1867,13 @@ function render() {
     ctx.textBaseline = 'middle';
     ctx.fillText(cta + ' →', ctaCenterX, ctaCenterY + 1);
     ctx.restore();
+    elementBoxes.cta = { x: ctaX, y: ctaY, w: ctaW, h: ctaH };
   }
 
   // Brand logo — drawn last so it sits on top of everything else, anchor is
   // its own center, position/scale come from layout.logo (drag + scroll-resize).
-  if (logoImg) {
+  const showLogo = logoImg && document.getElementById('t-logo').checked;
+  if (showLogo) {
     ctx.save();
     const logoScale = sc('logo');
     const maxLogoDim = Math.min(W, H) * 0.16 * logoScale;
@@ -1816,25 +1886,41 @@ function render() {
     ctx.shadowBlur = W * 0.015;
     ctx.drawImage(logoImg, logoCenterX - logoW / 2, logoCenterY - logoH / 2, logoW, logoH);
     ctx.restore();
+    elementBoxes.logo = { x: logoCenterX - logoW / 2, y: logoCenterY - logoH / 2, w: logoW, h: logoH };
   }
+
+  // Sync every text/badge handle's on-screen hit box to exactly what was
+  // just drawn, so grabbing a handle grabs the actual visible element —
+  // no more fixed-size buttons that miss large or small text.
+  syncHandleGeometry();
 }
 
 // ── DOWNLOAD ──
+// Uses toBlob() + an object URL instead of a data: URI — some browsers
+// (Safari in particular) will open a large data: URI in a new tab instead
+// of downloading it. A blob: URL on an <a download> that's actually
+// attached to the document reliably triggers a real file download instead.
 downloadBtn.addEventListener('click', () => {
-  const link = document.createElement('a');
-  link.download = `frx-creative-studio-${W}x${H}.png`;
-  link.href = canvas.toDataURL('image/png');
-  link.click();
+  canvas.toBlob((blob) => {
+    if (!blob) return;
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = `frx-creative-studio-${W}x${H}.png`;
+    link.href = url;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  }, 'image/png');
 });
 
 // Initial render (waits for web fonts to avoid fallback-font flash)
 syncZoomUI();
 updateHandleVisibility();
-initHandleBoxes();
-positionHandles();
+positionHandles(); // rough placement before the first real render
 syncSizeSliders();
 document.fonts.ready.then(render);
-render();
+render(); // render() finishes the job via syncHandleGeometry (exact boxes)
 </script>
 
 </body>
