@@ -415,7 +415,9 @@
   /* ── PREVIEW PANEL ── */
   .result-panel {
     background: var(--dark);
-    position: sticky; top: 84px;
+    position: sticky; top: 14px;
+    max-height: calc(100vh - 28px);
+    overflow-y: auto;
     box-shadow: 0 8px 40px rgba(26,20,16,0.18);
     border-top: 2px solid var(--red);
     padding-bottom: 22px;
@@ -793,7 +795,14 @@
     main { display: flex; flex-direction: column; padding-top: 14px; padding-bottom: 14px; overflow: hidden; }
     .grid { flex: 1; min-height: 0; align-items: stretch; }
     .form-card { height: 100%; overflow-y: auto; }
-    .result-panel { height: 100%; display: flex; flex-direction: column; position: static; overflow: hidden; }
+    /* Sticky + max-height stays ON here too (not overridden to static) as a
+       safety net: if fitAppHeight()'s JS pixel-lock is ever off (a resize
+       race, a slow web-font load, a future bug), the preview still can't
+       scroll out of the viewport — it just sticks and self-caps via CSS
+       alone, no JS required. When the JS sizing *does* land correctly,
+       main's own height already equals the available space, so sticky
+       has nothing to "stick" against and this rule is a no-op in practice. */
+    .result-panel { height: 100%; display: flex; flex-direction: column; overflow-y: auto; max-height: 100%; }
     /* canvas-stage stays inline-block/shrink-to-fit (untouched) so it keeps
        hugging the canvas exactly — the drag handles, grid overlay, and
        upload overlay are all positioned absolutely against canvas-stage's
