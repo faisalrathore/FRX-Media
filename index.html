@@ -1365,6 +1365,22 @@
     font-family: 'JetBrains Mono', monospace; font-size: 8px;
     letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 18px;
   }
+  .modal-accounts {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 18px;
+  }
+  .modal-accounts:empty { display: none; }
+  .modal-accounts-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(255,255,255,0.28); margin-right: 4px;
+  }
+  .modal-account-btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: rgba(255,255,255,0.55);
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 10px; cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .modal-account-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+  .modal-account-btn.active { background: #cc0000; border-color: #cc0000; color: #fff; }
   .modal-block {
     margin-bottom: 18px; padding-bottom: 18px;
     border-bottom: 1px solid rgba(255,255,255,0.06);
@@ -3506,6 +3522,20 @@ function openStoryModal(idx){
   document.getElementById('modalScreenshot').style.backgroundImage="url('"+d.img+"')";
   document.getElementById('modalIndustry').textContent=d.industry;
   document.getElementById('modalPeriod').textContent=d.period;
+  var accEl=document.getElementById('modalAccounts');
+  if(accEl){
+    var sibs=[];
+    for(var si=0; si<storyModalData.length; si++){
+      if(storyModalData[si].industry===d.industry) sibs.push(si);
+    }
+    if(sibs.length>1){
+      accEl.innerHTML='<span class="modal-accounts-label">'+sibs.length+' Accounts</span>'+sibs.map(function(v,n){
+        return '<button type="button" class="modal-account-btn'+(v===idx?' active':'')+'" onclick="openStoryModal('+v+')">Account 0'+(n+1)+'</button>';
+      }).join('');
+    } else {
+      accEl.innerHTML='';
+    }
+  }
   document.getElementById('modalCampaignStats').innerHTML=d.campaign.map(function(s){
     return '<div class="modal-stat"><div class="modal-stat-val">'+s.val+'</div><div class="modal-stat-label">'+s.label+'</div></div>';
   }).join('');
@@ -3779,6 +3809,7 @@ document.querySelectorAll('.story-card[data-industry]').forEach(function(card) {
     <div class="modal-body">
       <div class="modal-industry" id="modalIndustry"></div>
       <div class="modal-period" id="modalPeriod"></div>
+      <div class="modal-accounts" id="modalAccounts"></div>
       <div class="modal-block">
         <div class="modal-block-label">The Campaign</div>
         <div class="modal-stats" id="modalCampaignStats"></div>
