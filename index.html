@@ -1365,6 +1365,49 @@
     font-family: 'JetBrains Mono', monospace; font-size: 8px;
     letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 18px;
   }
+  /* ── MODAL: MULTI-BRAND SWITCHER ── */
+  .modal-brands {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 20px; padding: 10px 12px;
+    background: rgba(204,0,0,0.07); border: 1px solid rgba(204,0,0,0.3);
+  }
+  .modal-brands:empty { display: none; }
+  .modal-brands-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(255,255,255,0.45); margin-right: 2px;
+  }
+  .modal-brand-btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.16);
+    padding: 8px 12px; cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .modal-brand-btn:hover { color: #fff; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); }
+  .modal-brand-btn.active { background: #cc0000; border-color: #cc0000; color: #fff; font-weight: 700; }
+
+  .modal-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 11;
+    width: 42px; height: 42px; border-radius: 50%;
+    background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.28);
+    color: #fff; cursor: pointer; display: none;
+    align-items: center; justify-content: center; padding: 0;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .modal-arrow svg { width: 20px; height: 20px; }
+  .modal-arrow:hover { background: #cc0000; border-color: #cc0000; }
+  .modal-arrow.show { display: flex; }
+  .modal-arrow-prev { left: 12px; }
+  .modal-arrow-next { right: 12px; }
+  .modal-brand-counter {
+    position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 11;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: #fff;
+    background: rgba(0,0,0,0.72); border: 1px solid rgba(255,255,255,0.22);
+    padding: 6px 12px; display: none; white-space: nowrap;
+  }
+  .modal-brand-counter.show { display: block; }
+
   .modal-block {
     margin-bottom: 18px; padding-bottom: 18px;
     border-bottom: 1px solid rgba(255,255,255,0.06);
@@ -1434,7 +1477,7 @@
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: safe center;
     }
     .modal-industry { font-size: 12px; margin-bottom: 4px; }
     .modal-period { font-size: 9px; margin-bottom: 24px; }
@@ -2207,7 +2250,7 @@
         </div>
 
         <div class="story-card" data-story="8" data-industry="Jewellery & Accessories" onclick="openStoryModal(8)">
-          <div class="story-industry-tag">Jewellery & Accessories</div>
+          <div class="story-industry-tag">Jewellery &amp; Accessories · Brand 01</div>
           <div class="story-bg" style="background-image:url('case-studies/09-jewellery-accessories.jpg')"></div>
           <div class="story-overlay"></div>
           <div class="story-frame-dots">
@@ -2229,6 +2272,64 @@
             <div class="story-frame">
               <div class="story-frame-label">How We Did It</div>
               <div class="story-desc" style="font-size:12px;line-height:1.65;">Gifting-angle creatives for 3 seasonal peaks. Top ad sets scaled independently to protect ROAS.</div>
+            </div>
+          </div>
+          <div class="story-click-hint">Tap to expand ↗</div>
+          <div class="story-progress"><div class="story-progress-bar"></div></div>
+        </div>
+
+        <div class="story-card" data-story="10" data-industry="Jewellery & Accessories" onclick="openStoryModal(10)">
+          <div class="story-industry-tag">Jewellery &amp; Accessories · Brand 02</div>
+          <div class="story-bg" style="background-image:url('case-studies/11-jewellery-accessories-02.jpg')"></div>
+          <div class="story-overlay"></div>
+          <div class="story-frame-dots">
+            <div class="story-frame-dot active"></div>
+            <div class="story-frame-dot"></div>
+            <div class="story-frame-dot"></div>
+          </div>
+          <div class="story-frames">
+            <div class="story-frame active">
+              <div class="story-frame-label">The Campaign</div>
+              <div class="story-stat"><em>7,972</em></div>
+              <div class="story-desc">Total Purchases · Oct 2025 – Jul 2026 · Meta Ads</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-frame-label">Peak Performance</div>
+              <div class="story-stat"><em>7.86×</em> ROAS</div>
+              <div class="story-desc">$13.32 Best Cost / Purchase</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-frame-label">How We Did It</div>
+              <div class="story-desc" style="font-size:12px;line-height:1.65;">$152K scaled across 4 ad sets. Broad prospecting carried 52% of purchases at $15.62 CPP.</div>
+            </div>
+          </div>
+          <div class="story-click-hint">Tap to expand ↗</div>
+          <div class="story-progress"><div class="story-progress-bar"></div></div>
+        </div>
+
+        <div class="story-card" data-story="11" data-industry="Jewellery & Accessories" onclick="openStoryModal(11)">
+          <div class="story-industry-tag">Jewellery &amp; Accessories · Brand 03</div>
+          <div class="story-bg" style="background-image:url('case-studies/12-jewellery-accessories-03.jpg')"></div>
+          <div class="story-overlay"></div>
+          <div class="story-frame-dots">
+            <div class="story-frame-dot active"></div>
+            <div class="story-frame-dot"></div>
+            <div class="story-frame-dot"></div>
+          </div>
+          <div class="story-frames">
+            <div class="story-frame active">
+              <div class="story-frame-label">The Campaign</div>
+              <div class="story-stat"><em>723</em></div>
+              <div class="story-desc">Total Purchases · Feb 2026 – Jul 2026 · Meta Ads</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-frame-label">Peak Performance</div>
+              <div class="story-stat"><em>5.18×</em> ROAS</div>
+              <div class="story-desc">$20.90 Best Cost / Purchase</div>
+            </div>
+            <div class="story-frame">
+              <div class="story-frame-label">How We Did It</div>
+              <div class="story-desc" style="font-size:12px;line-height:1.65;">Bestseller-led ad sets. Tighter audience hit 3.12% CTR and 26% cheaper purchases.</div>
             </div>
           </div>
           <div class="story-click-hint">Tap to expand ↗</div>
@@ -3465,8 +3566,25 @@ var storyModalData = [
   { img:"case-studies/10-custom-leads.jpg", industry:"Lead Generation", period:"Jan 2026 – Apr 2026 · Meta Ads",
     campaign:[{val:"136",label:"Total Leads"},{val:"5",label:"Ad Sets Scaled"}],
     best:[{val:"8×",label:"ROAS on Lead Value",red:true},{val:"136",label:"Total Leads"},{val:"$566.18",label:"Total Spend"},{val:"$4.16",label:"Avg Cost / Lead"}],
-    strategy:"Went against the usual lead-gen instinct of trading quality for volume. The form was made longer and more deliberate on purpose, with <strong>OTP phone verification</strong> built in, so anyone who wasn't serious dropped off before ever reaching the sales team. Every verified lead synced straight into the <strong>CRM in real time</strong>. Cost per lead stayed under $5, but the number that mattered was the <strong>8× ROAS</strong> on lead value — because the leads that came through were ones actually worth calling." }
+    strategy:"Went against the usual lead-gen instinct of trading quality for volume. The form was made longer and more deliberate on purpose, with <strong>OTP phone verification</strong> built in, so anyone who wasn't serious dropped off before ever reaching the sales team. Every verified lead synced straight into the <strong>CRM in real time</strong>. Cost per lead stayed under $5, but the number that mattered was the <strong>8× ROAS</strong> on lead value — because the leads that came through were ones actually worth calling." },
+  { img:"case-studies/11-jewellery-accessories-02.jpg", industry:"Jewellery & Accessories", period:"Oct 2025 \u2013 Jul 2026 \u00b7 Meta Ads",
+    campaign:[{val:"7,972",label:"Total Purchases"},{val:"4",label:"Ad Sets Scaled"}],
+    best:[{val:"7.86\u00d7",label:"Peak ROAS",red:true},{val:"4,133",label:"Top Ad Set Purchases"},{val:"$13.32",label:"Best Cost / Purchase"},{val:"7.24\u00d7",label:"2nd Best ROAS"}],
+    strategy:"<strong>$152K scaled across just 4 ad sets</strong> in 10 months \u2014 7,972 purchases at a $19.07 blended cost per purchase and <strong>6.25\u00d7 account ROAS</strong> on a $119.24 average order value. Broad prospecting carried 52% of volume at $15.62 CPP, while the retargeting ad set returned the cheapest purchases in the account at $13.32 and 7.24\u00d7 ROAS. Budget stayed consolidated so the algorithm never lost its learning." },
+  { img:"case-studies/12-jewellery-accessories-03.jpg", industry:"Jewellery & Accessories", period:"Feb 2026 \u2013 Jul 2026 \u00b7 Meta Ads",
+    campaign:[{val:"723",label:"Total Purchases"},{val:"2",label:"Ad Sets Scaled"}],
+    best:[{val:"5.18\u00d7",label:"Peak ROAS",red:true},{val:"396",label:"Top Ad Set Purchases"},{val:"$20.90",label:"Best Cost / Purchase"},{val:"4.09\u00d7",label:"Account ROAS"}],
+    strategy:"A <strong>bestseller-led structure</strong> \u2014 only proven SKUs promoted, everything else cut. $18K spend produced 723 purchases at 4.09\u00d7 ROAS. The tighter of the two ad sets hit <strong>3.12% CTR at $0.79 CPC</strong> and bought purchases 26% cheaper ($20.90 vs $28.19), so budget was shifted into it rather than split evenly. Funnel held at 2,133 add-to-carts \u2192 1,203 checkouts \u2192 723 purchases." }
 ];
+
+var storyModalSibs = [];
+var storyModalPos = 0;
+
+function storyModalStep(dir){
+  if(!storyModalSibs || storyModalSibs.length<2) return;
+  var n=(storyModalPos+dir+storyModalSibs.length)%storyModalSibs.length;
+  openStoryModal(storyModalSibs[n]);
+}
 
 function openStoryModal(idx){
   var d=storyModalData[idx];
@@ -3474,6 +3592,30 @@ function openStoryModal(idx){
   document.getElementById('modalScreenshot').style.backgroundImage="url('"+d.img+"')";
   document.getElementById('modalIndustry').textContent=d.industry;
   document.getElementById('modalPeriod').textContent=d.period;
+  var sibs=[];
+  for(var si=0; si<storyModalData.length; si++){
+    if(storyModalData[si].industry===d.industry) sibs.push(si);
+  }
+  storyModalSibs = sibs;
+  storyModalPos = sibs.indexOf(idx);
+  var multi = sibs.length>1;
+  var brandsEl=document.getElementById('modalBrands');
+  if(brandsEl){
+    brandsEl.innerHTML = multi
+      ? '<span class="modal-brands-label">'+sibs.length+' Brands</span>'+sibs.map(function(v,n){
+          return '<button type="button" class="modal-brand-btn'+(v===idx?' active':'')+'" onclick="openStoryModal('+v+')">Brand 0'+(n+1)+'</button>';
+        }).join('')
+      : '';
+  }
+  var prevEl=document.getElementById('modalArrowPrev');
+  var nextEl=document.getElementById('modalArrowNext');
+  var cntEl=document.getElementById('modalBrandCounter');
+  if(prevEl) prevEl.classList.toggle('show', multi);
+  if(nextEl) nextEl.classList.toggle('show', multi);
+  if(cntEl){
+    cntEl.classList.toggle('show', multi);
+    cntEl.textContent = multi ? 'Brand '+(storyModalPos+1)+' / '+sibs.length+' \u2014 '+d.industry : '';
+  }
   document.getElementById('modalCampaignStats').innerHTML=d.campaign.map(function(s){
     return '<div class="modal-stat"><div class="modal-stat-val">'+s.val+'</div><div class="modal-stat-label">'+s.label+'</div></div>';
   }).join('');
@@ -3504,7 +3646,14 @@ function closeStoryModal(){
 })();
 // close handled by inline onclick
 // cta handled by inline onclick
-document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeStoryModal(); });
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){ closeStoryModal(); return; }
+  var openNow=document.getElementById('storyModalBackdrop');
+  if(openNow && openNow.classList.contains('open')){
+    if(e.key==='ArrowLeft') storyModalStep(-1);
+    if(e.key==='ArrowRight') storyModalStep(1);
+  }
+});
 
 
 /* ── BLOG ACCORDION ── */
@@ -3743,10 +3892,15 @@ document.querySelectorAll('.story-card[data-industry]').forEach(function(card) {
 <div class="story-modal-backdrop" id="storyModalBackdrop">
   <div class="story-modal" id="storyModal">
     <button class="modal-close" onclick="closeStoryModal()">×</button>
-    <div class="modal-screenshot" id="modalScreenshot"></div>
+    <div class="modal-screenshot" id="modalScreenshot">
+      <button type="button" class="modal-arrow modal-arrow-prev" id="modalArrowPrev" onclick="storyModalStep(-1)" aria-label="Previous brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button type="button" class="modal-arrow modal-arrow-next" id="modalArrowNext" onclick="storyModalStep(1)" aria-label="Next brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <div class="modal-brand-counter" id="modalBrandCounter"></div>
+    </div>
     <div class="modal-body">
       <div class="modal-industry" id="modalIndustry"></div>
       <div class="modal-period" id="modalPeriod"></div>
+      <div class="modal-brands" id="modalBrands"></div>
       <div class="modal-block">
         <div class="modal-block-label">The Campaign</div>
         <div class="modal-stats" id="modalCampaignStats"></div>
