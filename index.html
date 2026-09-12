@@ -529,8 +529,7 @@
     overflow: hidden;
   }
   .clients-header {
-    padding: 0 64px; margin-bottom: 32px;
-    display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
+    padding: 0 64px; margin-bottom: 32px; text-align: center;
   }
   .clients-label {
     font-family: 'JetBrains Mono', monospace; font-size: 10px;
@@ -552,7 +551,7 @@
   @keyframes frxScrollX { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   @media (prefers-reduced-motion: reduce) { .clients-track.running { animation-duration: 180s; } }
   .client-cell {
-    flex: 0 0 auto; width: clamp(200px, 20vw, 300px); height: 96px;
+    flex: 0 0 auto; width: clamp(200px, 20vw, 300px); height: 88px;
     display: flex; align-items: center; justify-content: center;
     border-right: 1px solid var(--border); padding: 0 28px; position: relative;
   }
@@ -577,7 +576,7 @@
   .client-cell.text-cell { width: clamp(230px, 22vw, 330px); }
   .client-chip {
     font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--muted); text-align: center; line-height: 1.9;
+    text-transform: uppercase; color: var(--muted); text-align: center;
   }
   .client-chip b { color: var(--red); font-weight: 600; }
   .client-chip .big {
@@ -2068,7 +2067,6 @@
 <section class="clients-section" id="clientsSection">
   <div class="clients-header">
     <div class="clients-label">Some Of The Brands We've Supported</div>
-    <div class="clients-count">e-commerce &middot; D2C &middot; retail</div>
   </div>
   <div class="marquee" id="clientMarquee">
     <div class="clients-track" id="clientTrack"></div>
@@ -2077,25 +2075,18 @@
 <script>
 (function(){
   var CLIENTS = [
-    {cls:'wm-serif',   label:'MARCO BICEGO',   sub:'FINE JEWELLERY &middot; US'},
-    {cls:'wm-sans',    label:'MONICA VINADER', sub:'JEWELLERY &middot; UK'},
-    {cls:'wm-cond',    label:'GRAVOY',         sub:'D2C'},
-    {cls:'wm-sans-lt', label:'ORGANISED',      sub:'SUPPLEMENTS'},
-    {cls:'wm-sans',    label:'POISON DROP',    sub:'JEWELLERY'},
-    {cls:'wm-sans-lt', label:'KAVE HOME',      sub:'FURNITURE &middot; EU'},
-    {cls:'wm-sans',    label:'YOUNG GOOSE',    sub:'SKINCARE &middot; US'},
-    {cls:'wm-goop',    label:'goop',           sub:'WELLNESS &middot; US'}
-  ];
-  var TEXT_CELLS = [
-    'jewellery &middot; skincare<br>supplements &middot; <b>furniture</b>',
-    '<span class="big">&amp; more</span> across US, UK<br>Europe &amp; India'
+    {cls:'wm-serif',   label:'MARCO BICEGO'},
+    {cls:'wm-sans',    label:'MONICA VINADER'},
+    {cls:'wm-cond',    label:'GRAVOY'},
+    {cls:'wm-sans-lt', label:'ORGANISED'},
+    {cls:'wm-sans',    label:'POISON DROP'},
+    {cls:'wm-sans-lt', label:'KAVE HOME'},
+    {cls:'wm-sans',    label:'YOUNG GOOSE'},
+    {cls:'wm-goop',    label:'goop'}
   ];
   var run = CLIENTS.map(function(c){
-    return '<div class="client-cell"><div class="wm '+c.cls+'">'+c.label+
-           '<span class="wm-sub">'+c.sub+'</span></div></div>';
-  }).join('') + TEXT_CELLS.map(function(t){
-    return '<div class="client-cell text-cell"><div class="client-chip">'+t+'</div></div>';
-  }).join('');
+    return '<div class="client-cell"><div class="wm '+c.cls+'">'+c.label+'</div></div>';
+  }).join('') + '<div class="client-cell text-cell"><div class="client-chip">&amp; many more</div></div>';
   var track = document.getElementById('clientTrack');
   track.innerHTML = run + run;
   var mq = document.getElementById('clientMarquee');
