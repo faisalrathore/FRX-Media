@@ -547,7 +547,6 @@
   .marquee::after { right: 0; background: linear-gradient(270deg, var(--parchment) 10%, rgba(249,246,240,0)); }
   .clients-track { display: flex; width: max-content; will-change: transform; }
   .clients-track.running { animation: frxScrollX 48s linear infinite; }
-  .marquee:hover .clients-track.running { animation-play-state: paused; }
   @keyframes frxScrollX { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   @media (prefers-reduced-motion: reduce) { .clients-track.running { animation-duration: 180s; } }
   .client-cell {
