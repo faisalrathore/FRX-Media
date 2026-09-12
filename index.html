@@ -173,7 +173,7 @@
   ]
 }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,600;1,700;1,800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,600;1,700;1,800&family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --cream: #f5f0e8;
@@ -518,6 +518,83 @@
   }
   @media(max-width: 480px) {
     .brands-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+
+  /* ───── CLIENT MARQUEE ───── */
+  .clients-section {
+    background: var(--parchment);
+    border-bottom: 1px solid var(--border);
+    padding: 52px 0 48px;
+    overflow: hidden;
+  }
+  .clients-header {
+    padding: 0 64px; margin-bottom: 32px;
+    display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
+  }
+  .clients-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+  }
+  .clients-count {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--red);
+  }
+  .marquee { position: relative; width: 100%; }
+  .marquee::before, .marquee::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 120px; z-index: 3; pointer-events: none;
+  }
+  .marquee::before { left: 0; background: linear-gradient(90deg, var(--parchment) 10%, rgba(249,246,240,0)); }
+  .marquee::after { right: 0; background: linear-gradient(270deg, var(--parchment) 10%, rgba(249,246,240,0)); }
+  .clients-track { display: flex; width: max-content; will-change: transform; }
+  .clients-track.running { animation: frxScrollX 48s linear infinite; }
+  .marquee:hover .clients-track.running { animation-play-state: paused; }
+  @keyframes frxScrollX { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .clients-track.running { animation-duration: 180s; } }
+  .client-cell {
+    flex: 0 0 auto; width: clamp(200px, 20vw, 300px); height: 96px;
+    display: flex; align-items: center; justify-content: center;
+    border-right: 1px solid var(--border); padding: 0 28px; position: relative;
+  }
+  .client-cell:first-child { border-left: 1px solid var(--border); }
+  .wm {
+    text-align: center; line-height: 1.05; color: var(--charcoal); opacity: 0.62;
+    transition: opacity 0.3s ease, color 0.3s ease, transform 0.3s ease; white-space: nowrap;
+  }
+  .client-cell:hover .wm { opacity: 1; color: var(--dark); transform: translateY(-2px); }
+  .wm-serif { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400;
+    font-size: clamp(17px,1.5vw,21px); letter-spacing: 0.30em; text-transform: uppercase; }
+  .wm-sans { font-family: 'Inter', sans-serif; font-weight: 500;
+    font-size: clamp(13px,1.1vw,15px); letter-spacing: 0.32em; text-transform: uppercase; }
+  .wm-sans-lt { font-family: 'Inter', sans-serif; font-weight: 300;
+    font-size: clamp(14px,1.2vw,17px); letter-spacing: 0.26em; text-transform: uppercase; }
+  .wm-goop { font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: clamp(26px,2.4vw,34px); letter-spacing: -0.02em; text-transform: lowercase; }
+  .wm-cond { font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: clamp(22px,2vw,28px); letter-spacing: 0.14em; text-transform: uppercase; }
+  .wm-sub { display: block; font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.2em; margin-top: 7px; color: var(--muted); font-weight: 400; }
+  .client-cell.text-cell { width: clamp(230px, 22vw, 330px); }
+  .client-chip {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--muted); text-align: center; line-height: 1.9;
+  }
+  .client-chip b { color: var(--red); font-weight: 600; }
+  .client-chip .big {
+    display: block; font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+    font-size: 30px; letter-spacing: 0.02em; color: var(--dark); line-height: 1; margin-bottom: 6px;
+  }
+  @media(max-width: 900px) {
+    .clients-header { padding: 0 28px; }
+    .marquee::before, .marquee::after { width: 60px; }
+    .client-cell { width: 190px; height: 84px; padding: 0 18px; }
+  }
+  @media(max-width: 480px) {
+    .clients-section { padding: 38px 0 36px; }
+    .clients-header { padding: 0 20px; margin-bottom: 24px; }
+    .client-cell { width: 160px; height: 76px; padding: 0 14px; }
+    .wm-serif { font-size: 14px; letter-spacing: 0.22em; }
+    .wm-sans { font-size: 11px; letter-spacing: 0.24em; }
   }
 
   /* ───── STATS ───── */
@@ -1985,6 +2062,53 @@
 
   </div>
 </div>
+
+
+<!-- CLIENT MARQUEE -->
+<section class="clients-section" id="clientsSection">
+  <div class="clients-header">
+    <div class="clients-label">Some Of The Brands We've Supported</div>
+    <div class="clients-count">e-commerce &middot; D2C &middot; retail</div>
+  </div>
+  <div class="marquee" id="clientMarquee">
+    <div class="clients-track" id="clientTrack"></div>
+  </div>
+</section>
+<script>
+(function(){
+  var CLIENTS = [
+    {cls:'wm-serif',   label:'MARCO BICEGO',   sub:'FINE JEWELLERY &middot; US'},
+    {cls:'wm-sans',    label:'MONICA VINADER', sub:'JEWELLERY &middot; UK'},
+    {cls:'wm-cond',    label:'GRAVOY',         sub:'D2C'},
+    {cls:'wm-sans-lt', label:'ORGANISED',      sub:'SUPPLEMENTS'},
+    {cls:'wm-sans',    label:'POISON DROP',    sub:'JEWELLERY'},
+    {cls:'wm-sans-lt', label:'KAVE HOME',      sub:'FURNITURE &middot; EU'},
+    {cls:'wm-sans',    label:'YOUNG GOOSE',    sub:'SKINCARE &middot; US'},
+    {cls:'wm-goop',    label:'goop',           sub:'WELLNESS &middot; US'}
+  ];
+  var TEXT_CELLS = [
+    'jewellery &middot; skincare<br>supplements &middot; <b>furniture</b>',
+    '<span class="big">&amp; more</span> across US, UK<br>Europe &amp; India'
+  ];
+  var run = CLIENTS.map(function(c){
+    return '<div class="client-cell"><div class="wm '+c.cls+'">'+c.label+
+           '<span class="wm-sub">'+c.sub+'</span></div></div>';
+  }).join('') + TEXT_CELLS.map(function(t){
+    return '<div class="client-cell text-cell"><div class="client-chip">'+t+'</div></div>';
+  }).join('');
+  var track = document.getElementById('clientTrack');
+  track.innerHTML = run + run;
+  var mq = document.getElementById('clientMarquee');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting) { setTimeout(function(){ track.classList.add('running'); }, 1400); io.disconnect(); }
+      });
+    }, {threshold: 0.25});
+    io.observe(mq);
+  } else { track.classList.add('running'); }
+})();
+</script>
 
 <!-- SHOWCASE — proof before pitch -->
 <section class="showcase" id="results">
