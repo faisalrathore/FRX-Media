@@ -2003,6 +2003,44 @@
   </div>
 </div>
 
+<!-- CLIENT MARQUEE -->
+<section class="clients-section" id="clientsSection">
+  <div class="clients-header">
+    <div class="clients-label">Some Of The Brands We've Supported</div>
+  </div>
+  <div class="marquee" id="clientMarquee">
+    <div class="clients-track" id="clientTrack"></div>
+  </div>
+</section>
+<script>
+(function(){
+  var CLIENTS = [
+    {cls:'wm-serif',   label:'MARCO BICEGO'},
+    {cls:'wm-sans',    label:'MONICA VINADER'},
+    {cls:'wm-cond',    label:'GRAVOY'},
+    {cls:'wm-sans-lt', label:'ORGANISED'},
+    {cls:'wm-sans',    label:'POISON DROP'},
+    {cls:'wm-sans-lt', label:'KAVE HOME'},
+    {cls:'wm-sans',    label:'YOUNG GOOSE'},
+    {cls:'wm-goop',    label:'goop'}
+  ];
+  var run = CLIENTS.map(function(c){
+    return '<div class="client-cell"><div class="wm '+c.cls+'">'+c.label+'</div></div>';
+  }).join('') + '<div class="client-cell text-cell"><div class="client-chip">&amp; many more</div></div>';
+  var track = document.getElementById('clientTrack');
+  track.innerHTML = run + run;
+  var mq = document.getElementById('clientMarquee');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting) { setTimeout(function(){ track.classList.add('running'); }, 1400); io.disconnect(); }
+      });
+    }, {threshold: 0.25});
+    io.observe(mq);
+  } else { track.classList.add('running'); }
+})();
+</script>
+
 <!-- BRAND LOGOS -->
 <div class="brands-section" id="platformsSection">
   <div class="brands-header">
@@ -2061,44 +2099,6 @@
   </div>
 </div>
 
-
-<!-- CLIENT MARQUEE -->
-<section class="clients-section" id="clientsSection">
-  <div class="clients-header">
-    <div class="clients-label">Some Of The Brands We've Supported</div>
-  </div>
-  <div class="marquee" id="clientMarquee">
-    <div class="clients-track" id="clientTrack"></div>
-  </div>
-</section>
-<script>
-(function(){
-  var CLIENTS = [
-    {cls:'wm-serif',   label:'MARCO BICEGO'},
-    {cls:'wm-sans',    label:'MONICA VINADER'},
-    {cls:'wm-cond',    label:'GRAVOY'},
-    {cls:'wm-sans-lt', label:'ORGANISED'},
-    {cls:'wm-sans',    label:'POISON DROP'},
-    {cls:'wm-sans-lt', label:'KAVE HOME'},
-    {cls:'wm-sans',    label:'YOUNG GOOSE'},
-    {cls:'wm-goop',    label:'goop'}
-  ];
-  var run = CLIENTS.map(function(c){
-    return '<div class="client-cell"><div class="wm '+c.cls+'">'+c.label+'</div></div>';
-  }).join('') + '<div class="client-cell text-cell"><div class="client-chip">&amp; many more</div></div>';
-  var track = document.getElementById('clientTrack');
-  track.innerHTML = run + run;
-  var mq = document.getElementById('clientMarquee');
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function(es){
-      es.forEach(function(e){
-        if (e.isIntersecting) { setTimeout(function(){ track.classList.add('running'); }, 1400); io.disconnect(); }
-      });
-    }, {threshold: 0.25});
-    io.observe(mq);
-  } else { track.classList.add('running'); }
-})();
-</script>
 
 <!-- SHOWCASE — proof before pitch -->
 <section class="showcase" id="results">
