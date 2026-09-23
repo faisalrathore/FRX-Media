@@ -965,6 +965,44 @@
   .cta-title em { font-style:italic; font-weight:700; color:var(--red3); text-transform:none; }
   .cta-sub { font-size:15px; color:rgba(255,255,255,0.45); max-width:500px; margin:0 auto 56px; line-height:1.85; font-weight:300; }
 
+  /* ── BOOK A CALL ── */
+  .book-call {
+    max-width: 740px; margin: 0 auto 36px; position: relative; z-index: 1;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    text-align: left; padding: 26px 30px;
+    border: 1px solid rgba(196,28,28,0.35);
+    background: linear-gradient(135deg, rgba(196,28,28,0.10), rgba(184,150,90,0.05));
+  }
+  .book-call-kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .book-call-kicker::before { content:''; width:6px; height:6px; border-radius:50%; background:#25d366; box-shadow:0 0 8px #25d366; }
+  .book-call-title {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 800;
+    text-transform: uppercase; color: #fff; line-height: 1.05; letter-spacing: 0.01em;
+  }
+  .book-call-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 6px; line-height: 1.7; font-weight: 300; }
+  .book-call-btn {
+    background: #fff; color: var(--dark); border: none; cursor: pointer;
+    padding: 16px 30px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase; white-space: nowrap; flex-shrink: 0;
+    transition: all 0.3s; text-decoration: none; display: inline-block;
+  }
+  .book-call-btn:hover { background: var(--red); color: #fff; box-shadow: 0 6px 28px rgba(196,28,28,0.4); transform: translateY(-2px); }
+  .book-call-or {
+    max-width: 740px; margin: 0 auto 28px; display: flex; align-items: center; gap: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(255,255,255,0.25); position: relative; z-index: 1;
+  }
+  .book-call-or::before, .book-call-or::after { content:''; flex:1; height:1px; background: rgba(255,255,255,0.08); }
+  .form-success .book-call-btn { margin-top: 26px; }
+  @media(max-width:700px) {
+    .book-call { flex-direction: column; align-items: stretch; padding: 22px 20px; gap: 18px; }
+    .book-call-btn { text-align: center; }
+  }
+
   /* ── AUDIT FORM ── */
   .audit-form {
     max-width: 740px; margin: 0 auto;
@@ -1938,6 +1976,7 @@
   <a href="naming.html" class="mobile-submenu-link" onclick="closeMobileMenu()">FRX Namer — Campaign Naming</a>
   <a href="adgen.html" class="mobile-submenu-link" onclick="closeMobileMenu()">FRX Creative Studio — Ad Creatives</a>
   <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+  <a href="#" data-book-call onclick="closeMobileMenu()">Book a Call</a>
   <a href="#contact" class="mobile-cta" onclick="closeMobileMenu()">Request Audit →</a>
 </div>
 
@@ -1980,7 +2019,7 @@
     <p class="hero-sub">Precision-engineered Meta advertising campaigns powered by AI-first campaign architecture. We turn ad spend into predictable, compounding revenue — wherever your market is.</p>
     <div class="hero-actions">
       <a href="#contact" class="btn-primary">Request Audit →</a>
-      <a href="#results" class="btn-ghost">See Proof First</a>
+      <a href="#" class="btn-ghost" data-book-call>Book a Call</a>
     </div>
     <div class="hero-ai-badge"><span class="hero-ai-dot"></span><span>AI-Optimised · Meta Andromeda · CAPI Signal Stack</span></div>
 
@@ -3315,6 +3354,17 @@
   <h2 class="cta-title reveal">Ready to<br><em>Scale?</em></h2>
   <p class="cta-sub reveal">Tell us about your business and your goals. We'll put together a tailored Meta Ads strategy and show you exactly how we'd approach your growth.</p>
 
+  <!-- Book a call (Calendly) -->
+  <div class="book-call reveal">
+    <div>
+      <div class="book-call-kicker">Free · 30 min · Google Meet</div>
+      <div class="book-call-title">Book a Strategy Call</div>
+      <p class="book-call-sub">Pick a time that suits you. We'll review your account live and map out your next 90 days on Meta.</p>
+    </div>
+    <a href="#" class="book-call-btn" data-book-call>Pick a Time →</a>
+  </div>
+  <div class="book-call-or reveal">or send us your details</div>
+
   <form class="audit-form reveal" id="auditForm" action="https://formspree.io/f/mwvwgaog" method="POST">
 
     <!-- Row 1: Name + Email -->
@@ -3444,6 +3494,7 @@
     <div class="form-success-icon">✓</div>
     <h3>Message Received</h3>
     <p>We'll review your details and reach out within 24 hours with a full breakdown of your Meta Ads opportunity.</p>
+    <a href="#" class="book-call-btn" data-book-call>Don't wait — book your call now →</a>
   </div>
 
   <p style="margin-top:20px;font-size:10px;color:rgba(255,255,255,0.15);font-family:'JetBrains Mono',monospace;letter-spacing:0.12em;" class="reveal">· RESULTS IN TWO WEEKS ·</p>
@@ -3976,6 +4027,56 @@ if (auditForm) {
     }
   });
 }
+
+/* ── BOOK A CALL (Calendly popup, lazy-loaded) ── */
+const CALENDLY_URL = 'https://calendly.com/frxmedia/strategy-call'; // ← replace with your Calendly event link
+(function () {
+  let loading = null;
+  function loadCalendly() {
+    if (window.Calendly) return Promise.resolve();
+    if (loading) return loading;
+    loading = new Promise(function (resolve, reject) {
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = 'https://assets.calendly.com/assets/external/widget.css';
+      document.head.appendChild(css);
+      const js = document.createElement('script');
+      js.src = 'https://assets.calendly.com/assets/external/widget.js';
+      js.async = true;
+      js.onload = resolve;
+      js.onerror = function (err) { loading = null; reject(err); };
+      document.head.appendChild(js);
+    });
+    return loading;
+  }
+  function prefill() {
+    const f = document.getElementById('auditForm');
+    if (!f) return {};
+    const name = (f.querySelector('[name="name"]') || {}).value || '';
+    const email = (f.querySelector('[name="email"]') || {}).value || '';
+    return { name: name.trim(), email: email.trim() };
+  }
+  function openBooking(e) {
+    e.preventDefault();
+    const url = CALENDLY_URL + (CALENDLY_URL.includes('?') ? '&' : '?') +
+      'hide_gdpr_banner=1&primary_color=c41c1c&utm_source=frxmedia.com&utm_medium=website';
+    loadCalendly()
+      .then(function () { Calendly.initPopupWidget({ url: url, prefill: prefill() }); })
+      .catch(function () { window.open(url, '_blank', 'noopener'); });
+    if (window.fbq) fbq('trackCustom', 'BookCallClick');
+    (window.dataLayer = window.dataLayer || []).push({ event: 'book_call_click' });
+  }
+  document.querySelectorAll('[data-book-call]').forEach(function (el) {
+    el.addEventListener('click', openBooking);
+    el.addEventListener('mouseenter', function () { loadCalendly().catch(function () {}); }, { once: true });
+  });
+  // Conversion event when a meeting is actually booked
+  window.addEventListener('message', function (e) {
+    if (e.origin !== 'https://calendly.com' || !e.data || e.data.event !== 'calendly.event_scheduled') return;
+    if (window.fbq) fbq('track', 'Schedule');
+    (window.dataLayer = window.dataLayer || []).push({ event: 'book_call_scheduled' });
+  });
+})();
 
 /* ── POPULATE INDUSTRY TAGS ── */
 document.querySelectorAll('.story-card[data-industry]').forEach(function(card) {
