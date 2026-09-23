@@ -667,6 +667,53 @@
   }
   .section-title em { font-style: italic; font-weight: 700; color: var(--red); text-transform: none; }
 
+  /* ───── LEAD GEN / SERVICE BUSINESSES ───── */
+  .lg-section { background: var(--parchment); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .lg-header { max-width: 640px; margin-bottom: 44px; }
+  .lg-intro { color: var(--mid); font-size: 15px; line-height: 1.85; font-weight: 300; margin-top: 16px; max-width: 540px; }
+  .lg-doors { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .lg-door { display: flex; flex-direction: column; padding: 40px 36px; background: #fff; border: 1px solid var(--border); text-decoration: none; color: var(--dark); transition: transform .3s, box-shadow .3s, border-color .3s; position: relative; overflow: hidden; }
+  .lg-door:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: rgba(196,28,28,0.2); }
+  .lg-door-kicker { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--red); margin-bottom: 18px; }
+  .lg-door-title { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; text-transform: uppercase; line-height: 1; margin-bottom: 14px; }
+  .lg-door p { font-size: 14px; line-height: 1.8; color: var(--mid); font-weight: 300; margin-bottom: 22px; }
+  .lg-door ul { list-style: none; margin-bottom: 30px; border-top: 1px solid var(--border); }
+  .lg-door li { font-size: 13px; padding: 10px 0; border-bottom: 1px solid var(--border); color: var(--mid); display: flex; gap: 10px; }
+  .lg-door li::before { content: '→'; color: var(--red); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .lg-door-cta { margin-top: auto; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dark); border-bottom: 1px solid var(--red); align-self: flex-start; padding-bottom: 4px; }
+  .lg-door--dark { background: var(--dark); color: var(--cream); border-color: var(--dark); }
+  .lg-door--dark::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 100% 0%, rgba(196,28,28,0.28), transparent 70%); pointer-events: none; }
+  .lg-door--dark > * { position: relative; }
+  .lg-door--dark .lg-door-kicker { color: var(--red3); }
+  .lg-door--dark p, .lg-door--dark li { color: rgba(245,240,232,0.62); }
+  .lg-door--dark ul, .lg-door--dark li { border-color: rgba(255,255,255,0.09); }
+  .lg-door--dark .lg-door-cta { color: #fff; background: var(--red); border: none; padding: 13px 22px; }
+  .lg-door--dark:hover { border-color: var(--red); }
+  .lg-proof { margin-top: 18px; display: grid; grid-template-columns: 1.3fr repeat(4, 1fr); background: #fff; border: 1px solid var(--border); }
+  .lg-proof > div { padding: 22px 24px; border-right: 1px solid var(--border); }
+  .lg-proof > div:last-child { border-right: none; }
+  .lg-proof-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); line-height: 1.7; display: flex; align-items: center; }
+  .lg-proof-num { font-family: 'Barlow Condensed', sans-serif; font-size: 34px; font-weight: 800; line-height: 1; color: var(--dark); }
+  .lg-proof-num.red { color: var(--red); }
+  .lg-proof-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+  .lg-industries { margin-top: 36px; }
+  .lg-industries-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--mid); margin-bottom: 14px; }
+  .lg-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .lg-chips a { font-size: 12px; font-weight: 500; color: var(--mid); text-decoration: none; padding: 8px 14px; border: 1px solid var(--border-strong); background: transparent; transition: all .2s; }
+  .lg-chips a:hover { color: #fff; background: var(--red); border-color: var(--red); }
+  .lg-chips a.lg-chip-all { color: var(--red); border-color: var(--red-mid); background: var(--red-pale); font-weight: 600; }
+  @media (max-width: 900px) {
+    .lg-doors { grid-template-columns: 1fr; }
+    .lg-proof { grid-template-columns: 1fr 1fr; }
+    .lg-proof > div { border-bottom: 1px solid var(--border); }
+    .lg-proof-label { grid-column: 1 / -1; border-right: none !important; }
+  }
+  @media (max-width: 480px) {
+    .lg-door { padding: 30px 22px; }
+    .lg-proof > div { padding: 18px; }
+    .lg-proof-num { font-size: 28px; }
+  }
+
   /* ───── CREATIVE REEL (text-free video wall) ───── */
   .creative-reel { background: var(--dark); padding: 48px 0; overflow: hidden; }
   .reel-viewport { position: relative; overflow: hidden; }
@@ -1910,7 +1957,14 @@
 <nav>
   <div class="logo"><img src="logotransparent.png" alt="FRX Media"></div>
   <ul class="nav-links">
-    <li><a href="#services">Services</a></li>
+    <li class="nav-dropdown" id="servicesDropdown">
+      <button type="button" class="nav-dropdown-toggle">Services</button>
+      <ul class="nav-dropdown-menu">
+        <li><a href="#services">All Services</a></li>
+        <li><a href="/ecommerce-meta-ads/">eCommerce &amp; D2C — Sales &amp; ROAS</a></li>
+        <li><a href="/lead-generation/">Service Businesses — Lead Generation</a></li>
+      </ul>
+    </li>
     <li><a href="#results">Results</a></li>
     <li><a href="#process">Process</a></li>
     <li class="nav-dropdown" id="toolsDropdown">
@@ -1933,21 +1987,25 @@
 
 <script>
 (function() {
-  var dropdown = document.getElementById('toolsDropdown');
-  var toggle = document.getElementById('toolsDropdownToggle');
-  if (!dropdown || !toggle) return;
-  toggle.addEventListener('click', function(e) {
-    e.stopPropagation();
-    dropdown.classList.toggle('open');
+  var dropdowns = Array.prototype.slice.call(document.querySelectorAll('nav .nav-dropdown'));
+  if (!dropdowns.length) return;
+  function closeAll(except) { dropdowns.forEach(function(d) { if (d !== except) d.classList.remove('open'); }); }
+  dropdowns.forEach(function(dropdown) {
+    var toggle = dropdown.querySelector('.nav-dropdown-toggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeAll(dropdown);
+      dropdown.classList.toggle('open');
+    });
+    dropdown.querySelectorAll('.nav-dropdown-menu a').forEach(function(a) {
+      a.addEventListener('click', function() { dropdown.classList.remove('open'); });
+    });
   });
   document.addEventListener('click', function(e) {
-    if (dropdown.classList.contains('open') && !dropdown.contains(e.target)) {
-      dropdown.classList.remove('open');
-    }
+    dropdowns.forEach(function(d) { if (d.classList.contains('open') && !d.contains(e.target)) d.classList.remove('open'); });
   });
-  window.addEventListener('scroll', function() {
-    dropdown.classList.remove('open');
-  }, { passive: true });
+  window.addEventListener('scroll', function() { closeAll(null); }, { passive: true });
 })();
 
 /* ── KEEP AI STATUS BAR PINNED DIRECTLY BELOW NAV (no overlap, no gap) ── */
@@ -1988,7 +2046,10 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#services" onclick="closeMobileMenu()">Services</a>
+  <div class="mobile-menu-label">Services</div>
+  <a href="#services" class="mobile-submenu-link" onclick="closeMobileMenu()">All Services</a>
+  <a href="/ecommerce-meta-ads/" class="mobile-submenu-link" onclick="closeMobileMenu()">eCommerce &amp; D2C</a>
+  <a href="/lead-generation/" class="mobile-submenu-link" onclick="closeMobileMenu()">Service Businesses — Lead Gen</a>
   <a href="#results" onclick="closeMobileMenu()">Results</a>
   <a href="#process" onclick="closeMobileMenu()">Process</a>
   <div class="mobile-menu-label">Tools</div>
@@ -2637,6 +2698,59 @@
     <div class="service-card reveal"><div class="service-num">04 / Analytics</div><div class="service-name">Attribution & Revenue Analytics</div><p class="service-desc">Crystal-clear reporting on what's working. Custom dashboards, pixel mastery, and first-party data strategies that cut through Meta's attribution noise.</p><span class="service-tag">GA4 · Pixel · CAPI</span></div>
     <div class="service-card reveal reveal-delay-1"><div class="service-num">05 / Scale</div><div class="service-name">Budget Scaling & Bid Strategy</div><p class="service-desc">Scaling ad spend without killing efficiency is an art. We've perfected the playbook across $500 to $50K+ monthly budgets across US, UK, UAE, AU and beyond.</p><span class="service-tag">CBO · ABO · ASC+</span></div>
     <div class="service-card reveal reveal-delay-2"><div class="service-num">06 / Retention</div><div class="service-name">Retargeting & Customer LTV</div><p class="service-desc">Your pixel is a goldmine. We deploy sophisticated retargeting sequences that bring prospects back and maximise lifetime value at scale.</p><span class="service-tag">Dynamic · Sequential · LTV</span></div>
+  </div>
+</section>
+
+<!-- LEAD GEN — SERVICE BUSINESSES -->
+<section class="lg-section" id="lead-gen">
+  <div class="lg-header reveal">
+    <div class="section-label">Two Ways We Grow Businesses</div>
+    <h2 class="section-title">Selling Products?<br><em>Or Selling a Service?</em></h2>
+    <p class="lg-intro">An online store and a roofing company shouldn't run the same Meta account. We use a different playbook for each, measure each on different numbers, and report on the metric that actually pays your bills.</p>
+  </div>
+  <div class="lg-doors">
+    <a class="lg-door reveal" href="#results">
+      <div class="lg-door-kicker">For eCommerce &amp; D2C</div>
+      <div class="lg-door-title">Sell More Products</div>
+      <p>Catalog, Advantage+ and creative testing, all built around one number: profitable ROAS.</p>
+      <ul><li>Purchases &amp; revenue</li><li>ROAS &amp; cost per purchase</li><li>AOV &amp; customer LTV</li></ul>
+      <span class="lg-door-cta">See eCommerce results →</span>
+    </a>
+    <a class="lg-door lg-door--dark reveal reveal-delay-1" href="/lead-generation/">
+      <div class="lg-door-kicker">For Service Businesses</div>
+      <div class="lg-door-title">Get Booked Calls &amp; Jobs</div>
+      <p>Qualified leads for contractors, clinics, law firms, real estate and B2B. Tire-kickers get filtered out before they reach your team, and every lead that gets through is followed up within minutes.</p>
+      <ul><li><span>Cost per <strong style="color:#fff;font-weight:600;">qualified</strong> lead</span></li><li>Calls, WhatsApp chats &amp; booked appointments</li><li>Lead → job conversion rate</li></ul>
+      <span class="lg-door-cta">Explore lead generation →</span>
+    </a>
+  </div>
+  <div class="lg-proof reveal">
+    <div class="lg-proof-label">Recent lead-gen account<br>Meta Ads · Jan–Apr 2026</div>
+    <div><div class="lg-proof-num">136</div><div class="lg-proof-sub">Verified leads</div></div>
+    <div><div class="lg-proof-num red">$4.16</div><div class="lg-proof-sub">Avg cost per lead</div></div>
+    <div><div class="lg-proof-num">8×</div><div class="lg-proof-sub">ROAS on lead value</div></div>
+    <div><div class="lg-proof-num">OTP</div><div class="lg-proof-sub">Phone-verified · CRM-synced</div></div>
+  </div>
+  <div class="lg-industries reveal">
+    <div class="lg-industries-label">Lead generation by industry</div>
+    <div class="lg-chips">
+      <a href="/lead-generation/" class="lg-chip-all">All service industries →</a>
+      <a href="/hvac-ads-agency-united-states/">HVAC</a>
+      <a href="/plumbing-ads-agency-united-states/">Plumbing</a>
+      <a href="/roofing-ads-agency-united-states/">Roofing</a>
+      <a href="/electrical-ads-agency-united-states/">Electrical</a>
+      <a href="/solar-ads-agency/">Solar</a>
+      <a href="/pest-control-ads-agency/">Pest Control</a>
+      <a href="/landscaping-ads-agency/">Landscaping</a>
+      <a href="/garage-door-ads-agency/">Garage Doors</a>
+      <a href="/moving-company-ads-agency/">Moving Companies</a>
+      <a href="/dental-ads-agency/">Dental</a>
+      <a href="/med-spa-ads-agency/">Med Spa</a>
+      <a href="/chiropractic-ads-agency/">Chiropractic</a>
+      <a href="/law-firm-ads-agency/">Law Firms</a>
+      <a href="/real-estate-ads-agency/">Real Estate</a>
+      <a href="/b2b-saas-ppc-agency/">B2B SaaS</a>
+    </div>
   </div>
 </section>
 
@@ -3336,6 +3450,7 @@
   <a href="/google-ads-agency/">Google Ads Agency</a>
   <a href="/linkedin-ads-agency/">LinkedIn Ads Agency</a>
   <a href="/ecommerce-meta-ads/">eCommerce Meta Ads</a>
+  <a href="/lead-generation/">Lead Generation Agency for Service Businesses</a>
   <a href="/real-estate-ads-agency/">Real Estate Ads Agency</a>
   <a href="/meta-ads-agency-beauty-skincare/">Beauty Skincare Meta Ads</a>
   <a href="/meta-ads-agency-health-supplements/">Health Supplements Meta Ads</a>
@@ -3599,6 +3714,7 @@
   <div class="footer-logo"><img src="logotransparent.png" alt="FRX Media"></div>
   <div class="footer-links">
     <a href="#services">Services</a>
+    <a href="/lead-generation/">Lead Generation</a>
     <a href="#results">Results</a>
     <a href="#process">Process</a>
     <a href="mailto:info@frxmedia.com">info@frxmedia.com</a>
