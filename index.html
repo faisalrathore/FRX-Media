@@ -657,6 +657,8 @@
   .creative-reel::before, .creative-reel::after { content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2; pointer-events: none; }
   .creative-reel::before { left: 0; background: linear-gradient(90deg, var(--dark), transparent); }
   .creative-reel::after { right: 0; background: linear-gradient(-90deg, var(--dark), transparent); }
+  .reel-header { padding: 0 64px; margin-bottom: 32px; }
+  .creative-reel .section-title { color: var(--cream); margin-bottom: 0; }
   .reel-track { display: flex; gap: 16px; width: max-content; animation: reelScroll 60s linear infinite; }
   .creative-reel:hover .reel-track { animation-play-state: paused; }
   .reel-item { flex: 0 0 auto; width: 230px; aspect-ratio: 9 / 16; border-radius: 14px; overflow: hidden; background: var(--charcoal); box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
@@ -664,6 +666,7 @@
   @keyframes reelScroll { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 8px)); } }
   @media (max-width: 768px) {
     .creative-reel { padding: 32px 0; }
+    .reel-header { padding: 0 20px; margin-bottom: 22px; }
     .creative-reel::before, .creative-reel::after { width: 32px; }
     .reel-track { gap: 10px; animation-duration: 45s; }
     .reel-item { width: 150px; border-radius: 10px; }
@@ -2510,6 +2513,10 @@
 
 <!-- CREATIVE REEL: add a creative = one .reel-item line (keep list duplicated below for the seamless loop). Images: <div class="reel-item"><img src="creatives/x.webp" alt="" loading="lazy"></div> -->
 <section class="creative-reel" id="creativeReel" aria-label="Ad creatives we've produced">
+  <div class="reel-header reveal">
+    <div class="section-label">Creative Studio</div>
+    <h2 class="section-title">Ads Built To<br><em>Stop The Scroll.</em></h2>
+  </div>
   <div class="reel-track" id="reelTrack">
     <div class="reel-item"><video muted loop playsinline preload="none" poster="creatives/creative1.webp" data-src="creatives/creative1.mp4"></video></div>
     <div class="reel-item"><video muted loop playsinline preload="none" poster="creatives/creative2.webp" data-src="creatives/creative2.mp4"></video></div>
