@@ -255,6 +255,16 @@
     }
   }
   .nav-links { display: flex; align-items: center; gap: 44px; list-style: none; }
+  /* Logo image is scaled 4.5x visually but only takes 35px of layout space.
+     Reserve the real visual width so the first nav item never sits on top of it. */
+  @media (min-width: 1025px) {
+    .logo { margin-right: 130px; flex-shrink: 0; }
+  }
+  @media (min-width: 1025px) and (max-width: 1360px) {
+    .nav-links { gap: 26px !important; }
+    .nav-links a, .nav-dropdown-toggle { letter-spacing: 0.1em !important; font-size: 13px !important; }
+    .logo { margin-right: 118px; }
+  }
   .nav-links li { display: flex; align-items: center; }
   .nav-links a {
     font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
