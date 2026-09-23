@@ -652,6 +652,28 @@
   }
   .section-title em { font-style: italic; font-weight: 700; color: var(--red); text-transform: none; }
 
+  /* ───── CREATIVE REEL (text-free video wall) ───── */
+  .creative-reel { background: var(--dark); padding: 48px 0; overflow: hidden; position: relative; }
+  .creative-reel::before, .creative-reel::after { content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2; pointer-events: none; }
+  .creative-reel::before { left: 0; background: linear-gradient(90deg, var(--dark), transparent); }
+  .creative-reel::after { right: 0; background: linear-gradient(-90deg, var(--dark), transparent); }
+  .reel-track { display: flex; gap: 16px; width: max-content; animation: reelScroll 60s linear infinite; }
+  .creative-reel:hover .reel-track { animation-play-state: paused; }
+  .reel-item { flex: 0 0 auto; width: 230px; aspect-ratio: 9 / 16; border-radius: 14px; overflow: hidden; background: var(--charcoal); box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
+  .reel-item video, .reel-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  @keyframes reelScroll { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 8px)); } }
+  @media (max-width: 768px) {
+    .creative-reel { padding: 32px 0; }
+    .creative-reel::before, .creative-reel::after { width: 32px; }
+    .reel-track { gap: 10px; animation-duration: 45s; }
+    .reel-item { width: 150px; border-radius: 10px; }
+    @keyframes reelScroll { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 5px)); } }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .creative-reel { overflow-x: auto; }
+    .reel-track { animation: none; }
+  }
+
   /* ───── SERVICES ───── */
   .services { background: var(--cream2); }
   .services-header { max-width: 580px; margin-bottom: 48px; }
@@ -2485,6 +2507,40 @@
     <div class="carousel-counter" id="carouselCounter"></div>
   </div>
 </section>
+
+<!-- CREATIVE REEL: add a creative = one .reel-item line (keep list duplicated below for the seamless loop). Images: <div class="reel-item"><img src="creatives/x.webp" alt="" loading="lazy"></div> -->
+<section class="creative-reel" id="creativeReel" aria-label="Ad creatives we've produced">
+  <div class="reel-track" id="reelTrack">
+    <div class="reel-item"><video muted loop playsinline preload="none" poster="creatives/creative1.webp" data-src="creatives/creative1.mp4"></video></div>
+    <div class="reel-item"><video muted loop playsinline preload="none" poster="creatives/creative2.webp" data-src="creatives/creative2.mp4"></video></div>
+    <div class="reel-item"><video muted loop playsinline preload="none" poster="creatives/creative3.webp" data-src="creatives/creative3.mp4"></video></div>
+    <div class="reel-item"><video muted loop playsinline preload="none" poster="creatives/creative4.webp" data-src="creatives/creative4.mp4"></video></div>
+    <div class="reel-item"><video muted loop playsinline preload="none" poster="creatives/creative5.webp" data-src="creatives/creative5.mp4"></video></div>
+    <div class="reel-item"><video muted loop playsinline preload="none" poster="creatives/creative6.webp" data-src="creatives/creative6.mp4"></video></div>
+    <div class="reel-item"><video muted loop playsinline preload="none" poster="creatives/creative7.webp" data-src="creatives/creative7.mp4"></video></div>
+    <div class="reel-item"><video muted loop playsinline preload="none" poster="creatives/creative8.webp" data-src="creatives/creative8.mp4"></video></div>
+    <div class="reel-item"><video muted loop playsinline preload="none" poster="creatives/creative9.webp" data-src="creatives/creative9.mp4"></video></div>
+    <div class="reel-item"><video muted loop playsinline preload="none" poster="creatives/creative10.webp" data-src="creatives/creative10.mp4"></video></div>
+  </div>
+</section>
+<script>
+(function(){
+  var track=document.getElementById('reelTrack'); if(!track) return;
+  // duplicate set once for a seamless infinite loop
+  Array.prototype.slice.call(track.children).forEach(function(n){ var c=n.cloneNode(true); c.setAttribute('aria-hidden','true'); track.appendChild(c); });
+  var vids=track.querySelectorAll('video');
+  if(!('IntersectionObserver' in window)){ vids.forEach(function(v){ v.src=v.dataset.src; v.play().catch(function(){}); }); return; }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      var v=e.target;
+      if(e.isIntersecting){ if(!v.src){ v.src=v.dataset.src; } var p=v.play(); if(p) p.catch(function(){}); }
+      else if(!v.paused){ v.pause(); }
+    });
+  },{rootMargin:'0px 200px 0px 200px',threshold:0.01});
+  vids.forEach(function(v){ io.observe(v); });
+})();
+</script>
+
 
 
 <!-- SERVICES -->
