@@ -304,6 +304,21 @@
     display: flex; align-items: center; line-height: 1;
   }
   .nav-cta:hover { background: var(--red2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(196,28,28,0.3); }
+  .nav-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+  .nav-book {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500;
+    letter-spacing: 0.1em; color: var(--dark); background: transparent;
+    padding: 11px 20px; text-decoration: none; transition: all 0.25s;
+    border: 1px solid var(--dark);
+    display: flex; align-items: center; gap: 8px; line-height: 1; white-space: nowrap;
+  }
+  .nav-book:hover { background: var(--dark); color: #fff; transform: translateY(-1px); }
+  .nav-book-dot { width: 6px; height: 6px; border-radius: 50%; background: #25d366; box-shadow: 0 0 6px #25d366; flex-shrink: 0; }
+  @media (max-width: 1024px) { .nav-actions { margin-right: 14px; } }
+  @media (max-width: 600px) {
+    .nav-actions .nav-cta { display: none; }   /* Request Audit stays in hero + mobile menu */
+    .nav-book { padding: 10px 14px; }
+  }
 
   /* ───── HERO ───── */
   .hero {
@@ -1906,7 +1921,10 @@
     </li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="#contact" class="nav-cta">Request Audit →</a>
+  <div class="nav-actions">
+    <a href="#" class="nav-book" data-book-call><span class="nav-book-dot"></span>Book a Call</a>
+    <a href="#contact" class="nav-cta">Request Audit →</a>
+  </div>
   <button class="nav-hamburger" id="hamburger" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
@@ -4029,7 +4047,7 @@ if (auditForm) {
 }
 
 /* ── BOOK A CALL (Calendly popup, lazy-loaded) ── */
-const CALENDLY_URL = 'https://calendly.com/frxmedia/strategy-call'; // ← replace with your Calendly event link
+const CALENDLY_URL = 'https://calendly.com/faisalrathore93/30min'; // Calendly event link. Empty = buttons scroll to the form.
 (function () {
   let loading = null;
   function loadCalendly() {
@@ -4058,6 +4076,17 @@ const CALENDLY_URL = 'https://calendly.com/frxmedia/strategy-call'; // ← repla
   }
   function openBooking(e) {
     e.preventDefault();
+    if (!CALENDLY_URL) { // no booking link yet — fall back to the audit form
+      const c = document.getElementById('contact');
+      if (c) c.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    if (!/calendly\.com/.test(CALENDLY_URL)) { // non-Calendly link (e.g. Google Calendar booking page)
+      window.open(CALENDLY_URL, '_blank', 'noopener');
+      if (window.fbq) fbq('trackCustom', 'BookCallClick');
+      (window.dataLayer = window.dataLayer || []).push({ event: 'book_call_click' });
+      return;
+    }
     const url = CALENDLY_URL + (CALENDLY_URL.includes('?') ? '&' : '?') +
       'hide_gdpr_banner=1&primary_color=c41c1c&utm_source=frxmedia.com&utm_medium=website';
     loadCalendly()
@@ -4068,7 +4097,7 @@ const CALENDLY_URL = 'https://calendly.com/frxmedia/strategy-call'; // ← repla
   }
   document.querySelectorAll('[data-book-call]').forEach(function (el) {
     el.addEventListener('click', openBooking);
-    el.addEventListener('mouseenter', function () { loadCalendly().catch(function () {}); }, { once: true });
+    el.addEventListener('mouseenter', function () { if (/calendly\.com/.test(CALENDLY_URL)) loadCalendly().catch(function () {}); }, { once: true });
   });
   // Conversion event when a meeting is actually booked
   window.addEventListener('message', function (e) {
