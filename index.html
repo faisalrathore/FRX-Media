@@ -668,10 +668,11 @@
   .section-title em { font-style: italic; font-weight: 700; color: var(--red); text-transform: none; }
 
   /* ───── CREATIVE REEL (text-free video wall) ───── */
-  .creative-reel { background: var(--dark); padding: 48px 0; overflow: hidden; position: relative; }
-  .creative-reel::before, .creative-reel::after { content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2; pointer-events: none; }
-  .creative-reel::before { left: 0; background: linear-gradient(90deg, var(--dark), transparent); }
-  .creative-reel::after { right: 0; background: linear-gradient(-90deg, var(--dark), transparent); }
+  .creative-reel { background: var(--dark); padding: 48px 0; overflow: hidden; }
+  .reel-viewport { position: relative; overflow: hidden; }
+  .reel-viewport::before, .reel-viewport::after { content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2; pointer-events: none; }
+  .reel-viewport::before { left: 0; background: linear-gradient(90deg, var(--dark), transparent); }
+  .reel-viewport::after { right: 0; background: linear-gradient(-90deg, var(--dark), transparent); }
   .reel-header { padding: 0 64px; margin-bottom: 32px; }
   .creative-reel .section-title { color: var(--cream); margin-bottom: 0; }
   .reel-track { display: flex; gap: 16px; width: max-content; animation: reelScroll 60s linear infinite; }
@@ -686,14 +687,14 @@
   @media (max-width: 768px) {
     .creative-reel { padding: 32px 0; }
     .reel-header { padding: 0 20px; margin-bottom: 22px; }
-    .creative-reel::before, .creative-reel::after { width: 32px; }
+    .reel-viewport::before, .reel-viewport::after { width: 32px; }
     .reel-track { gap: 10px; animation-duration: 45s; }
     .reel-item { width: 150px; border-radius: 10px; }
     .reel-item::after { width: 44px; height: 44px; margin: -22px 0 0 -22px; background-size: 20px; }
     @keyframes reelScroll { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 5px)); } }
   }
   @media (prefers-reduced-motion: reduce) {
-    .creative-reel { overflow-x: auto; }
+    .reel-viewport { overflow-x: auto; }
     .reel-track { animation: none; }
   }
 
@@ -2579,18 +2580,20 @@
     <div class="section-label">Creative Studio</div>
     <h2 class="section-title">Ads Built To<br><em>Stop The Scroll.</em></h2>
   </div>
-  <div class="reel-track" id="reelTrack">
-    <div class="reel-item"><video playsinline preload="none" poster="creatives/creative1.webp" data-src="creatives/creative1.mp4"></video></div>
-    <div class="reel-item"><video playsinline preload="none" poster="creatives/creative2.webp" data-src="creatives/creative2.mp4"></video></div>
-    <div class="reel-item"><video playsinline preload="none" poster="creatives/creative3.webp" data-src="creatives/creative3.mp4"></video></div>
-    <div class="reel-item"><video playsinline preload="none" poster="creatives/creative4.webp" data-src="creatives/creative4.mp4"></video></div>
-    <div class="reel-item"><video playsinline preload="none" poster="creatives/creative5.webp" data-src="creatives/creative5.mp4"></video></div>
-    <div class="reel-item"><video playsinline preload="none" poster="creatives/creative6.webp" data-src="creatives/creative6.mp4"></video></div>
-    <div class="reel-item"><video playsinline preload="none" poster="creatives/creative7.webp" data-src="creatives/creative7.mp4"></video></div>
-    <div class="reel-item"><video playsinline preload="none" poster="creatives/creative8.webp" data-src="creatives/creative8.mp4"></video></div>
-    <div class="reel-item"><video playsinline preload="none" poster="creatives/creative9.webp" data-src="creatives/creative9.mp4"></video></div>
-    <div class="reel-item"><video playsinline preload="none" poster="creatives/creative10.webp" data-src="creatives/creative10.mp4"></video></div>
-    <div class="reel-item"><video playsinline preload="none" poster="creatives/creative11.webp" data-src="creatives/creative11.mp4"></video></div>
+  <div class="reel-viewport">
+    <div class="reel-track" id="reelTrack">
+      <div class="reel-item"><video playsinline preload="none" poster="creatives/creative1.webp" data-src="creatives/creative1.mp4"></video></div>
+      <div class="reel-item"><video playsinline preload="none" poster="creatives/creative2.webp" data-src="creatives/creative2.mp4"></video></div>
+      <div class="reel-item"><video playsinline preload="none" poster="creatives/creative3.webp" data-src="creatives/creative3.mp4"></video></div>
+      <div class="reel-item"><video playsinline preload="none" poster="creatives/creative4.webp" data-src="creatives/creative4.mp4"></video></div>
+      <div class="reel-item"><video playsinline preload="none" poster="creatives/creative5.webp" data-src="creatives/creative5.mp4"></video></div>
+      <div class="reel-item"><video playsinline preload="none" poster="creatives/creative6.webp" data-src="creatives/creative6.mp4"></video></div>
+      <div class="reel-item"><video playsinline preload="none" poster="creatives/creative7.webp" data-src="creatives/creative7.mp4"></video></div>
+      <div class="reel-item"><video playsinline preload="none" poster="creatives/creative8.webp" data-src="creatives/creative8.mp4"></video></div>
+      <div class="reel-item"><video playsinline preload="none" poster="creatives/creative9.webp" data-src="creatives/creative9.mp4"></video></div>
+      <div class="reel-item"><video playsinline preload="none" poster="creatives/creative10.webp" data-src="creatives/creative10.mp4"></video></div>
+      <div class="reel-item"><video playsinline preload="none" poster="creatives/creative11.webp" data-src="creatives/creative11.mp4"></video></div>
+    </div>
   </div>
 </section>
 <script>
