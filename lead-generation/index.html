@@ -479,7 +479,7 @@ footer{border-top:1px solid var(--border);padding:48px 64px;display:flex;align-i
     </div>
     <div class="form-row">
       <div class="form-field"><label>Phone / WhatsApp *</label><input type="tel" name="phone" placeholder="+1 555 123 4567" required></div>
-      <div class="form-field"><label>Business Website</label><input type="text" name="website" placeholder="yourbusiness.com"></div>
+      <div class="form-field"><label>Business Website *</label><input type="text" name="website" placeholder="yourbusiness.com" required></div>
     </div>
     <hr class="form-divider">
     <div class="form-row">
@@ -497,7 +497,7 @@ footer{border-top:1px solid var(--border);padding:48px 64px;display:flex;align-i
           <option>Other Service Business</option>
         </select>
       </div>
-      <div class="form-field"><label>Service Area</label><input type="text" name="service_area" placeholder="e.g. Dallas TX, Dubai, All of UK"></div>
+      <div class="form-field"><label>Service Area *</label><input type="text" name="service_area" placeholder="e.g. Dallas TX, Dubai, All of UK" required></div>
     </div>
     <div class="form-row">
       <div class="form-field"><label>Monthly Ad Budget *</label>
@@ -511,8 +511,8 @@ footer{border-top:1px solid var(--border);padding:48px 64px;display:flex;align-i
           <option>$10,000+</option>
         </select>
       </div>
-      <div class="form-field"><label>Current Cost Per Lead</label>
-        <select name="current_cpl">
+      <div class="form-field"><label>Current Cost Per Lead *</label>
+        <select name="current_cpl" required>
           <option value="" disabled selected>Approximate CPL</option>
           <option>Not running ads yet</option>
           <option>Don't know</option>
@@ -525,8 +525,8 @@ footer{border-top:1px solid var(--border);padding:48px 64px;display:flex;align-i
       </div>
     </div>
     <div class="form-row">
-      <div class="form-field"><label>Average Job / Client Value</label>
-        <select name="avg_job_value">
+      <div class="form-field"><label>Average Job / Client Value *</label>
+        <select name="avg_job_value" required>
           <option value="" disabled selected>Select range</option>
           <option>Under $250</option>
           <option>$250 – $1,000</option>
@@ -535,8 +535,8 @@ footer{border-top:1px solid var(--border);padding:48px 64px;display:flex;align-i
           <option>$20,000+</option>
         </select>
       </div>
-      <div class="form-field"><label>How Are Leads Followed Up Today?</label>
-        <select name="followup">
+      <div class="form-field"><label>How Are Leads Followed Up Today? *</label>
+        <select name="followup" required>
           <option value="" disabled selected>Select one</option>
           <option>Within minutes (automated)</option>
           <option>Same day, manually</option>
@@ -546,7 +546,7 @@ footer{border-top:1px solid var(--border);padding:48px 64px;display:flex;align-i
       </div>
     </div>
     <hr class="form-divider">
-    <div class="form-field"><label>Biggest Challenge Right Now</label><textarea name="challenge" placeholder="e.g. Leads are cheap but don't pick up, CPL keeps rising, can't tell which ads bring real jobs..."></textarea></div>
+    <div class="form-field"><label>Biggest Challenge Right Now *</label><textarea name="challenge" placeholder="e.g. Leads are cheap but don't pick up, CPL keeps rising, can't tell which ads bring real jobs..." required></textarea></div>
     <div class="cf-turnstile" data-sitekey="0x4AAAAAADfr_JNPykHglEdH" data-theme="dark"></div>
     <p class="form-error" id="formError"></p>
     <div class="form-submit-row">
@@ -596,6 +596,8 @@ document.querySelectorAll('.faq-q').forEach(function(q){q.addEventListener('clic
   function showErr(t){err.textContent=t;err.style.display='block';}
   f.addEventListener('submit',async function(e){
     e.preventDefault();err.style.display='none';
+    var empty=Array.prototype.filter.call(f.querySelectorAll('input:not([type="hidden"]),select,textarea'),function(el){return !el.closest('.cf-turnstile')&&!(el.value||'').trim();})[0];
+    if(empty){empty.value='';empty.reportValidity();empty.focus();showErr('Please fill in all fields before submitting.');return;}
     var btn=document.getElementById('submitBtn');
     var tok=f.querySelector('[name="cf-turnstile-response"]');
     if(!tok||!tok.value){showErr('Please wait for the security check to complete, then try again.');return;}

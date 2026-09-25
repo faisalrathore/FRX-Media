@@ -3528,12 +3528,12 @@
     <!-- Row 2: Phone + Website -->
     <div class="form-row">
       <div class="form-field">
-        <label>Phone / WhatsApp</label>
-        <input type="tel" name="phone" placeholder="+91 98765 43210">
+        <label>Phone / WhatsApp *</label>
+        <input type="tel" name="phone" placeholder="+91 98765 43210" required>
       </div>
       <div class="form-field">
-        <label>Business Website</label>
-        <input type="text" name="website" placeholder="yourbrand.com">
+        <label>Business Website *</label>
+        <input type="text" name="website" placeholder="yourbrand.com" required>
       </div>
     </div>
 
@@ -3557,8 +3557,8 @@
         </select>
       </div>
       <div class="form-field">
-        <label>Industry / Niche</label>
-        <input type="text" name="industry" placeholder="e.g. Fashion, Skincare, Real Estate">
+        <label>Industry / Niche *</label>
+        <input type="text" name="industry" placeholder="e.g. Fashion, Skincare, Real Estate" required>
       </div>
     </div>
 
@@ -3578,8 +3578,8 @@
         </select>
       </div>
       <div class="form-field">
-        <label>Current ROAS (if running ads)</label>
-        <select name="current_roas">
+        <label>Current ROAS *</label>
+        <select name="current_roas" required>
           <option value="" disabled selected>Select approximate ROAS</option>
           <option>Not running ads yet</option>
           <option>Below 1× (losing money)</option>
@@ -3606,8 +3606,8 @@
         </select>
       </div>
       <div class="form-field">
-        <label>Platforms Currently Using</label>
-        <select name="platforms">
+        <label>Platforms Currently Using *</label>
+        <select name="platforms" required>
           <option value="" disabled selected>Select platform</option>
           <option>Facebook & Instagram (Meta)</option>
           <option>Google Ads</option>
@@ -3622,8 +3622,8 @@
 
     <!-- Full-width: Biggest challenge -->
     <div class="form-field">
-      <label>Biggest Challenge Right Now</label>
-      <textarea name="challenge" placeholder="e.g. Our CPL is too high, creative keeps fatiguing, not sure why ROAS dropped last month..."></textarea>
+      <label>Biggest Challenge Right Now *</label>
+      <textarea name="challenge" placeholder="e.g. Our CPL is too high, creative keeps fatiguing, not sure why ROAS dropped last month..." required></textarea>
     </div>
 
     <!-- Submit row -->
@@ -4140,6 +4140,17 @@ if (auditForm) {
   auditForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const submitBtn = document.getElementById('submitBtn');
+
+    // All fields compulsory: reject empty / whitespace-only answers
+    const emptyField = Array.from(auditForm.querySelectorAll('input:not([type="hidden"]), select, textarea'))
+      .filter(el => !el.closest('.cf-turnstile'))
+      .find(el => !(el.value || '').trim());
+    if (emptyField) {
+      emptyField.value = '';
+      emptyField.reportValidity();
+      emptyField.focus();
+      return;
+    }
 
     // Turnstile token check
     const tokenInput = auditForm.querySelector('[name="cf-turnstile-response"]');
