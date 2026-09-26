@@ -509,7 +509,7 @@
   }
   .brands-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     gap: 2px;
   }
   .brand-logo-item {
@@ -548,11 +548,12 @@
     text-transform: uppercase;
   }
   @media(max-width: 900px) {
-    .brands-grid { grid-template-columns: repeat(3, 1fr); }
+    .brands-grid { grid-template-columns: repeat(4, 1fr); }
     .brands-section { padding: 40px 28px; }
   }
   @media(max-width: 480px) {
     .brands-grid { grid-template-columns: repeat(2, 1fr); }
+    .brand-logo-item.brand-logo-last { grid-column: 1 / -1; }
   }
 
 
@@ -2270,6 +2271,12 @@ src="https://www.facebook.com/tr?id=1109186501573747&ev=PageView&noscript=1"
     <div class="brand-logo-item" onclick="togglePlatform(this, 'microsoft')">
       <img src="brand-logos/microsoft-advertising.png" alt="Microsoft Advertising"
            onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Microsoft Advertising</span></div>'">
+    </div>
+
+    <!-- SLOT 7 — Amazon Ads -->
+    <div class="brand-logo-item brand-logo-last" onclick="togglePlatform(this, 'amazon')">
+      <img src="brand-logos/amazon.png" alt="Amazon Ads" style="max-height:36px;"
+           onerror="this.parentElement.innerHTML='<div class=\'brand-logo-placeholder\'><span>Amazon Ads</span></div>'">
     </div>
 
     <!-- ACCORDION PANEL — spans full width, hidden by default -->
@@ -4119,7 +4126,8 @@ const platformData = {
   'shopify': { name:'Shopify', desc:'We integrate Meta campaigns directly with Shopify — <strong>pixel setup, CAPI via Shopify native integration, Dynamic Product Ads, and catalogue campaigns</strong> that show the right product to the right person at the right time.' },
   'woocommerce': { name:'WooCommerce', desc:'WooCommerce needs a more hands-on tracking setup. We handle <strong>server-side CAPI integration, product feed setup for dynamic ads, and custom conversion event configuration</strong> so your campaigns optimise on real purchase data.' },
   'google-ads': { name:'Google Ads', desc:'We run <strong>Search, Shopping, Performance Max, and YouTube campaigns</strong> that capture high-intent demand. Combined with Meta, Google Ads completes the full funnel — Meta creates desire, Google captures it.' },
-  'microsoft': { name:'Microsoft Advertising', desc:'Microsoft Advertising reaches a <strong>high-intent, professional audience on Bing and the Microsoft network</strong> — often at lower CPCs than Google. We capture demand your competitors are ignoring.' }
+  'microsoft': { name:'Microsoft Advertising', desc:'Microsoft Advertising reaches a <strong>high-intent, professional audience on Bing and the Microsoft network</strong> — often at lower CPCs than Google. We capture demand your competitors are ignoring.' },
+  'amazon': { name:'Amazon Ads', desc:'We manage <strong>Sponsored Products, Sponsored Brands and Sponsored Display</strong> against real margins (TACoS, not vanity ACoS) — and use Meta to drive outside traffic to your listings, tracked with Amazon Attribution. <a href="/amazon-ppc-agency/" style="color:inherit;text-decoration:underline;">See our Amazon PPC service →</a>' }
 };
 function togglePlatform(card, key) {
   const panel = document.getElementById('platformPanel');
