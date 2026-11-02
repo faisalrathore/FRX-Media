@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ── PRIMARY SEO ── -->
+<title>Meta Andromeda 2.0 Explained: What the New Ads Retrieval Engine Means for Advertisers — FRX Media</title>
+<meta name="description" content="Meta's next-gen Andromeda scores 1B+ ads per second with ~300× less compute and has lifted Facebook conversions 2.4%. Here's how it works and what Meta advertisers should change.">
+<meta name="keywords" content="Meta Andromeda, Andromeda 2.0, Meta ads retrieval, Meta ads algorithm 2026, Advantage+ creative, Meta ads creative diversity, Facebook ads algorithm update">
+<meta name="author" content="FRX Media">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://www.frxmedia.com/blog/meta-andromeda-2-0/">
+
+<!-- ── OPEN GRAPH ── -->
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.frxmedia.com/blog/meta-andromeda-2-0/">
+<meta property="og:title" content="Meta Andromeda 2.0 Explained — What It Means for Your Ads">
+<meta property="og:description" content="1B+ ads scored per second, ~300× less compute, +2.4% conversions on Facebook. A performance marketer's breakdown of Meta's new retrieval engine.">
+<meta property="og:image" content="https://www.frxmedia.com/blog/meta-andromeda-2-0/og-andromeda-2.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="FRX Media">
+<meta property="article:published_time" content="2026-11-02">
+<meta property="article:section" content="Meta Ads">
+
+<!-- ── TWITTER CARD ── -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Meta Andromeda 2.0 Explained — What It Means for Your Ads">
+<meta name="twitter:description" content="1B+ ads scored per second, ~300× less compute, +2.4% conversions on Facebook. What Meta advertisers should change now.">
+<meta name="twitter:image" content="https://www.frxmedia.com/blog/meta-andromeda-2-0/og-andromeda-2.png">
+
+<!-- ── SCHEMA ── -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"FRX Media","item":"https://www.frxmedia.com/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.frxmedia.com/blog/"},{"@type":"ListItem","position":3,"name":"Meta Andromeda 2.0 Explained","item":"https://www.frxmedia.com/blog/meta-andromeda-2-0/"}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Meta Andromeda 2.0 Explained: What the New Ads Retrieval Engine Means for Advertisers",
+  "description": "Meta's next-gen Andromeda scores 1B+ ads per second with ~300x less compute and has lifted Facebook conversions 2.4%. How it works and what advertisers should change.",
+  "image": "https://www.frxmedia.com/blog/meta-andromeda-2-0/og-andromeda-2.png",
+  "datePublished": "2026-11-02",
+  "dateModified": "2026-11-02",
+  "author": {"@type": "Organization", "name": "FRX Media", "url": "https://www.frxmedia.com"},
+  "publisher": {"@type": "Organization", "name": "FRX Media", "logo": {"@type": "ImageObject", "url": "https://www.frxmedia.com/logotransparent.png"}},
+  "mainEntityOfPage": "https://www.frxmedia.com/blog/meta-andromeda-2-0/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is Meta Andromeda?", "acceptedAnswer": {"@type": "Answer", "text": "Andromeda is Meta's machine-learning system for ads retrieval — the first stage of ad delivery, which narrows every eligible ad down to a small shortlist in milliseconds before the ranking models and auction decide what a person actually sees."}},
+    {"@type": "Question", "name": "What changed in Andromeda 2.0?", "acceptedAnswer": {"@type": "Answer", "text": "The 2026 version uses a retrieval mixture-of-experts model, fuses model and system work into a single GPU kernel, and co-locates index matching, scoring and top-K selection on one GPU server. Meta reports over 1 billion ads scored per second per server (about 100x the 2024 system) with roughly 300x fewer inference FLOPs."}},
+    {"@type": "Question", "name": "How does Andromeda 2.0 affect advertisers?", "acceptedAnswer": {"@type": "Answer", "text": "Retrieval can now consider every eligible ad with near-ranking quality, so each creative competes on its own merits for each user. Meta reports a 2.4% conversion lift on Facebook since 2025. Practically, creative diversity, clean conversion signals and broad, consolidated campaigns matter more than narrow audience targeting."}},
+    {"@type": "Question", "name": "Is Andromeda 2.0 an official Meta name?", "acceptedAnswer": {"@type": "Answer", "text": "No. Meta's engineering blog calls it the next generation or 2026 iteration of Meta Andromeda. Andromeda 2.0 is the shorthand used by marketers."}}
+  ]
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,600;1,700;1,800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8; --cream2: #ede8de; --cream3: #e5dfd3; --parchment: #f9f6f0;
+    --dark: #1a1410; --charcoal: #2c2420; --mid: #5a4e44; --muted: rgba(26,20,16,0.42);
+    --red: #c41c1c; --red2: #d92222; --red3: #e83535;
+    --red-pale: rgba(196,28,28,0.08); --red-mid: rgba(196,28,28,0.18);
+    --gold: #b8965a;
+    --border: rgba(26,20,16,0.1); --border-strong: rgba(26,20,16,0.18);
+    --shadow: 0 4px 32px rgba(26,20,16,0.08); --shadow-lg: 0 12px 56px rgba(26,20,16,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-serif; font-weight: 400; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.6; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 64px; display: flex; align-items: center; justify-content: space-between; background: rgba(245,240,232,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+  .logo img { height: 35px; width: auto; transform: scale(4.5); transform-origin: left center; }
+  .nav-links { display: flex; gap: 44px; list-style: none; }
+  .nav-links a { font-size: 14px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.25s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--red); }
+  .nav-cta { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; color: #fff; background: var(--red); padding: 11px 26px; text-decoration: none; transition: all 0.25s; border: 1px solid var(--red); }
+  .nav-cta:hover { background: var(--red2); transform: translateY(-1px); }
+  .nav-hamburger { display: none; }
+
+  /* PROGRESS */
+  .progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--red); z-index: 101; width: 0; }
+
+  /* HERO */
+  .post-hero { position: relative; background: var(--parchment); padding: 150px 32px 64px; overflow: hidden; border-bottom: 1px solid var(--border); }
+  .post-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 65% 55% at 50% -10%, rgba(196,28,28,0.09) 0%, transparent 65%); }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(26,20,16,0.05) 1px, transparent 0px), linear-gradient(90deg, rgba(26,20,16,0.05) 1px, transparent 1px); background-size: 32px 32px; mask-image: radial-gradient(ellipse 85% 70% at 50% 40%, black 0%, transparent 60%); }
+  .post-hero-inner { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; text-align: center; }
+  .crumbs { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 22px; }
+  .crumbs a { color: var(--mid); text-decoration: none; }
+  .crumbs a:hover { color: var(--red); }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--red); margin-bottom: 18px; }
+  .post-title { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(46px, 7vw, 86px); font-weight: 800; line-height: 0.95; text-transform: uppercase; margin-bottom: 24px; }
+  .post-title em { font-style: italic; color: var(--red); }
+  .post-dek { font-size: 18px; color: var(--mid); line-height: 1.7; max-width: 680px; margin: 0 auto 28px; }
+  .post-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  .post-meta span::before { content: '◆'; color: var(--red); margin-right: 8px; font-size: 8px; }
+  .hero-figure { max-width: 1100px; margin: 52px auto 0; position: relative; z-index: 2; }
+
+  /* LAYOUT */
+  .post-wrap { max-width: 1180px; margin: 0 auto; padding: 72px 32px 40px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 64px; }
+  .toc { position: sticky; top: 110px; align-self: start; }
+  .toc h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); margin-bottom: 14px; }
+  .toc ol { list-style: none; border-left: 1px solid var(--border-strong); }
+  .toc a { display: block; padding: 7px 0 7px 16px; font-size: 13px; color: var(--mid); text-decoration: none; line-height: 1.4; margin-left: -1px; border-left: 2px solid transparent; transition: all .2s; }
+  .toc a:hover, .toc a.on { color: var(--red); border-left-color: var(--red); }
+  article { max-width: 760px; }
+
+  /* TYPOGRAPHY */
+  article h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 44px; font-weight: 800; text-transform: uppercase; line-height: 1; margin: 64px 0 20px; scroll-margin-top: 110px; }
+  article h2 .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--red); letter-spacing: 0.16em; display: block; margin-bottom: 10px; font-weight: 600; }
+  article h2:first-child { margin-top: 0; }
+  article h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; margin: 36px 0 12px; }
+  article p { font-size: 17px; line-height: 1.8; color: var(--charcoal); margin-bottom: 20px; }
+  article p strong, article li strong { color: var(--dark); font-weight: 600; }
+  article ul.list { margin: 0 0 24px; list-style: none; }
+  article ul.list li { position: relative; padding-left: 26px; font-size: 16.5px; line-height: 1.75; color: var(--charcoal); margin-bottom: 10px; }
+  article ul.list li::before { content: ''; position: absolute; left: 4px; top: 12px; width: 8px; height: 8px; background: var(--red); transform: rotate(45deg); }
+  article a { color: var(--red); }
+  .lead { font-size: 20px !important; color: var(--dark) !important; line-height: 1.7 !important; }
+
+  /* COMPONENTS */
+  .callout { background: var(--dark); color: var(--cream); padding: 30px 34px; margin: 36px 0; position: relative; }
+  .callout::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--red); }
+  .callout .label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red3); margin-bottom: 10px; }
+  .callout p { color: rgba(245,240,232,0.88); margin: 0; font-size: 16.5px; }
+  .note { border: 1px dashed var(--border-strong); background: var(--parchment); padding: 18px 22px; margin: 28px 0; font-size: 14.5px; line-height: 1.7; color: var(--mid); }
+  .note b { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); margin-right: 6px; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border-strong); border: 1px solid var(--border-strong); margin: 40px 0; }
+  .stat { background: var(--parchment); padding: 26px 22px; }
+  .stat .v { font-family: 'Barlow Condensed', sans-serif; font-size: 54px; font-weight: 800; line-height: 1; color: var(--dark); }
+  .stat .v small { color: var(--red); font-size: 34px; }
+  .stat .k { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mid); margin-top: 10px; line-height: 1.5; }
+  .stat.hot { background: var(--red); }
+  .stat.hot .v, .stat.hot .v small, .stat.hot .k { color: #fff; }
+
+  figure.fig { margin: 40px 0; background: var(--parchment); border: 1px solid var(--border); padding: 26px; box-shadow: var(--shadow); }
+  figure.fig svg { width: 100%; height: auto; display: block; }
+  figure.fig figcaption { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.08em; color: var(--mid); margin-top: 16px; line-height: 1.6; border-top: 1px solid var(--border); padding-top: 12px; }
+  figure.fig figcaption b { color: var(--red); }
+
+  table.data { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 14.5px; }
+  table.data th { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; text-align: left; color: var(--cream); background: var(--dark); padding: 12px 14px; }
+  table.data td { padding: 13px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; color: var(--charcoal); background: var(--parchment); }
+  table.data td:first-child { font-weight: 600; color: var(--dark); }
+  table.data td.up { color: var(--red); font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 13px; white-space: nowrap; }
+
+  .plays { counter-reset: p; display: grid; gap: 14px; margin: 28px 0; }
+  .play { counter-increment: p; display: grid; grid-template-columns: 56px 1fr; gap: 18px; background: var(--parchment); border: 1px solid var(--border); padding: 22px; transition: all .25s; }
+  .play:hover { border-color: var(--red); box-shadow: var(--shadow); transform: translateY(-2px); }
+  .play::before { content: counter(p, decimal-leading-zero); font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 40px; color: var(--red); line-height: 1; }
+  .play h4 { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+  .play p { font-size: 15.5px; margin: 0; line-height: 1.7; }
+
+  .faq-item { border-bottom: 1px solid var(--border-strong); }
+  .faq-q { width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 20px 0; font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700; text-transform: uppercase; color: var(--dark); display: flex; justify-content: space-between; gap: 16px; }
+  .faq-q::after { content: '+'; color: var(--red); font-family: 'JetBrains Mono', monospace; font-size: 20px; transition: transform .25s; }
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+  .faq-item.open .faq-a { max-height: 400px; }
+  .faq-a p { font-size: 16px; padding-bottom: 20px; }
+
+  .sources { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border-strong); font-size: 13.5px; color: var(--mid); line-height: 1.7; }
+  .sources h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
+
+  /* CTA */
+  .cta { background: var(--dark); color: var(--cream); padding: 80px 32px; text-align: center; position: relative; overflow: hidden; margin-top: 64px; }
+  .cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 70% at 50% 120%, rgba(196,28,28,0.35), transparent 70%); }
+  .cta > * { position: relative; }
+  .cta h2 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(40px, 6vw, 68px); font-weight: 800; text-transform: uppercase; line-height: 0.95; margin-bottom: 18px; }
+  .cta h2 em { color: var(--red3); }
+  .cta p { color: rgba(245,240,232,0.75); max-width: 560px; margin: 0 auto 30px; line-height: 1.7; }
+  .btn-primary { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; background: var(--red); padding: 16px 36px; text-decoration: none; display: inline-block; transition: all .25s; }
+  .btn-primary:hover { background: var(--red2); transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--border); padding: 48px 64px; display: flex; align-items: center; justify-content: space-between; background: var(--cream); }
+  .footer-logo img { height: 26px; width: auto; }
+  .footer-links { display: flex; gap: 32px; }
+  .footer-links a { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.25s; font-family: 'JetBrains Mono', monospace; }
+  .footer-links a:hover { color: var(--dark); }
+  .footer-copy { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.1em; }
+
+  .wa-btn { position: fixed; bottom: 28px; right: 28px; z-index: 200; width: 52px; height: 52px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: all 0.3s; }
+  .wa-btn:hover { transform: scale(1.1); }
+  .wa-btn svg { width: 28px; height: 28px; fill: #fff; }
+
+  /* SVG animation */
+  @keyframes flow { to { stroke-dashoffset: -40; } }
+  .flow { stroke-dasharray: 6 6; animation: flow 1.6s linear infinite; }
+  @keyframes pulse { 0%,100% { opacity: .35 } 50% { opacity: 1 } }
+  .pulse { animation: pulse 2.4s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .flow, .pulse { animation: none; } }
+
+  @media(max-width: 1024px) {
+    nav { padding: 16px 32px; }
+    .logo img { transform: scale(2.8); }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-hamburger span { width: 22px; height: 2px; background: var(--dark); display: block; }
+    .post-wrap { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .toc { display: none; }
+    article { max-width: none; }
+    footer { flex-direction: column; gap: 24px; text-align: center; padding: 40px 32px; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+  @media(max-width: 640px) {
+    .logo img { transform: scale(2.2); }
+    .post-hero { padding: 120px 20px 48px; }
+    .post-wrap { padding: 48px 20px 24px; }
+    .hero-figure { overflow-x: auto; margin: 40px -20px 0; padding: 0 20px; -webkit-overflow-scrolling: touch; }
+    .hero-figure svg { min-width: 760px; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stat .v { font-size: 42px; }
+    article h2 { font-size: 36px; }
+    figure.fig { padding: 14px; margin: 32px -6px; }
+    .play { grid-template-columns: 1fr; gap: 6px; }
+    table.data { font-size: 13px; } table.data td.up { white-space: normal; }
+    table.data th, table.data td { padding: 10px 8px; }
+  }
+</style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1109186501573747');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1109186501573747&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<nav>
+  <div class="logo"><a href="/"><img src="/logotransparent.png" alt="FRX Media"></a></div>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li><li><a href="/#services">Services</a></li>
+    <li><a href="/#results">Results</a></li>
+    <li><a href="/blog/" class="active">Blog</a></li>
+    <li><a href="/#contact">Contact</a></li>
+  </ul>
+  <a href="/#contact" class="nav-cta">Request Audit →</a>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu" onclick="location.href='/#contact'">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═════════ HERO ═════════ -->
+<header class="post-hero">
+  <div class="hero-grid"></div>
+  <div class="post-hero-inner">
+    <div class="crumbs"><a href="/">FRX Media</a> / <a href="/blog/">Blog</a> / Meta Ads</div>
+    <div class="eyebrow">Meta Ads · Algorithm Breakdown</div>
+    <h1 class="post-title">Meta Andromeda <em>2.0</em>:<br>Every Ad, Every User, Scored</h1>
+    <p class="post-dek">Meta just rebuilt the engine that decides which ads even get a shot at your customer. It now scores more than a billion ads per second, using roughly 300× less compute per ad. Here's what changed and how to run your accounts now.</p>
+    <div class="post-meta"><span>Nov 2, 2026</span><span>9 min read</span><span>FRX Media</span></div>
+  </div>
+
+  <!-- HERO GRAPHIC: delivery funnel -->
+  <div class="hero-figure" aria-label="Swipe to see the full ad delivery funnel">
+    <svg viewBox="0 0 1100 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Meta ad delivery funnel: eligible ads, Andromeda retrieval, ranking, auction, feed">
+      <defs>
+        <linearGradient id="hg" x1="0" x2="1"><stop offset="0" stop-color="#1a1410"/><stop offset="1" stop-color="#2c2420"/></linearGradient>
+      </defs>
+      <!-- dots cloud: eligible ads -->
+      <g>
+        <rect x="0" y="40" width="250" height="220" fill="#ede8de" stroke="rgba(26,20,16,.15)"/>
+        <g fill="#5a4e44" opacity=".55">
+          <!-- grid of tiny ad squares -->
+          <g id="adgrid">
+            <rect x="16" y="56" width="10" height="10"/><rect x="34" y="56" width="10" height="10"/><rect x="52" y="56" width="10" height="10"/><rect x="70" y="56" width="10" height="10"/><rect x="88" y="56" width="10" height="10"/><rect x="106" y="56" width="10" height="10"/><rect x="124" y="56" width="10" height="10"/><rect x="142" y="56" width="10" height="10"/><rect x="160" y="56" width="10" height="10"/><rect x="178" y="56" width="10" height="10"/><rect x="196" y="56" width="10" height="10"/><rect x="214" y="56" width="10" height="10"/>
+          </g>
+          <use href="#adgrid" y="18"/><use href="#adgrid" y="36"/><use href="#adgrid" y="54"/><use href="#adgrid" y="72"/><use href="#adgrid" y="90"/><use href="#adgrid" y="108"/><use href="#adgrid" y="126"/><use href="#adgrid" y="144"/>
+        </g>
+        <g fill="#c41c1c" class="pulse"><rect x="52" y="92" width="10" height="10"/><rect x="160" y="128" width="10" height="10"/><rect x="88" y="182" width="10" height="10"/><rect x="196" y="74" width="10" height="10"/><rect x="124" y="164" width="10" height="10"/></g>
+        <text x="16" y="240" font-family="JetBrains Mono, monospace" font-size="12" fill="#1a1410" font-weight="600" letter-spacing="1.5">ALL ELIGIBLE ADS</text>
+        <text x="16" y="28" font-family="JetBrains Mono, monospace" font-size="11" fill="#5a4e44" letter-spacing="1.5">01 · MILLIONS OF CANDIDATES</text>
+      </g>
+      <!-- flow lines -->
+      <path d="M252 150 H318" stroke="#c41c1c" stroke-width="3" class="flow" fill="none"/>
+      <!-- Andromeda -->
+      <g>
+        <rect x="320" y="60" width="270" height="180" fill="url(#hg)"/>
+        <rect x="320" y="60" width="6" height="180" fill="#c41c1c"/>
+        <text x="345" y="28" font-family="JetBrains Mono, monospace" font-size="11" fill="#c41c1c" letter-spacing="1.5" font-weight="600">02 · RETRIEVAL ← THIS UPDATE</text>
+        <text textLength="225" lengthAdjust="spacingAndGlyphs" x="345" y="112" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="40" font-weight="800" fill="#f5f0e8">ANDROMEDA</text>
+        <text x="345" y="140" font-family="JetBrains Mono, monospace" font-size="12" fill="rgba(245,240,232,.7)">scores every eligible ad</text>
+        <text x="345" y="186" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="44" font-weight="800" fill="#e83535">1B+</text>
+        <text x="420" y="176" font-family="JetBrains Mono, monospace" font-size="11" fill="rgba(245,240,232,.75)">ads / second</text>
+        <text x="420" y="192" font-family="JetBrains Mono, monospace" font-size="11" fill="rgba(245,240,232,.75)">per GPU server</text>
+        <text x="345" y="222" font-family="JetBrains Mono, monospace" font-size="10" fill="rgba(245,240,232,.5)">~ milliseconds per request</text>
+      </g>
+      <path d="M592 150 H648" stroke="#c41c1c" stroke-width="3" class="flow" fill="none"/>
+      <!-- Ranking -->
+      <g>
+        <rect x="650" y="85" width="170" height="130" fill="#f9f6f0" stroke="#1a1410" stroke-width="1.5"/>
+        <text x="668" y="28" font-family="JetBrains Mono, monospace" font-size="11" fill="#5a4e44" letter-spacing="1.5">03 · RANKING</text>
+        <text textLength="120" lengthAdjust="spacingAndGlyphs" x="668" y="135" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="30" font-weight="800" fill="#1a1410">RANKING</text>
+        <text x="668" y="160" font-family="JetBrains Mono, monospace" font-size="11" fill="#5a4e44">deep scoring of</text>
+        <text x="668" y="176" font-family="JetBrains Mono, monospace" font-size="11" fill="#5a4e44">the shortlist</text>
+        <g fill="#c41c1c"><rect x="668" y="190" width="10" height="10"/><rect x="684" y="190" width="10" height="10"/><rect x="700" y="190" width="10" height="10"/><rect x="716" y="190" width="10" height="10"/><rect x="732" y="190" width="10" height="10"/></g>
+      </g>
+      <path d="M822 150 H878" stroke="#c41c1c" stroke-width="3" class="flow" fill="none"/>
+      <!-- Auction -->
+      <g>
+        <rect x="880" y="105" width="90" height="90" fill="#f9f6f0" stroke="#1a1410" stroke-width="1.5"/>
+        <text x="888" y="28" font-family="JetBrains Mono, monospace" font-size="11" fill="#5a4e44" letter-spacing="1.5">04</text>
+        <text textLength="72" lengthAdjust="spacingAndGlyphs" x="925" y="155" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="22" font-weight="800" fill="#1a1410">AUCTION</text>
+        <g fill="#c41c1c"><rect x="904" y="168" width="10" height="10"/><rect x="920" y="168" width="10" height="10"/><rect x="936" y="168" width="10" height="10"/></g>
+      </g>
+      <path d="M972 150 H1008" stroke="#c41c1c" stroke-width="3" class="flow" fill="none"/>
+      <!-- Phone -->
+      <g>
+        <rect x="1010" y="80" width="86" height="150" rx="14" fill="#1a1410"/>
+        <rect x="1018" y="96" width="70" height="118" rx="4" fill="#f5f0e8"/>
+        <rect x="1024" y="104" width="58" height="50" fill="#c41c1c"/>
+        <rect x="1024" y="160" width="40" height="6" fill="#5a4e44"/><rect x="1024" y="172" width="54" height="6" fill="#cfc7b8"/><rect x="1024" y="184" width="30" height="6" fill="#cfc7b8"/>
+        <text x="1010" y="28" font-family="JetBrains Mono, monospace" font-size="11" fill="#5a4e44" letter-spacing="1.5">05 · FEED</text>
+      </g>
+    </svg>
+  </div>
+</header>
+
+<!-- ═════════ BODY ═════════ -->
+<div class="post-wrap">
+  <aside class="toc">
+    <h4>In this post</h4>
+    <ol>
+      <li><a href="#what">What Andromeda is</a></li>
+      <li><a href="#why">Why Meta rebuilt it</a></li>
+      <li><a href="#numbers">The numbers</a></li>
+      <li><a href="#model">The new model (MoE)</a></li>
+      <li><a href="#system">One GPU, one pipeline</a></li>
+      <li><a href="#nvidia">Meta × NVIDIA</a></li>
+      <li><a href="#advertisers">What it means for you</a></li>
+      <li><a href="#playbook">The FRX playbook</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ol>
+  </aside>
+
+  <article id="article">
+    <p class="lead">On October 28, Meta's engineering team published the technical write-up on the next generation of <strong>Andromeda</strong>, the system that picks which ads get considered for every person, on every scroll, across Facebook and Instagram. Marketers are calling it <strong>Andromeda 2.0</strong>.</p>
+    <p>Most coverage stops at "Meta's AI got smarter." For anyone actually buying media, the important detail is narrower: <strong>the retrieval stage is no longer a rough pre-filter.</strong> It now scores every eligible ad at close to the quality of Meta's full ranking models. That changes what wins in the account.</p>
+
+    <div class="note"><b>Naming</b> Meta doesn't use "Andromeda 2.0." The engineering post calls it the next generation, or 2026 iteration, of Meta Andromeda. We use 2.0 here because that's what the industry is searching for.</div>
+
+    <!-- 1 -->
+    <h2 id="what"><span class="num">01 /</span>What Andromeda actually does</h2>
+    <p>Meta's ad delivery runs in stages. When someone opens Instagram, there are millions of ads they could be eligible for. Ranking all of them with Meta's heaviest models would be far too slow, so the system works like a funnel:</p>
+    <ul class="list">
+      <li><strong>Retrieval (Andromeda)</strong> sorts through every eligible ad and returns a small shortlist within milliseconds.</li>
+      <li><strong>Ranking</strong> applies deeper, more expensive models to that shortlist to predict clicks, conversions and value.</li>
+      <li><strong>Auction</strong> combines your bid, the predicted action rates and ad quality to choose the winner.</li>
+    </ul>
+    <p>The catch is that <strong>an ad that doesn't make the retrieval shortlist never reaches the auction</strong>, whatever its bid or however good its creative. Retrieval is the gate, and Meta has just made that gate much more precise.</p>
+
+    <!-- 2 -->
+    <h2 id="why"><span class="num">02 /</span>Why Meta had to rebuild it</h2>
+    <p>The first Andromeda launched in late 2024 on NVIDIA Grace Hopper (GH200) chips. Meta says it grew retrieval model capacity by four orders of magnitude. Then generative AI happened to the ad inventory.</p>
+    <p>With Advantage+ and Meta's AI creative tools, advertisers have produced <strong>hundreds of millions of new ads</strong>. Each one is another candidate retrieval has to evaluate. The 2024 system handled tens of millions of ads per second per GPU. Meta's demand projections called for <strong>billions</strong>. Making the 2024 model bigger wouldn't get there, so the model, software and hardware were redesigned together.</p>
+
+    <figure class="fig">
+      <svg viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Throughput comparison on log scale: 2024 Andromeda tens of millions of ads per second versus 2026 over 1 billion per server and over 10 billion for the model on one GPU">
+        <text x="0" y="18" font-family="JetBrains Mono, monospace" font-size="11" fill="#c41c1c" letter-spacing="1.5" font-weight="600">THROUGHPUT · ADS SCORED PER SECOND (LOG SCALE)</text>
+        <!-- gridlines: 10M .. 10B -->
+        <g font-family="JetBrains Mono, monospace" font-size="10" fill="#5a4e44">
+          <line x1="170" y1="44" x2="170" y2="290" stroke="rgba(26,20,16,.12)"/><text x="170" y="310" text-anchor="middle">10M</text>
+          <line x1="360" y1="44" x2="360" y2="290" stroke="rgba(26,20,16,.12)"/><text x="360" y="310" text-anchor="middle">100M</text>
+          <line x1="550" y1="44" x2="550" y2="290" stroke="rgba(26,20,16,.12)"/><text x="550" y="310" text-anchor="middle">1B</text>
+          <line x1="740" y1="44" x2="740" y2="290" stroke="rgba(26,20,16,.12)"/><text x="740" y="310" text-anchor="middle">10B</text>
+        </g>
+        <!-- bars -->
+        <g font-family="Inter, sans-serif" font-size="13" fill="#1a1410">
+          <text x="0" y="82" font-weight="600">2024 Andromeda</text>
+          <text x="0" y="98" font-family="JetBrains Mono, monospace" font-size="10" fill="#5a4e44">per GPU card</text>
+          <rect x="170" y="66" width="57" height="34" fill="#5a4e44"/>
+          <text x="236" y="88" font-family="JetBrains Mono, monospace" font-size="12" fill="#5a4e44">tens of millions</text>
+
+          <text x="0" y="162" font-weight="600">2026 full pipeline</text>
+          <text x="0" y="178" font-family="JetBrains Mono, monospace" font-size="10" fill="#5a4e44">per GPU server, production</text>
+          <rect x="170" y="146" width="390" height="34" fill="#c41c1c"/>
+          <text x="570" y="168" font-family="JetBrains Mono, monospace" font-size="12" fill="#c41c1c" font-weight="700">1B+  (~100×)</text>
+
+          <text x="0" y="242" font-weight="600">2026 model inference</text>
+          <text x="0" y="258" font-family="JetBrains Mono, monospace" font-size="10" fill="#5a4e44">single GH200 GPU</text>
+          <rect x="170" y="226" width="572" height="34" fill="#1a1410"/>
+          <text x="728" y="248" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="12" fill="#f5f0e8" font-weight="700">10B+</text>
+        </g>
+      </svg>
+      <figcaption><b>FIG. 1</b> One step on this axis is 10×. The 2024 bar uses Meta's "tens of millions" description, so its exact position is illustrative. Source: Engineering at Meta, Oct 28 2026.</figcaption>
+    </figure>
+
+    <!-- 3 -->
+    <h2 id="numbers"><span class="num">03 /</span>The headline numbers</h2>
+    <div class="stats">
+      <div class="stat hot"><div class="v">1B<small>+</small></div><div class="k">ads scored / sec per GPU server</div></div>
+      <div class="stat"><div class="v">~100<small>×</small></div><div class="k">throughput vs. 2024 system</div></div>
+      <div class="stat"><div class="v">~300<small>×</small></div><div class="k">fewer inference FLOPs vs. 2024 model</div></div>
+      <div class="stat"><div class="v">10B<small>+</small></div><div class="k">ads / sec model inference on one GH200</div></div>
+      <div class="stat"><div class="v">~100<small>×</small></div><div class="k">less network traffic in the pipeline</div></div>
+      <div class="stat hot"><div class="v">+2.4<small>%</small></div><div class="k">conversions on Facebook since 2025</div></div>
+    </div>
+    <p>The last number is the one advertisers should note. A <strong>2.4% conversion lift</strong> across a platform of Facebook's size comes from infrastructure alone, with no change to anyone's campaigns. It shows that better retrieval feeds directly into results.</p>
+
+    <!-- 4 -->
+    <h2 id="model"><span class="num">04 /</span>The new model: retrieval mixture-of-experts</h2>
+    <p>Meta took a technique familiar from large language models, <strong>mixture-of-experts (MoE)</strong>, and applied it to retrieval. Instead of one large network doing everything, several specialised "experts" each learn a different view of the user, and a router selects which ones to use for each ad.</p>
+
+    <figure class="fig">
+      <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Retrieval mixture of experts architecture diagram">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c41c1c"/></marker>
+          <marker id="ad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5a4e44"/></marker>
+        </defs>
+        <text x="0" y="16" font-family="JetBrains Mono, monospace" font-size="11" fill="#c41c1c" letter-spacing="1.5" font-weight="600">RETRIEVAL MoE · HOW ONE USER × AD PAIR IS SCORED</text>
+
+        <!-- user signals -->
+        <g font-family="JetBrains Mono, monospace" font-size="10.5" fill="#1a1410">
+          <text x="0" y="52" fill="#5a4e44" letter-spacing="1">USER SIGNALS</text>
+          <rect x="0" y="62" width="168" height="38" fill="#ede8de"/><text x="10" y="86">Ad engagement history</text>
+          <rect x="0" y="108" width="168" height="38" fill="#ede8de"/><text x="10" y="132">User-cohort patterns</text>
+          <rect x="0" y="154" width="168" height="38" fill="#ede8de"/><text x="10" y="178">LLM semantic features</text>
+          <rect x="0" y="200" width="168" height="38" fill="#ede8de"/><text x="10" y="224">Cross-surface signals</text>
+        </g>
+        <!-- experts -->
+        <g>
+          <text x="232" y="52" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#5a4e44" letter-spacing="1">USER EXPERTS</text>
+          <g font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="17" font-weight="700" text-anchor="middle">
+            <rect x="232" y="62" width="120" height="38" fill="#c41c1c"/><text x="292" y="87" fill="#fff">EXPERT A</text>
+            <rect x="232" y="108" width="120" height="38" fill="#f9f6f0" stroke="#1a1410"/><text x="292" y="133" fill="#1a1410">EXPERT B</text>
+            <rect x="232" y="154" width="120" height="38" fill="#c41c1c"/><text x="292" y="179" fill="#fff">EXPERT C</text>
+            <rect x="232" y="200" width="120" height="38" fill="#f9f6f0" stroke="#1a1410"/><text x="292" y="225" fill="#1a1410">EXPERT D</text>
+          </g>
+        </g>
+        <g stroke="#5a4e44" stroke-width="1.2" fill="none" marker-end="url(#ad)">
+          <path d="M170 81H228"/><path d="M170 127H228"/><path d="M170 173H228"/><path d="M170 219H228"/>
+        </g>
+
+        <!-- ad tower -->
+        <g font-family="JetBrains Mono, monospace" font-size="10.5">
+          <text x="0" y="296" fill="#5a4e44" letter-spacing="1">CANDIDATE AD</text>
+          <rect x="0" y="306" width="168" height="38" fill="#1a1410"/><text x="10" y="330" fill="#f5f0e8">Creative + copy + offer</text>
+          <rect x="0" y="352" width="168" height="38" fill="#ede8de"/><text x="10" y="376" fill="#1a1410">Real-time serving context</text>
+          <rect x="232" y="318" width="120" height="58" fill="#f9f6f0" stroke="#1a1410"/>
+          <text x="292" y="342" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="16" font-weight="700" fill="#1a1410">CONTEXTUAL</text>
+          <text x="292" y="362" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="16" font-weight="700" fill="#1a1410">AD ENCODING</text>
+        </g>
+        <g stroke="#5a4e44" stroke-width="1.2" fill="none" marker-end="url(#ad)"><path d="M170 325H228"/><path d="M170 371H228"/></g>
+
+        <!-- router -->
+        <rect x="430" y="150" width="150" height="120" fill="#1a1410"/>
+        <rect x="430" y="150" width="150" height="5" fill="#c41c1c"/>
+        <text x="505" y="194" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="22" font-weight="800" fill="#f5f0e8">AD-AWARE</text>
+        <text x="505" y="218" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="22" font-weight="800" fill="#f5f0e8">MoE ROUTER</text>
+        <text x="505" y="246" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="rgba(245,240,232,.65)">picks top-K experts</text>
+        <text x="505" y="259" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="rgba(245,240,232,.65)">for THIS ad</text>
+        <g fill="none" stroke-width="2">
+          <path d="M354 81 C400 81, 400 175, 426 180" stroke="#c41c1c" marker-end="url(#ar)" class="flow"/>
+          <path d="M354 127 C390 127, 400 195, 426 195" stroke="rgba(26,20,16,.2)"/>
+          <path d="M354 173 C390 173, 400 205, 426 205" stroke="#c41c1c" marker-end="url(#ar)" class="flow"/>
+          <path d="M354 219 C390 219, 400 225, 426 225" stroke="rgba(26,20,16,.2)"/>
+          <path d="M354 347 C400 347, 400 250, 426 250" stroke="#1a1410" marker-end="url(#ad)"/>
+        </g>
+
+        <!-- score -->
+        <path d="M582 210H636" stroke="#c41c1c" stroke-width="2.5" marker-end="url(#ar)" class="flow"/>
+        <circle cx="690" cy="210" r="52" fill="#c41c1c"/>
+        <text textLength="84" lengthAdjust="spacingAndGlyphs" x="690" y="206" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="22" font-weight="800" fill="#fff">RELEVANCE</text>
+        <text x="690" y="228" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="22" font-weight="800" fill="#fff">SCORE</text>
+        <text x="690" y="300" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#5a4e44">~300× fewer FLOPs</text>
+        <text x="690" y="316" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#5a4e44">than 2024 model</text>
+      </svg>
+      <figcaption><b>FIG. 2</b> Specialised user experts and a context-aware ad encoding feed a router that activates only the experts relevant to each ad. Red paths show active experts. Redrawn from Meta's architecture description.</figcaption>
+    </figure>
+
+    <h3>Three changes that matter</h3>
+    <ul class="list">
+      <li><strong>Many user experts instead of one user tower.</strong> Separate experts learn from ad engagement sequences, cohort behaviour, LLM-derived semantic understanding and co-engagement across Meta's surfaces, so the system has several distinct views of what a person responds to.</li>
+      <li><strong>Ads are encoded with live context.</strong> Your creative is represented together with the real-time serving context, not as a fixed fingerprint. The same ad can score differently depending on the moment and the placement.</li>
+      <li><strong>An attention-based router replaces dense layers.</strong> For each candidate ad, only the most relevant experts run. Meta says this delivers near-ranking quality at a small fraction of the compute, and that after optimisation the gating costs about as much as a simple dot product.</li>
+    </ul>
+
+    <div class="callout">
+      <div class="label">FRX take</div>
+      <p>Because the router picks experts per ad, a meaningfully different creative (new angle, new format, new hook) can be matched through a different "view" of the user and reach a different pocket of people. Ten variations of one concept probably all look the same to it. Creative diversity is now literally how the retrieval model is built.</p>
+    </div>
+
+    <!-- 5 -->
+    <h2 id="system"><span class="num">05 /</span>One GPU server, one pipeline</h2>
+    <p>The model was only half the work. At billions of ads per second, Meta found that the bottleneck was <strong>moving data</strong>, not computing it. Two engineering changes fixed that:</p>
+    <ul class="list">
+      <li><strong>A single fused kernel.</strong> Fetching embeddings, the user-ad interaction and scoring now run in one GPU pass, with intermediate results kept on-chip instead of written out to memory.</li>
+      <li><strong>Co-location.</strong> Index matching, which enforces your targeting rules, used to run on CPU servers and send huge candidate lists across the network to GPUs. Now matching, scoring and top-K selection all run on the same GPU server. Only a small request goes in and only the final shortlist comes out, cutting network traffic by about 100×.</li>
+    </ul>
+
+    <figure class="fig">
+      <svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Before and after: 2024 split CPU and GPU pipeline versus 2026 single GPU server pipeline">
+        <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c41c1c"/></marker>
+        <marker id="ad2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5a4e44"/></marker></defs>
+        <!-- BEFORE -->
+        <text x="0" y="18" font-family="JetBrains Mono, monospace" font-size="11" fill="#5a4e44" letter-spacing="1.5" font-weight="600">BEFORE · 2024</text>
+        <rect x="0" y="34" width="200" height="110" fill="#ede8de" stroke="rgba(26,20,16,.2)" stroke-dasharray="4 3"/>
+        <text x="14" y="56" font-family="JetBrains Mono, monospace" font-size="10" fill="#5a4e44">CPU HOSTS</text>
+        <rect x="14" y="66" width="172" height="30" fill="#f9f6f0" stroke="#5a4e44"/><text x="100" y="86" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#1a1410">Index matching</text>
+        <rect x="14" y="102" width="172" height="30" fill="#f9f6f0" stroke="#5a4e44"/><text x="100" y="122" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#1a1410">Top-K selection</text>
+        <!-- network pipe -->
+        <g>
+          <path d="M204 76 H404" stroke="#5a4e44" stroke-width="10" opacity=".25"/>
+          <path d="M204 76 H400" stroke="#5a4e44" stroke-width="2" marker-end="url(#ad2)"/>
+          <path d="M404 112 H208" stroke="#5a4e44" stroke-width="10" opacity=".25"/>
+          <path d="M404 112 H208" stroke="#5a4e44" stroke-width="2" marker-end="url(#ad2)"/>
+          <text x="304" y="62" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#c41c1c" font-weight="600">HUGE CANDIDATE LISTS</text>
+          <text x="304" y="138" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#5a4e44">network saturates at scale</text>
+        </g>
+        <rect x="408" y="34" width="180" height="110" fill="#ede8de" stroke="rgba(26,20,16,.2)" stroke-dasharray="4 3"/>
+        <text x="422" y="56" font-family="JetBrains Mono, monospace" font-size="10" fill="#5a4e44">GPU</text>
+        <rect x="422" y="66" width="152" height="66" fill="#f9f6f0" stroke="#5a4e44"/><text x="498" y="104" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#1a1410">Model scoring</text>
+        <text x="608" y="84" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="30" font-weight="800" fill="#5a4e44">10s of M</text>
+        <text x="608" y="104" font-family="JetBrains Mono, monospace" font-size="10" fill="#5a4e44">ads / sec / card</text>
+
+        <line x1="0" y1="178" x2="760" y2="178" stroke="rgba(26,20,16,.15)"/>
+
+        <!-- AFTER -->
+        <text x="0" y="210" font-family="JetBrains Mono, monospace" font-size="11" fill="#c41c1c" letter-spacing="1.5" font-weight="600">AFTER · 2026</text>
+        <rect x="0" y="244" width="94" height="46" fill="#ede8de"/><text x="47" y="263" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#1a1410">user features</text><text x="47" y="278" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#1a1410">+ targeting</text>
+        <path d="M96 267 H128" stroke="#c41c1c" stroke-width="2" marker-end="url(#ar2)"/>
+        <rect x="132" y="222" width="456" height="134" fill="#1a1410"/>
+        <rect x="132" y="222" width="456" height="5" fill="#c41c1c"/>
+        <text x="148" y="248" font-family="JetBrains Mono, monospace" font-size="10" fill="#e83535" letter-spacing="1.2" font-weight="600">ONE GPU SERVER</text>
+        <g font-family="Inter, sans-serif" font-size="12" text-anchor="middle">
+          <rect x="148" y="262" width="118" height="60" fill="#2c2420" stroke="rgba(245,240,232,.25)"/><text x="207" y="288" fill="#f5f0e8">Index</text><text x="207" y="305" fill="#f5f0e8">matching</text>
+          <rect x="286" y="262" width="150" height="60" fill="#c41c1c"/><text x="361" y="288" fill="#fff" font-weight="600">Fused scoring</text><text x="361" y="305" fill="#fff">kernel (on-chip)</text>
+          <rect x="456" y="262" width="118" height="60" fill="#2c2420" stroke="rgba(245,240,232,.25)"/><text x="515" y="288" fill="#f5f0e8">Top-K</text><text x="515" y="305" fill="#f5f0e8">selection</text>
+        </g>
+        <path d="M268 292 H282" stroke="#f5f0e8" stroke-width="2"/><path d="M438 292 H452" stroke="#f5f0e8" stroke-width="2"/>
+        <text x="148" y="342" font-family="JetBrains Mono, monospace" font-size="9.5" fill="rgba(245,240,232,.6)">embeddings → MoE interaction → score, in one pass</text>
+        <path d="M590 290 H622" stroke="#c41c1c" stroke-width="2" marker-end="url(#ar2)"/>
+        <text x="630" y="282" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="34" font-weight="800" fill="#c41c1c">1B+</text>
+        <text x="630" y="302" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1410">ads / sec / server</text>
+        <text x="630" y="320" font-family="JetBrains Mono, monospace" font-size="10" fill="#5a4e44">~100× less traffic</text>
+      </svg>
+      <figcaption><b>FIG. 3</b> In 2024, CPU hosts sent large candidate lists across the network to GPUs for scoring. In 2026, matching, scoring and top-K selection run together on one GPU server. Based on Meta's pipeline description.</figcaption>
+    </figure>
+
+    <p>One detail for media buyers: moving index matching onto the GPU required a new index design. Meta says it still supports <strong>complex targeting across dozens of feature categories</strong> and real-time updates as ads are created, edited or switched off. Your targeting constraints, exclusions and new launches are respected immediately, just at much higher speed.</p>
+
+    <!-- 6 -->
+    <h2 id="nvidia"><span class="num">06 /</span>Meta × NVIDIA: how close to the limit?</h2>
+    <p>In early 2026 Meta and NVIDIA benchmarked the pipeline against the hardware's limits. NVIDIA supplied optimised kernels and Meta integrated and tested them. Every component improved by 2× to 5× over its baseline:</p>
+
+    <table class="data">
+      <thead><tr><th>Component</th><th>What it does</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Interaction network</td><td>MoE gating that scores user × ad</td><td class="up">2.4B → 10B+ ads/s (5.3×)</td></tr>
+        <tr><td>INT8 quantisation</td><td>Lower-precision gating math</td><td class="up">up to 2× vs FP16, same accuracy</td></tr>
+        <tr><td>Index matching</td><td>Enforces targeting rules</td><td class="up">100B+ ads/s (2×+)</td></tr>
+        <tr><td>End-to-end</td><td>Full pipeline on one server</td><td class="up">multiple × production</td></tr>
+      </tbody>
+    </table>
+
+    <figure class="fig">
+      <svg viewBox="0 0 760 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interaction network throughput improved from 2.4 billion to over 10 billion ads per second">
+        <text x="0" y="16" font-family="JetBrains Mono, monospace" font-size="11" fill="#c41c1c" letter-spacing="1.5" font-weight="600">INTERACTION NETWORK · BILLION ADS / SEC (LINEAR)</text>
+        <g font-family="JetBrains Mono, monospace" font-size="10" fill="#5a4e44">
+          <line x1="140" y1="36" x2="140" y2="170" stroke="rgba(26,20,16,.2)"/><text x="140" y="190" text-anchor="middle">0</text>
+          <line x1="290" y1="36" x2="290" y2="170" stroke="rgba(26,20,16,.1)"/><text x="290" y="190" text-anchor="middle">2.5</text>
+          <line x1="440" y1="36" x2="440" y2="170" stroke="rgba(26,20,16,.1)"/><text x="440" y="190" text-anchor="middle">5</text>
+          <line x1="590" y1="36" x2="590" y2="170" stroke="rgba(26,20,16,.1)"/><text x="590" y="190" text-anchor="middle">7.5</text>
+          <line x1="740" y1="36" x2="740" y2="170" stroke="rgba(26,20,16,.1)"/><text x="740" y="190" text-anchor="middle">10</text>
+        </g>
+        <text x="0" y="78" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#1a1410">Baseline</text>
+        <rect x="140" y="58" width="144" height="34" fill="#5a4e44"/><text x="294" y="80" font-family="JetBrains Mono, monospace" font-size="12" fill="#5a4e44" font-weight="700">2.4B</text>
+        <text x="0" y="138" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#1a1410">Optimised</text>
+        <rect x="140" y="118" width="600" height="34" fill="#c41c1c"/><text x="728" y="140" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="12" fill="#fff" font-weight="700">10B+ · 5.3×</text>
+      </svg>
+      <figcaption><b>FIG. 4</b> At this speed the gating network runs at about 85% of the GPU's peak memory bandwidth. Meta describes the extra model complexity as essentially free on Tensor Core hardware. Next up: NVIDIA Grace Blackwell.</figcaption>
+    </figure>
+
+    <p>The practical point is that <strong>Meta has room to keep making retrieval smarter</strong> (deeper networks, more experts, more signals) without its infrastructure costs growing at the same rate. Expect this layer to keep improving through 2027.</p>
+
+    <!-- 7 -->
+    <h2 id="advertisers"><span class="num">07 /</span>What it means for advertisers</h2>
+    <p>Meta's post covers engineering, not campaign strategy. Here's how we read it from the media-buying side, based on what we see across the eCommerce and lead-gen accounts we manage.</p>
+
+    <figure class="fig">
+      <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Old playbook versus Andromeda era playbook">
+        <rect x="0" y="0" width="370" height="300" fill="#ede8de"/>
+        <rect x="390" y="0" width="370" height="300" fill="#1a1410"/>
+        <rect x="390" y="0" width="370" height="5" fill="#c41c1c"/>
+        <text x="24" y="40" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="28" font-weight="800" fill="#5a4e44">THE OLD PLAYBOOK</text>
+        <text x="414" y="40" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="28" font-weight="800" fill="#f5f0e8">THE ANDROMEDA ERA</text>
+        <g font-family="Inter, sans-serif" font-size="14" fill="#5a4e44">
+          <text x="24" y="90">✕  Narrow interest stacks</text>
+          <text x="24" y="132">✕  Many small ad sets</text>
+          <text x="24" y="174">✕  10 tweaks of one ad</text>
+          <text x="24" y="216">✕  Pixel-only tracking</text>
+          <text x="24" y="258">✕  Audience is the lever</text>
+        </g>
+        <g font-family="Inter, sans-serif" font-size="14" fill="#f5f0e8">
+          <text x="414" y="90"><tspan fill="#e83535" font-weight="700">→</tspan>  Broad + Advantage+ audience</text>
+          <text x="414" y="132"><tspan fill="#e83535" font-weight="700">→</tspan>  Few, well-funded campaigns</text>
+          <text x="414" y="174"><tspan fill="#e83535" font-weight="700">→</tspan>  Distinct concepts &amp; formats</text>
+          <text x="414" y="216"><tspan fill="#e83535" font-weight="700">→</tspan>  CAPI + high-quality events</text>
+          <text x="414" y="258"><tspan fill="#e83535" font-weight="700">→</tspan>  Creative is the targeting</text>
+        </g>
+      </svg>
+      <figcaption><b>FIG. 5</b> How account structure is shifting as retrieval gets smarter. FRX Media's view.</figcaption>
+    </figure>
+
+    <h3>1. Every ad competes on its own merits</h3>
+    <p>When retrieval was coarse, a weak ad could ride along inside a strong ad set. Now each ad is scored for each user at close to ranking quality. <strong>The best creative for a specific person is far more likely to be found</strong>, and weak creative is far more likely to be filtered out before the auction.</p>
+
+    <h3>2. Creative is your targeting</h3>
+    <p>The model reads ad content directly and matches it to user experts. The hook, visuals, offer and format effectively decide who sees an ad. Narrow interest targeting mostly limits the pool the system can search.</p>
+
+    <h3>3. Signal quality feeds the experts</h3>
+    <p>The user experts learn from engagement and conversion behaviour. Clean, deduplicated <strong>Conversions API</strong> events with strong match quality, and optimising for the event you actually care about, give the system better training data, which leads to better matching.</p>
+
+    <h3>4. Volume without variety is noise</h3>
+    <p>Meta built this upgrade partly because AI tools created hundreds of millions of ads. Having more ads is not the advantage. <strong>More genuinely different ads</strong> is, because that's what lets the router find new pockets of demand.</p>
+
+    <!-- 8 -->
+    <h2 id="playbook"><span class="num">08 /</span>The FRX Andromeda playbook</h2>
+    <p>Here's what we're doing in client accounts this quarter:</p>
+    <div class="plays">
+      <div class="play"><div><h4>Consolidate structure</h4><p>Fewer campaigns and ad sets, each with enough budget to exit learning. Use Advantage+ Sales or broad ABO/CBO with Advantage+ audience, and let retrieval do the searching.</p></div></div>
+      <div class="play"><div><h4>Build concepts, not variations</h4><p>Aim for 6–10 truly distinct concepts per ad set: different angles (problem, social proof, offer, founder, comparison), different people on camera, different formats (UGC video, static, carousel, catalog).</p></div></div>
+      <div class="play"><div><h4>Fix the signal layer first</h4><p>Pixel + CAPI with deduplication, an Event Match Quality of 8 or higher where possible, value passed on purchases, and offline or CRM events for lead-gen. Judge results from your backend, not just Ads Manager.</p></div></div>
+      <div class="play"><div><h4>Refresh on a cadence</h4><p>Ship new concepts every 1–2 weeks at meaningful spend. Read concept-level results (hook rate, CTR, CPA by concept), not just individual ads, and cut losers fast.</p></div></div>
+      <div class="play"><div><h4>Use exclusions, not interests</h4><p>Keep hard constraints (geo, age where legally required, existing-customer exclusions) and drop speculative interest layers. Index matching still enforces your rules, so only keep the ones you truly need.</p></div></div>
+    </div>
+
+    <div class="callout">
+      <div class="label">Bottom line</div>
+      <p>Andromeda 2.0 doesn't reward clever account hacks. It rewards a steady supply of distinct, well-made creative, backed by clean conversion data. The accounts that win in 2027 will be the ones with the best creative systems.</p>
+    </div>
+
+    <!-- FAQ -->
+    <h2 id="faq"><span class="num">09 /</span>FAQ</h2>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Is Andromeda 2.0 an official name?</button><div class="faq-a"><p>No. Meta refers to it as the next generation, or 2026 iteration, of Meta Andromeda. "Andromeda 2.0" is the shorthand marketers use.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Do I need to change anything for it to work?</button><div class="faq-a"><p>No. It's already serving across Facebook and Instagram, and Meta's 2.4% conversion lift on Facebook required no advertiser action. You'll get more from it with consolidated structure, diverse creative and clean CAPI data.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Does targeting still matter?</button><div class="faq-a"><p>Hard constraints like location, exclusions and compliance rules are still enforced at the index-matching step. Speculative interest stacking matters much less, because the model matches people to ads using their content and behaviour signals.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How many creatives should I run?</button><div class="faq-a"><p>Count distinct concepts, not ad volume. For most accounts, 6–10 genuinely different concepts per ad set, refreshed every one to two weeks, works far better than dozens of near-identical versions.</p></div></div>
+
+    <div class="sources">
+      <h4>Sources</h4>
+      <p>Engineering at Meta, "Meta Andromeda: next-generation ads retrieval with GPU co-design," October 28, 2026. <a href="https://engineering.fb.com/2026/10/28/ml-applications/meta-andromeda-next-gen-ads-retrieval-gpu-co-design/" target="_blank" rel="noopener">engineering.fb.com</a>. All figures on this page are original FRX Media illustrations of the data and architecture Meta describes.</p>
+    </div>
+  </article>
+</div>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Is your account built for <em>Andromeda?</em></h2>
+  <p>We'll audit your structure, creative mix and CAPI setup against the new retrieval system and show you where you're leaving conversions on the table.</p>
+  <a href="/#contact" class="btn-primary">Request a Free Audit →</a>
+</section>
+
+<footer>
+  <div class="footer-logo"><a href="/"><img src="/logotransparent.png" alt="FRX Media"></a></div>
+  <div class="footer-links">
+    <a href="/#services">Services</a>
+    <a href="/#results">Results</a>
+    <a href="/blog/">Blog</a>
+    <a href="mailto:hello@frxmedia.com">hello@frxmedia.com</a>
+  </div>
+  <div class="footer-copy">© 2026 FRX Media · Global Performance Marketing</div>
+</footer>
+
+<a class="wa-btn" href="https://wa.me/919596864140?text=Hi%20FRX%20Media%2C%20I%20read%20your%20Andromeda%202.0%20post%20and%20want%20to%20discuss%20my%20Meta%20Ads." target="_blank" aria-label="Contact on WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+function toggleFaq(el){ el.parentElement.classList.toggle('open'); }
+(function(){
+  var bar=document.getElementById('progress'), art=document.getElementById('article');
+  var links=[].slice.call(document.querySelectorAll('.toc a'));
+  var heads=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  function onScroll(){
+    var r=art.getBoundingClientRect(), total=art.offsetHeight-window.innerHeight;
+    bar.style.width=Math.max(0,Math.min(100,(-r.top/total)*100))+'%';
+    var cur=0; heads.forEach(function(h,i){ if(h && h.getBoundingClientRect().top<160) cur=i; });
+    links.forEach(function(a,i){ a.classList.toggle('on', i===cur); });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+})();
+</script>
+</body>
+</html>
