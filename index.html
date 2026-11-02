@@ -2965,6 +2965,117 @@ src="https://www.facebook.com/tr?id=1109186501573747&ev=PageView&noscript=1"
 
   <div class="blog-list">
 
+    <!-- POST 0: Meta Andromeda 2.0 (Nov 2026) -->
+    <style>
+      .blog-item--feature.is-open .blog-body { max-height: 4200px; }
+      .blog-new { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #fff; background: var(--red); padding: 3px 8px; }
+      .blog-fig { margin: 24px 0 8px; background: var(--parchment); border: 1px solid var(--border); padding: 16px; overflow-x: auto; }
+      .blog-fig svg { width: 100%; min-width: 560px; height: auto; display: block; }
+      .blog-fig-cap { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.06em; color: var(--muted); margin: 10px 0 18px; line-height: 1.6; }
+      .blog-statgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border-strong); border: 1px solid var(--border-strong); margin: 20px 0; }
+      .blog-statgrid div { background: var(--parchment); padding: 16px 14px; }
+      .blog-statgrid b { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 34px; font-weight: 800; line-height: 1; color: var(--dark); }
+      .blog-statgrid b em { color: var(--red); font-style: normal; }
+      .blog-statgrid span { display: block; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mid); margin-top: 6px; line-height: 1.5; }
+      .blog-readfull { display: inline-flex; align-items: center; gap: 10px; margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; background: var(--red); padding: 14px 24px; text-decoration: none; transition: all .25s; }
+      .blog-readfull:hover { background: var(--dark); transform: translateY(-1px); }
+      @media(max-width:640px) { .blog-statgrid { grid-template-columns: 1fr 1fr; } .blog-statgrid b { font-size: 28px; } }
+    </style>
+    <div class="blog-item blog-item--feature reveal" data-blog="10">
+      <div class="blog-trigger" onclick="toggleBlog(this)">
+        <div class="blog-trigger-left">
+          <div class="blog-meta">
+            <span class="blog-new">New</span>
+            <span class="blog-cat">Algorithm Update</span>
+            <span class="blog-dot"></span>
+            <span class="blog-readtime">4 min read · Nov 2026</span>
+          </div>
+          <div class="blog-headline">Meta Andromeda 2.0: Every Ad, Every User, Scored</div>
+          <div class="blog-deck">Meta's new retrieval engine scores 1B+ ads per second with ~300× less compute, and has already lifted Facebook conversions 2.4%. What changed under the hood, and the playbook we're running because of it.</div>
+        </div>
+        <div class="blog-toggle">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="blog-body">
+        <div class="blog-content">
+          <div class="blog-text">
+            <h3>Retrieval Is the Gate</h3>
+            <p>Every impression runs through three stages: <strong>retrieval</strong> picks a shortlist from every eligible ad, <strong>ranking</strong> scores that shortlist in depth, and the <strong>auction</strong> picks the winner. Andromeda is the retrieval stage. If your ad doesn't make the shortlist, its bid and creative never get a chance.</p>
+
+            <div class="blog-fig">
+              <svg viewBox="0 0 760 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Meta ad delivery: eligible ads to Andromeda retrieval to ranking to auction to feed">
+                <defs><marker id="bfa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c41c1c"/></marker></defs>
+                <rect x="0" y="30" width="150" height="110" fill="#ede8de"/>
+                <g fill="#5a4e44" opacity=".5"><rect x="12" y="44" width="8" height="8"/><rect x="26" y="44" width="8" height="8"/><rect x="40" y="44" width="8" height="8"/><rect x="54" y="44" width="8" height="8"/><rect x="68" y="44" width="8" height="8"/><rect x="82" y="44" width="8" height="8"/><rect x="96" y="44" width="8" height="8"/><rect x="110" y="44" width="8" height="8"/><rect x="124" y="44" width="8" height="8"/><rect x="12" y="58" width="8" height="8"/><rect x="26" y="58" width="8" height="8"/><rect x="40" y="58" width="8" height="8"/><rect x="54" y="58" width="8" height="8"/><rect x="68" y="58" width="8" height="8"/><rect x="82" y="58" width="8" height="8"/><rect x="96" y="58" width="8" height="8"/><rect x="110" y="58" width="8" height="8"/><rect x="124" y="58" width="8" height="8"/><rect x="12" y="72" width="8" height="8"/><rect x="26" y="72" width="8" height="8"/><rect x="40" y="72" width="8" height="8"/><rect x="54" y="72" width="8" height="8"/><rect x="68" y="72" width="8" height="8"/><rect x="82" y="72" width="8" height="8"/><rect x="96" y="72" width="8" height="8"/><rect x="110" y="72" width="8" height="8"/><rect x="124" y="72" width="8" height="8"/><rect x="12" y="86" width="8" height="8"/><rect x="26" y="86" width="8" height="8"/><rect x="40" y="86" width="8" height="8"/><rect x="54" y="86" width="8" height="8"/><rect x="68" y="86" width="8" height="8"/><rect x="82" y="86" width="8" height="8"/><rect x="96" y="86" width="8" height="8"/><rect x="110" y="86" width="8" height="8"/><rect x="124" y="86" width="8" height="8"/></g>
+                <g fill="#c41c1c"><rect x="40" y="58" width="8" height="8"/><rect x="96" y="72" width="8" height="8"/><rect x="124" y="44" width="8" height="8"/></g>
+                <text x="12" y="126" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1410" font-weight="600" letter-spacing="1">ALL ELIGIBLE ADS</text>
+                <path d="M152 85H196" stroke="#c41c1c" stroke-width="2.5" marker-end="url(#bfa)"/>
+                <rect x="200" y="20" width="230" height="130" fill="#1a1410"/><rect x="200" y="20" width="5" height="130" fill="#c41c1c"/>
+                <text x="220" y="14" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#c41c1c" font-weight="600" letter-spacing="1">THIS UPDATE</text>
+                <text x="220" y="62" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="32" font-weight="800" fill="#f5f0e8" textLength="170" lengthAdjust="spacingAndGlyphs">ANDROMEDA</text>
+                <text x="220" y="84" font-family="JetBrains Mono, monospace" font-size="10" fill="rgba(245,240,232,.7)">scores every eligible ad</text>
+                <text x="220" y="128" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="36" font-weight="800" fill="#e83535">1B+</text>
+                <text x="294" y="118" font-family="JetBrains Mono, monospace" font-size="10" fill="rgba(245,240,232,.75)">ads / second</text>
+                <text x="294" y="132" font-family="JetBrains Mono, monospace" font-size="10" fill="rgba(245,240,232,.75)">per GPU server</text>
+                <path d="M432 85H476" stroke="#c41c1c" stroke-width="2.5" marker-end="url(#bfa)"/>
+                <rect x="480" y="45" width="120" height="80" fill="#f9f6f0" stroke="#1a1410"/>
+                <text x="540" y="82" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="22" font-weight="800" fill="#1a1410" textLength="84" lengthAdjust="spacingAndGlyphs">RANKING</text>
+                <g fill="#c41c1c"><rect x="505" y="98" width="8" height="8"/><rect x="519" y="98" width="8" height="8"/><rect x="533" y="98" width="8" height="8"/><rect x="547" y="98" width="8" height="8"/><rect x="561" y="98" width="8" height="8"/></g>
+                <path d="M602 85H636" stroke="#c41c1c" stroke-width="2.5" marker-end="url(#bfa)"/>
+                <rect x="640" y="55" width="70" height="60" fill="#f9f6f0" stroke="#1a1410"/>
+                <text x="675" y="90" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="16" font-weight="800" fill="#1a1410" textLength="56" lengthAdjust="spacingAndGlyphs">AUCTION</text>
+                <path d="M712 85H726" stroke="#c41c1c" stroke-width="2.5" marker-end="url(#bfa)"/>
+                <rect x="730" y="50" width="30" height="70" rx="6" fill="#1a1410"/><rect x="734" y="58" width="22" height="20" fill="#c41c1c"/>
+              </svg>
+            </div>
+            <div class="blog-fig-cap">FIG. Where Andromeda sits in Meta's ad delivery. Retrieval now works at close to the quality of ranking.</div>
+
+            <h3>What Changed in the 2026 Version</h3>
+            <div class="blog-statgrid">
+              <div><b>1B<em>+</em></b><span>ads/sec per GPU server</span></div>
+              <div><b>~100<em>×</em></b><span>throughput vs 2024</span></div>
+              <div><b>~300<em>×</em></b><span>fewer inference FLOPs</span></div>
+            </div>
+            <ul>
+              <li><strong>Mixture-of-experts model.</strong> Instead of one user model, several specialist "experts" each learn a different view of the user. For every ad, a router uses only the experts relevant to that ad.</li>
+              <li><strong>Ads read in context.</strong> Your creative is encoded together with the live serving context, so the same ad can score differently depending on placement and moment.</li>
+              <li><strong>One GPU, one pipeline.</strong> Targeting checks, scoring and shortlisting now run on a single GPU server, cutting network traffic by about 100×. Your exclusions and targeting rules are still enforced.</li>
+            </ul>
+
+            <h3>What We're Doing in Accounts Now</h3>
+            <ul>
+              <li><strong>Concepts over variations:</strong> 6–10 genuinely different angles and formats per ad set. Ten versions of one idea look the same to the router.</li>
+              <li><strong>Consolidate:</strong> fewer, better-funded campaigns using broad or Advantage+ audience.</li>
+              <li><strong>Fix the signal layer:</strong> Pixel + CAPI with deduplication and strong Event Match Quality, plus value on purchases.</li>
+              <li><strong>Refresh on a cadence:</strong> new concepts every 1–2 weeks, with results read at concept level.</li>
+            </ul>
+            <p>Andromeda 2.0 doesn't reward account hacks. It rewards a steady supply of distinct creative backed by clean conversion data.</p>
+            <a class="blog-readfull" href="/blog/meta-andromeda-2-0/">Read the full breakdown with diagrams →</a>
+          </div>
+          <div class="blog-sidebar">
+            <div class="blog-sidebar-box">
+              <div class="blog-sidebar-label">Conversion Lift</div>
+              <div class="blog-sidebar-stat"><em>+2.4%</em></div>
+              <div class="blog-sidebar-note">More conversions on Facebook since 2025, from the infrastructure upgrade alone, with no advertiser changes needed. (Source: Engineering at Meta, Oct 28 2026.)</div>
+            </div>
+            <div class="blog-sidebar-box">
+              <div class="blog-sidebar-label">Key Action</div>
+              <div class="blog-sidebar-stat" style="font-size:28px; line-height:1.2;">Creative Is the Targeting.</div>
+              <div class="blog-sidebar-note">The model reads your ad and matches it to user experts. Distinct hooks, offers and formats reach different pockets of demand.</div>
+            </div>
+            <a class="blog-ig-cta" href="/#contact">
+              <span>Get an Andromeda audit</span>
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:10px;height:10px;opacity:1"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- POST 1: Meta Andromeda -->
     <div class="blog-item reveal" data-blog="0">
       <div class="blog-trigger" onclick="toggleBlog(this)">
